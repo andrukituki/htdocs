@@ -17,7 +17,7 @@
 
             //header("Location:../menu/menu.php");
 			//header("Location:http://localhost/menu/monitoreo/tabla_arp.php");
-			header("Location:http://".$_SERVER['SERVER_NAME']."/menu/inicio/inicio.php");
+			header("Location:".$_SERVER['SERVER_NAME']."/menu/inicio/inicio.php");
 			return;
 		}
 
