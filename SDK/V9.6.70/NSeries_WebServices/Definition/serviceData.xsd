@@ -1,0 +1,1773 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/nsrs/soap/sh/servicedata"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:d="http://www.metaswitch.com/nsrs/soap/sh/documentation"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.metaswitch.com/nsrs/soap/sh/documentation Documentation.xsd"
+           targetNamespace="http://www.metaswitch.com/nsrs/soap/sh/servicedata"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           version="3.9">
+  <xs:annotation>
+    <xs:documentation xml:lang="en">This is the schema for conference companies
+       and users on the N-Series system.
+    </xs:documentation>
+  </xs:annotation>
+
+  <xs:complexType name="tServiceData">
+    <xs:choice>
+      <xs:element name="NseriesData" type="tNseriesData"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="tNseriesData">
+    <xs:choice>
+
+      <xs:element name="Nsrs_Server_BaseInformation" type="tNsrs_Server_BaseInformation">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Server_SystemLogList" type="tNsrs_Server_SystemLogList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+              <d:Identifier>Conference System Log List
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Server_RecordingReportList" type="tNsrs_Server_RecordingReportList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+              <d:Identifier>Conference Recording Report List
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_ConfCompany_BaseInformation" type="tNsrs_Company_BaseInformation">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+              <d:Identifier>Company Name: Id
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_ConfUser_BaseInformation" type="tNsrs_User_BaseInformation">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+              <d:Identifier>User Name: Id
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_ConfClassOfService_BaseInformation" type="tNsrs_ConfClassOfService_BaseInformation">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+              <d:Identifier>Class of Service Description
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Server_ConfCompanyList" type="tNsrs_Server_ConfCompanyList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Server_ConfUserList" type="tNsrs_Server_ConfUserList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_ConfCompany_ConfUserList" type="tNsrs_ConfCompany_ConfUserList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+              <d:Identifier>Company Name
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Server_ConfCoSList" type="tNsrs_Server_ConfCoSList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Server_MOHGMGList" type="tNsrs_Server_MOHGMGList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_MOHGlobalMediaGroup_ResourceList" type="tNsrs_MOHGlobalMediaGroup_ResourceList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+              <d:Identifier>Music On Hold - Global Media Group
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Global_ServerList" type="tNsrs_Global_ServerList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Global_ConfUserSearch" type="tNsrs_Global_ConfUserSearch">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Global_ConfCompanySearch" type="tNsrs_Global_ConfCompanySearch">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Global_ConfCoSSearch" type="tNsrs_Global_ConfCoSSearch">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Server_AvailableBillingRecordsList" type="tNsrs_Server_AvailableBillingRecordsList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Nsrs_Server_RecentlyDownloadedBillingRecordsList" type="tNsrs_Server_RecentlyDownloadedBillingRecordsList">
+        <xs:annotation>
+          <xs:documentation>
+            <d:Identifiers>
+              <d:Identifier>Server Name
+              </d:Identifier>
+            </d:Identifiers>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+    </xs:choice>
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- Defining useful common types upfront.                                -->
+  <!--**********************************************************************-->
+  <xs:simpleType name="tTrueFalse">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="True"/>
+      <xs:enumeration value="False"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tLanguage">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="English - American" />
+      <xs:enumeration value="English - Canadian" />
+      <xs:enumeration value="French - Canadian" />
+      <xs:enumeration value="English - United Kingdom" />
+      <xs:enumeration value="Spanish - Latin America" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tParticipantCode">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="4" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tModeratorCode">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="4" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tClassOfService">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="256" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tName">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1" />
+      <xs:maxLength value="64" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tMoH">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="0" />
+      <xs:maxLength value="256" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tInfo">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="0" />
+      <xs:maxLength value="2048" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tPhoneNumber">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[0-9]{0,64}" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tEmail">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[^@]+@[^\.]+\..+" />
+      <xs:minLength value="0" />
+      <xs:maxLength value="254" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tAcctNumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="" />
+      <xs:enumeration value="Client/Matter Number" />
+      <xs:enumeration value="Account Number" />
+      <xs:enumeration value="Billing Number" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tRecordingNotification">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Always" />
+      <xs:enumeration value="Optional" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tMaxParticipants">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="150" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tIntegers">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="999" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tDeleteRecordingsKeep">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="30" />
+      <xs:maxInclusive value="730" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tDeleteRecordingsWarn">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="60" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="tEnabledDisabled">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Enabled" />
+      <xs:enumeration value="Disabled" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <!--**********************************************************************-->
+  <!-- Types to represent lists of companies and users.                     -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_Server_ConfCompanyList">
+    <xs:sequence>
+      <xs:element name="Company" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CompanyName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Company Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_Server_ConfUserList">
+    <xs:sequence>
+      <xs:element name="User" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="CompanyName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Company Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="UserName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>User Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ParticipantCode" type="tParticipantCode">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Participant Code</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ModeratorCode" type="tModeratorCode">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Moderator Code</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_ConfCompany_ConfUserList">
+    <xs:sequence>
+      <xs:element name="User" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="UserName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>User Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ParticipantCode" type="tParticipantCode">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Participant Code</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ModeratorCode" type="tModeratorCode">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Moderator Code</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_Server_ConfCoSList">
+    <xs:sequence>
+      <xs:element name="ClassOfService" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ClassOfServiceName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Class Of Service Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_Server_MOHGMGList">
+    <xs:sequence>
+      <xs:element name="GlobalMediaGroup" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="GroupName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Group Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_MOHGlobalMediaGroup_ResourceList">
+    <xs:sequence>
+      <xs:element name="Resource" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ResourceName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Resource Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- A type to represent enabling of a company.                           -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_Company_BaseInformation">
+    <xs:annotation>
+      <xs:documentation>
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+          <d:Action>enable</d:Action>
+          <d:Action>disable</d:Action>
+        </d:Actions>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+
+      <xs:element name="ServerName" type="tName">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Server Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="CompanyName" type="tName">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Company Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="CompanyInfo" type="tInfo">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Company Info</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ContactName" type="tName">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Contact Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ContactPhone" type="tPhoneNumber">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Contact Phone</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="EmailAddress" type="tEmail">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Email Address</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="DialInNumber" type="tPhoneNumber">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Dial In Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="UserAccounts" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>User Accounts</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ActualStatus" type="tEnabledDisabled">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Status</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+
+    <xs:attribute name="Action">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="apply" />
+          <xs:enumeration value="delete" />
+          <xs:enumeration value="enable" />
+          <xs:enumeration value="disable" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- A type to represent enabling of a user.                              -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_User_BaseInformation">
+    <xs:annotation>
+      <xs:documentation>
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+          <d:Action>enable</d:Action>
+          <d:Action>disable</d:Action>
+          <d:Action>generatenewmoderatorcode</d:Action>
+          <d:Action>generatenewparticipantcode</d:Action>
+        </d:Actions>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+
+      <xs:element name="ServerName" type="tName">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Server Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="CompanyName" type="tName">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Company Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="UserName" type="tName">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>User Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Language" type="tLanguage">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Language</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ParticipantCode" type="tParticipantCode">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Participant Code</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ModeratorCode" type="tModeratorCode">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Moderator Code</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ClassOfService" type="tClassOfService">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Class of Service</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MemberNotification" type="tTrueFalse" default="False">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Member Notification</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="JoiningTones" type="tTrueFalse" default="False">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Joining Tones</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="UseMusicOnHold" type="tTrueFalse" default="False">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Use Music On-Hold </d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MoHGlobalMediaGroup" type="tMoH">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Music On Hold - Global Media Group</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MoHResource" type="tMoH">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Music On Hold - Resource</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Email" type="tEmail">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Email</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AccountNumberType" type="tAcctNumType">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Account Number Type</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="BanOutboundCalls" type="tTrueFalse" default="False">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Ban Outbound Calls</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="OutdialBillingNumber" type="tPhoneNumber">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Outdial Billing Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MaximumPermittedParticipants" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Maximum permitted participants</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="RecordingSpaceUsed" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Recording Space Used</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="RecordingsUsed" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Recordings Used</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="OnHoldSpaceUsed" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>OnHold Space Used</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="DirectoriesUsed" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Directories Used</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ActualStatus" type="tEnabledDisabled">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Status</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+
+    <xs:attribute name="Action">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="apply" />
+          <xs:enumeration value="delete" />
+          <xs:enumeration value="enable" />
+          <xs:enumeration value="disable" />
+          <xs:enumeration value="generatenewmoderatorcode" />
+          <xs:enumeration value="generatenewparticipantcode" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- A type to represent global configuration of conferencing.            -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_Server_BaseInformation">
+    <xs:annotation>
+      <xs:documentation>
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+
+      <xs:element name="ServerName" type="tName">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Server Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="BatchSize" type="tInfo">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Batch Size</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="RecordingNotification" type="tRecordingNotification">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Recording Notification</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowModeratorSoftExit" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow Moderator Soft Exit</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowSoftExitOnDisconnect" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow Soft Exit On Disconnect</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="TurnOnSoftExitByDefault" type="tTrueFalse">
+        <xs:annotation>
+           <xs:documentation>
+              <d:DisplayName>Turn On Soft Exit By Default</d:DisplayName>
+              <d:Type>Choice of values</d:Type>
+              <d:BaseAccess>R-RWRW</d:BaseAccess>
+              <d:Mandatory>No</d:Mandatory>
+           </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="SoftExitTimeoutFollowingDisconnect" type="tIntegers">
+        <xs:annotation>
+           <xs:documentation>
+              <d:DisplayName>Soft Exit Timeout Following Disconnect</d:DisplayName>
+              <d:Type>Integer Range</d:Type>
+              <d:BaseAccess>R-RWRW</d:BaseAccess>
+              <d:Mandatory>No</d:Mandatory>
+           </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowConferencesToStartWithoutModerator" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow Conferences To Start Without Moderator</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="TurnOnStartWithoutModeratorByDefault" type="tTrueFalse">
+        <xs:annotation>
+           <xs:documentation>
+              <d:DisplayName>Turn On Start without Moderator By Default</d:DisplayName>
+              <d:Type>Choice of values</d:Type>
+              <d:BaseAccess>R-RWRW</d:BaseAccess>
+              <d:Mandatory>No</d:Mandatory>
+           </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowOnHoldMusic" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow On Hold Music</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="TurnOnMusicOnHoldByDefault" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Turn On Music On Hold By Default</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ExposeModeratorCodeInUi" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Expose Moderator Code In UI</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowHdAudio" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow HD Audio</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="TelephoneUserInterfaceNumbers">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="GlobalDialInNumber" minOccurs="0" maxOccurs="unbounded" type="tPhoneNumber">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Global Dial In Number</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>RWRWRW</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                  <d:Actions>
+                    <d:Action>apply</d:Action>
+                    <d:Action>delete</d:Action>
+                  </d:Actions>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="Action">
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="apply" />
+                <xs:enumeration value="delete" />
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+
+      <xs:element name="LogDialInNumbersInBillingRecords" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Log Dial In Numbers In Billing Records</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-RWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+    </xs:sequence>
+    <xs:attribute name="Action">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="apply" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- A type to represent class of service configuration.                  -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_ConfClassOfService_BaseInformation">
+    <xs:annotation>
+      <xs:documentation>
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+
+      <xs:element name="ServerName" type="tName">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Server Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Description" type="tClassOfService">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Description</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MaxParticipants" type="tMaxParticipants">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Max Participants</d:DisplayName>
+            <d:Type>Integer</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MaxRecordingTime" type="tIntegers">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Max Recording Time</d:DisplayName>
+            <d:Type>Integer Range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MaxRecordings" type="tIntegers">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Max Recordings</d:DisplayName>
+            <d:Type>Integer Range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MaxDirectories" type="tIntegers">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Max Directories</d:DisplayName>
+            <d:Type>Integer Range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MaxOnHoldSize" type="tIntegers">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Max OnHold Size</d:DisplayName>
+            <d:Type>Integer Range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MoHGlobalMediaGroup" type="tMoH">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Music On Hold - Global Media Group</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="MoHResource" type="tMoH">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Music On Hold - Resource</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="DeleteRecordingsKeep" type="tDeleteRecordingsKeep">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Delete Recordings - Keep</d:DisplayName>
+            <d:Type>Integer Range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="DeleteRecordingsWarn" type="tDeleteRecordingsWarn">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Delete Recordings - Warn</d:DisplayName>
+            <d:Type>Integer Range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowCustomMoh" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow Custom MoH</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowRecordings" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow Recordings</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowSecondaryGreeting" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow Secondary Greeting</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="AllowHdAudio" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            <d:DisplayName>Allow HD Audio</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+
+    <xs:attribute name="Action">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="apply" />
+          <xs:enumeration value="delete" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- A type to represent system logs - read only.                         -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_Server_SystemLogList">
+    <xs:sequence>
+      <xs:element name="SystemLog" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+
+            <xs:element name="SystemLogsCreated" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>System Log Created</d:DisplayName>
+                  <d:Type>Integer</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="SystemLogsMessage" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>System Log Message</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- A type to represent recording report - read only.                    -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_Server_RecordingReportList">
+    <xs:annotation>
+      <xs:documentation>
+        <d:Actions>
+          <d:Action>DeleteAllRecordings</d:Action>
+        </d:Actions>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="Report" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+
+            <xs:element name="CompanyName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Company Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="UserName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>User Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="Started" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Started</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="RecordingSize" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Recording Size</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ClassOfService" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Class of Service</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ClassOfServiceInfo" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>CoS Information</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+
+    <xs:attribute name="Action">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="DeleteAllRecordings" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_Global_ServerList">
+    <xs:sequence>
+      <xs:element name="Server" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ServerName" type="xs:string" />
+            <xs:element name="Version" type="xs:string" />
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_Global_ConfUserSearch">
+    <xs:sequence>
+      <xs:element name="User" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ServerName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Server Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="CompanyName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Company Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="UserName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>User Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ParticipantCode" type="tParticipantCode">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Participant Code</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ModeratorCode" type="tModeratorCode">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Moderator Code</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_Global_ConfCompanySearch">
+    <xs:sequence>
+      <xs:element name="Company" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ServerName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Server Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="CompanyName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Company Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="tNsrs_Global_ConfCoSSearch">
+    <xs:sequence>
+      <xs:element name="ClassOfService" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="ServerName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Server Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="ClassOfServiceName" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Class Of Service Name</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>No</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- A type to represent available billing records - read only.           -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_Server_AvailableBillingRecordsList">
+    <xs:annotation>
+      <xs:documentation>
+        <d:Actions>
+          <d:Action>CloseCurrentBatch</d:Action>
+        </d:Actions>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="BillingRecord" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+
+            <xs:element name="BatchId" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Batch ID</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="Records" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Records</d:DisplayName>
+                  <d:Type>Integer</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="Started" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Started</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="Available" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Available</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="DownloadUrl" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Download URL</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="CloseCurrentBatch" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+
+  </xs:complexType>
+
+  <!--**********************************************************************-->
+  <!-- A type to represent recently downloaded billing records - read only. -->
+  <!--**********************************************************************-->
+  <xs:complexType name="tNsrs_Server_RecentlyDownloadedBillingRecordsList">
+    <xs:sequence>
+      <xs:element name="BillingRecord" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:sequence>
+
+            <xs:element name="BatchId" type="tName">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Batch ID</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>R-R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="Records" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Records</d:DisplayName>
+                  <d:Type>Integer</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="Available" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Available</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="Downloaded" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Started</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+            <xs:element name="DownloadUrl" type="xs:string">
+              <xs:annotation>
+                <xs:documentation>
+                  <d:DisplayName>Download URL</d:DisplayName>
+                  <d:Type>String</d:Type>
+                  <d:BaseAccess>--R-R-</d:BaseAccess>
+                  <d:Mandatory>Yes</d:Mandatory>
+                </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

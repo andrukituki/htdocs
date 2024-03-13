@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_BusinessGroup_BaseInformation">
+    <xs:annotation>
+      <xs:documentation>
+        Business Group fragment settings service indication.  Used to manage the common settings associated with a BG fragment.  Note that Business Groups with more than 1000 lines should be deleted in a low utilization window.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>masterAdmin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="BusinessGroupName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of this Business Group fragment.  Permitted regex: .*
+            <d:DisplayName>Business Group Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="NetworkID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The network ID for signaling between CLASS 5 switches.  This is used by MetaSphere to correlate fragments of the same Business Group together in order to provide services as if they were a single BG.
+            <d:DisplayName>Network ID</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="OperatorNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Directory Number of the Operator associated with this BG fragment.
+            <d:DisplayName>Operator Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="RestrictSubscriberToSubscriberMessaging" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether to disallow sending messages to subscribers outside the Business Group.
+            <d:DisplayName>Restrict Subscriber To Subscriber Messaging</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>True</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="RepresentCallingNumberByExtension" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether to present the calling number of Business Group subscribers to other subscribers within the BG by extension number.
+            <d:DisplayName>Represent Calling Number By Extension</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>True</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ExternalLineCode" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The code a BG subscriber must dial in order to reach numbers outside the BG.  Permitted regex: .*
+            <d:DisplayName>External Line Code</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EASSystemName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of EAS System hosting this subscriber.
+            <d:DisplayName>EAS System Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="MaxNumberOfScheduledReports" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            The maximum number of ACD scheduled reports which can be created for this Business Group.
+            <d:DisplayName>Max Number Of Scheduled Reports</d:DisplayName>
+            <d:ValidFrom>1.13.10</d:ValidFrom>
+            <d:Type>Integer</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>50</d:DefaultValue>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CurrentNumberOfScheduledReports" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            The number of ACD scheduled reports which are currently configured for this Business Group.
+            <d:DisplayName>Current Number Of Scheduled Reports</d:DisplayName>
+            <d:ValidFrom>1.13.10</d:ValidFrom>
+            <d:Type>Integer</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>0</d:DefaultValue>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CallNotificationTargetList" type="tCallNotificationTargetList">
+        <xs:annotation>
+          <xs:documentation>
+            The targets to which notifications will be sent when a subscriber places a call of a specific type (configured on the CFS BG) e.g. an emergency call to 911.  Supplying an empty list element will delete any configured call target notifications.
+            <d:DisplayName>Call Notification Target List</d:DisplayName>
+            <d:ValidFrom>1.14.10</d:ValidFrom>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PreferredSite" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The site in a geo-redundant system where a Business Group would normally prefer to be under normal operation. This field is mandatory when using the Network-Wide Web Services API in a geographically redundant Clustered EAS deployment.  This field is deprecated as of version 1.20.
+            <d:DisplayName>Preferred Site</d:DisplayName>
+            <d:ValidFrom>1.16</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SiteName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of the site this object is currently hosted in. This is only relevant for geographically-redundant deployments.  This field is deprecated as of version 1.20.
+            <d:DisplayName>Site Name</d:DisplayName>
+            <d:ValidFrom>1.16</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ClusterName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of the EAS Cluster this object is hosted in. This is only relevant for geographically-redundant deployments.  This field is deprecated as of version 1.20.
+            <d:DisplayName>Cluster Name</d:DisplayName>
+            <d:ValidFrom>1.16</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SupportsOver10kLines" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this Business Group supports more than 10,000 lines. If set to true, requests for a list of all subscribers in the Business Group will be filtered to only return subscribers under the same top-level department.
+            <d:DisplayName>Supports Over 10k Lines</d:DisplayName>
+            <d:ValidFrom>1.19.10</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SubscriberCount" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            The number of subscribers that are currently members of this Business Group.
+            <d:DisplayName>Subscriber Count</d:DisplayName>
+            <d:ValidFrom>1.19.11</d:ValidFrom>
+            <d:Type>Integer</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="MembersCanSetOwnOperatorNumber" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether members of this Business Group are allowed to set their own operator number. If this is set to true, and a member's Class of Service allows operator transfer, then the member can set their own operator number, which takes precedence over any operator number configured at the Department or Business Group scope.
+            <d:DisplayName>Members Can Set Own Operator Number</d:DisplayName>
+            <d:ValidFrom>1.28</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EmergencyLocationsAllowed" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether emergency locations can be configured on this Business Group.
+            <d:DisplayName>Emergency Locations Allowed</d:DisplayName>
+            <d:ValidFrom>1.33</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AdminsCanEditEmergencyLocations" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether Business Group admins are allowed to manage the list of emergency locations for this Business Group.  If enabled, only root level admins, or top-level department admins in Business Groups with 'Supports Over 10k Lines' set, can change the configuration.
+            <d:DisplayName>Admins Can Edit Emergency Locations</d:DisplayName>
+            <d:ValidFrom>1.33</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="HasEmergencyLocations" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this Business Group has emergency locations configured.
+            <d:DisplayName>Has Emergency Locations</d:DisplayName>
+            <d:ValidFrom>1.33</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AADTenantID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The unique ID of the Azure Active Directory (AAD) tenant associated with this Business Group.  Permitted regex: ^[A-Fa-f0-9]{8}-([A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}$
+            <d:DisplayName>AAD Tenant ID</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PreferredPlaylist" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The default playlist to use for Music on Hold in this BG. Can be overruled by defaults at the Department or subscriber level.
+            <d:DisplayName>Preferred Playlist</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

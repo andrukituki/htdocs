@@ -1,0 +1,285 @@
+<html>
+<head>
+<title>Service Assurance Server Logging : Advanced Topic - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Service Assurance Server Logging - CommPortal SDK Tutorial</h1>
+
+In this advanced tutorial, we'll look at how to make logs to
+your Service Assurance Server.
+
+<p>
+As usual, the tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+<strong>
+As usual, you can point the sample code at the CommPortal Sandbox on Innovators to
+see it working.  However, on this particular occasion it's much better to use your
+own CommPortal server.
+</strong>
+This is because some of what we'll be doing makes logs appear in the Service
+Assurance Server; if you're able to use your own system, you can watch that happen
+in real-time.  Don't worry if you can't, though, as we've included screenshots
+to help you follow along.
+
+<p>
+And by the way...
+<strong>
+The first few steps below are slightly different from the previous tutorial.
+</strong>
+So it's worth reading through from the beginning, even if you're already familiar
+with a lot of what we cover here.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>setClientVersion()</b>
+  <li><b>fetchRawData()</b>
+  <li><b>saveData()</b>
+  <li><b>makeSASLog()</b>
+  <li><b>makeSASErrorLog()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  As always, if you copy this code, remember that it
+needs to appear before any other script tag and that you'll need to adjust
+the <i>src</i> URL to reference the correct location on your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+<p>
+Like all tutorials, we include a form, which you can use to enter a suitable
+CommPortal URL.  But there's a difference!  For this tutorial, we've also
+included an extra text field you can use to specify a "client version".
+You can use additional extra snippet of information to note which version of
+your application the user is running, which in turn can help a great deal in
+diagnosing any problems.
+
+<p>
+We'll see below that the client version appears in Service Assurance Server
+logs.  (In a real application, of course, you wouldn't ask the user to
+specify a value - you'd just hard-code it.)
+
+<p>
+Timing's important here.  The client version must be set after the CommPortal
+object has been created, but before login() is called.
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+As usual, we've coded our <i>doLogin()</i> function so that, when
+the user successfully logs in, we automatically proceed to the
+next part of the example.  In this case, that's the
+<i>doEnableButtons()</i> function covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="enableButtons"></a>
+<h2>Enable Buttons</h2>
+
+So, to summarize what we've done so far: we've opened a connection
+to CommPortal, set the client version, and we've allowed the subscriber to
+log in.
+
+<p>
+As in some previous tutorials, the functions in this example are fired up as
+and when the user clicks buttons on the web page.  Those buttons were
+originally disabled, to prevent them being used before the subscriber logged
+in - so now, we use a <i>doEnableButtons()</i> function to enable them all.
+
+<code id="enableButtonsScript"></code>
+
+<p>
+In contrast to some previous examples, you'll notice we don't go on to call any other
+functions. We're now just going to wait until a button gets clicked.
+
+<p>
+Instead, we provide buttons to allow a simple piece of EAS Subscriber data to
+be read/written to along with buttons to explicitly make SAS logs. We also
+provide text boxes to allow you to control what is logged in each of these
+cases.
+
+<code class="html" id="loggedOperations"></code>
+
+(This HTML fragment shows the buttons as "disabled", but remember that the
+code in <i>doEnableButtons()</i> enabled them as soon as the user logged in.)
+
+<h2>Logging to the Service Assurance Server</h2>
+
+The preparations are complete!  we're ready to see how we can make logs to
+the Service Assurance Server from the CommPortal API.
+
+<h3>Logs when you log in</h3>
+
+Actually, we've already made our first log, just by logging in!  Take a
+look in your Service Assurance Server now, and you should see it.  Or if you
+don't have your own server, take a look at the screenshot below.
+
+<p>
+A lot of the detail of this log is the standard type of thing you'd find in
+any access log.  However, you can see there's already one detail which is a
+little more interesting: the Client Version of the application.
+
+<p>
+You might have expected this to be the Client Version we set above, but
+(unless you just happen to have chosen a matching number) you won't see that
+coming through at this stage.  The reason is that, like all of the tutorials,
+we've chosen to use CommPortal's own login page to handle authentication.
+It's that page whose version is being reported just now.  Don't worry
+though - we'll see our own app's Client Version show up in subsequent steps.
+
+<p>
+<img src="img/saslogin.gif" />
+
+<h3>Logs using the core data API</h3>
+
+<p>
+During the <a href="coredata.html">Core data</a> tutorial, we saw that the
+CommPortal API has a number of high-level functions - for example, to
+retrieve messages - and a set of lower-level functions you can use for
+complete access to CommPortal.  The high-level functions take care of all
+the necessary logging automatically.  But when you're using the lower-level
+core data API, you might like to fill in some extra details yourself.
+
+<p>
+By specifying log messages to appear in Service Assurance Server, you can
+explain the flow of logic through your application or clarify why it's
+making the changes it's making.  A good choice of log messages may
+considerably help your administrators diagnose and fix problems.
+
+<p>
+Here's a quick example to show how it works.  This <i>toggleSkipPin()</i>
+function uses the core data API to fetch your current mailbox settings,
+then inverts your "Skip Pin" setting.
+
+<code id="toggleSkipPinScript"></code>
+
+<p>
+Actually, we're not going to talk about this function in detail, since we cover
+very similar examples in the <a href="coredata.html">Core data</a> tutorial.
+If you've not already read that tutorial, this might be a good time.
+
+<p>
+But we <em>are</em> going to look at what shows up in Service Assurance Server.
+First of all, whenever you fetch or save data using the CommPortal SDK, the
+client version is included with the request and is logged to the Service
+Assurance Server.  You don't need to do anything particular to make that happen.
+
+<p>
+But additionally, when you save data, you can optionally specify an extra piece
+of log text (up to 128 characters long) which will be logged to the Service
+Assurance Server.  You can use this to provide a better summary of the update,
+specific to your application.
+
+<p>
+When you execute <i>toggleSkipPin()</i>, you'll see one of two logs made to the
+Service Assurance Server.
+<ol>
+<li>If there is an error during the data fetch, the client version is included
+in the log.
+<p>
+<img src="img/sasfetchdata.gif" />
+<li>The data save log includes the client version in and the text in the
+"Update Summary" text field.
+<p>
+<img src="img/sassavedata.gif" />
+</ol>
+
+<h3>Make SAS Log</h3>
+
+So far, we've seen how to make logs to the Service Assurance Server while doing
+other things with the CommPortal SDK. Sometimes though, you might want to make
+a log to record something the user does or a decision you've made, even if the
+rest of the SDK isn't involved.  If you want to, you can even use the Service
+Assurance Server as the complete logging solution for your whole application.
+
+<p>
+The SDK functions you use for this couldn't be easier.  There's a pair of them -
+one to make a "normal" log and one to make an "error" log - and they each
+simply take summary and detail text.  Unlike most of the SDK functions, they're
+synchronous, so there's no callback function to worry about.
+
+<p>
+In this example, we call the CommPortal SDK functions and include the text
+you've entered into the text boxes in the web form.  There are a couple
+of limits to be aware of: summary text can be up to 128 characters, and detail
+text up to 512 characters.  You need to bear this in mind to keep your logs
+usable, but in our example we can happily ignore it, since the SDK will
+automatically truncate over-long logs and append "..." append in place of the
+missing part.
+
+<code id="makeSASLogScript"></code>
+
+<code id="makeSASErrorLogScript"></code>
+
+<p>
+You might well be asking: what's the difference with an "error" log?  It's
+simple: makeSASErrorLog() will add a stack trace to the detail text, and
+will also mark the log within the Service Assurance Server as an error.
+Try it yourself, or compare the two screenshots below.
+
+<p>
+<img src="img/saslog.gif" />
+
+<p>
+<img src="img/saserrorlog.gif" />
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="saslogging-code.html"></iframe>
+
+<h2>What next?</h2>
+
+This is currently the last tutorial in this series.  Check back at
+<a href="http://innovators.metaswitch.com/">Innovators</a> soon to see if a
+more recent SDK is available.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_CallTree_RecordedNames">
+    <xs:annotation>
+      <xs:documentation>
+        Call Tree Recorded Names Service Indication - used to define recorded names for use in the dial list.  Deleting a recorded name will also delete the associated recorded name data.  Deleting a dial list entry will not delete the associated recorded name.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="RecordedName" type="tMsph_Subscriber_CallTree_RecordedNames_RecordedName">
+        <xs:annotation>
+          <xs:documentation>
+            A recorded name from the dial list.
+            <d:DisplayName>Recorded Name</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_Subscriber_CallTree_RecordedNames_RecordedName">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="RecordedNameID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            An identifier that uniquely identifies this recorded name from other recorded names defined for this subscriber. This should be specified for deletes, to identify the Recorded Name to be removed.
+            <d:DisplayName>Recorded Name ID</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Recorded" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether or not a recording exists for this recorded name.
+            <d:DisplayName>Recorded</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

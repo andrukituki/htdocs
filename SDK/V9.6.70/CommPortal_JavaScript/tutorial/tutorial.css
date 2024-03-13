@@ -1,0 +1,61 @@
+body
+{
+  font: 12px Tahoma, Arial, Helvetica, sans-serif;
+}
+
+code
+{
+  display: block;
+  margin: 10px;
+  border: inset 5px gray;
+  padding: 0 10px 10px 10px;
+  background-color: #ffffcc;
+  white-space: pre;
+}
+
+code.html
+{
+  background-color: #ccffcc;
+  border: solid 5px black;
+}
+
+textarea
+{
+  width: 100%;
+  height: 400px;
+  display: block;
+}
+
+.warning
+{
+  background-color: #ffcccc;
+}
+
+.notWritten
+{
+  font-style: italic;
+}
+
+
+dl
+{
+  margin-left: 3em;
+  border: 3px double #ccc;
+}
+dt
+{
+  font-weight: bold;
+  float: left;
+  clear: left;
+  width:11em;
+}
+dd
+{
+}
+
+#homelink
+{
+  position: absolute;
+  top: 1em;
+  right: 1em;
+}

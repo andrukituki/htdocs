@@ -1,0 +1,663 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+"http://www.w3.org/TR/html4/strict.dtd">
+<html>
+  <head>
+    <title>CommPortal SDK Playground</title>
+    <!--Include stylesheet and javascript for google-code-prettify-->
+    <link rel="stylesheet" type="text/css" href="../script/prettify.css"></link>
+    <script type="text/javascript" src="../script/prettify.js"></script>
+
+    <!--Include javascript for CommPortal SDK-->
+    <script type="text/javascript" src="../script/commportal.js"></script>
+    <script type="text/javascript" src="../script/json2.js"></script>
+
+    <!--Include Playground stylesheet-->
+    <link rel="stylesheet" type="text/css" href="playgroundstyle.css"></link>
+
+    <!--Playground scripts-->
+    <script type="text/javascript">
+
+      /**
+       * variable with directory where code samples are stored.
+       * @final
+       */
+      var EXAMPLE_ROOT = "";
+
+      /**
+       * variable to store the connection with the CommPortal server after login.
+       */
+      var connection = null;
+
+      /**
+       * variable to store the sample code to be evaluated.
+       */
+      var rawCode;
+
+      /**
+       * variable to store the event response content.
+       */
+      var eventResponseContent = "";
+
+      /**
+       * checks for a cookie with cookieName and fills the servername field with its value.
+       * @param cookieName name of cookie
+       */
+      function getCookie(cookieName)
+      {
+        var returnString = "Enter Server Name...";
+        // Check if there are cookies stored.
+        if (document.cookie.length>0)
+        {
+          // Look for cookieName and if it is present, set the return to its value.
+          var cookieStart = document.cookie.indexOf(cookieName + "=");
+          if (cookieStart != -1 )
+          {
+            cookieStart = cookieStart + cookieName.length + 1;
+            var cookieEnd = document.cookie.indexOf(";", cookieStart);
+            if (cookieEnd == -1) cookieEnd = document.cookie.length;
+            returnString = unescape(document.cookie.substring(cookieStart, cookieEnd));
+          }
+        }
+        return returnString;
+      }
+
+      /**
+       * creates and saves a cookie called cookie_name, storing cookie_value,
+       * and expiring after expiredays days.
+       * @param cookieName name of cookie
+       * @param cookieValue value to store
+       * @param expiredays number of days until cookie expires
+       */
+      function setCookie(cookieName, cookieValue, expiredays)
+      {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + expiredays);
+        document.cookie = cookieName+ "=" + escape(cookieValue) +
+                        ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString());
+      }
+
+      /**
+       * creates a connection to the CommPortal server and prompts the user for
+       * login details. On successful login, the loginSuccess function is called,
+       * and on failure, the loginError function is called.
+       */
+      function loginPressed()
+      {
+        // If the value of the login button is 'Logout', the subscriber is logging out.
+        if (document.getElementById('login').value == 'Logout')
+        {
+          document.connection.logout();
+          document.connection = null;
+          // Prepare the page for login and clear the output field.
+          document.getElementById('login').value = 'Login';
+          document.getElementById('server').disabled = false;
+          document.getElementById('output').innerHTML = "";
+        }
+        // If there is no server name supplied, alert this.
+        else if (document.getElementById('server').value == "")
+        {
+          alert('Enter server name');
+        }
+        else
+        {
+          var server = document.getElementById('server').value;
+          // Create the CommPortal object and log in
+          var connection = new CommPortal(server);
+          connection.login("Playground",
+                           loginSuccess,
+                           loginError);
+        }
+      }
+
+      /**
+       * stores the CommPortal instance for later use in the connection variable,
+       * and passes callback functions to this instance. Calls setCookie to save servername.
+       * Changes the value of the Login button to Logout and disables the servername field.
+       * @param connectobj instance of CommPortal object
+       * @param sessionId sessionId of connection between instance of CommPortal object and CommPortal server
+       */
+      function loginSuccess(connectobj, sessionId)
+      {
+        // Set the callback functions in the SDK to return copies of on-the-wire data
+        connectobj.setGetRequestCallback(getRequestHandler);
+        connectobj.setGetResponseCallback(getResponseHandler);
+        connectobj.setUpdateRequestCallback(updateRequestHandler);
+        connectobj.setUpdateResponseCallback(updateResponseHandler);
+        // Store the connection to the document
+        connection = connectobj;
+        setCookie('server',document.getElementById('server').value, 365);
+        // Prepare page for Logout
+        document.getElementById('login').value = 'Logout';
+        document.getElementById('server').disabled = true;
+      }
+
+      /**
+       * displays login error message in alert box.
+       * @param connection instance of CommPortal object
+       * @param error error object returned by SD
+       */
+      function loginError(connection, error)
+      {
+        alert("Login error: " + error);
+      }
+
+      /**
+       * creates xmlHttpRequest object.
+       */
+      function getHttpObject()
+      {
+         var returnObject = false;
+         if (typeof XMLHttpRequest != 'undefined')
+         {
+           returnObject = new XMLHttpRequest();
+         }
+         try
+         {
+           returnObject = new ActiveXObject("Msxml2.XMLHTTP");
+         }
+         catch (e)
+         {
+           try
+           {
+             returnObject = new ActiveXObject("Microsoft.XMLHTTP");
+           }
+           catch (e)
+           {
+           }
+         }
+         return returnObject;
+      }
+
+      /**
+       * changes the request/response panel to the correct view.
+       * Requests code sample from file, and calls handleHttpResponse to deal with response.
+       * @param filename name of file containing code sample
+       */
+      function changeSample(filename)
+      {
+        if (filename!="None")
+        {
+          // Clear request and response fields.
+          document.getElementById('getRequest').innerHTML = "<pre></pre>";
+          document.getElementById('getRequestData').innerHTML = "<pre></pre>";
+          document.getElementById('getResponse').innerHTML = "<pre></pre>";
+          document.getElementById('updateRequest').innerHTML = "<pre></pre>";
+          document.getElementById('updateResponse').innerHTML = "<pre></pre>";
+
+          // Change the request/response fields to fetch/update depending on
+          // the name of the code sample file.
+          switch(filename.substring(0, 3))
+          {
+          case 'get':
+            document.getElementById('interface').className = 'col1 usingGet';
+            break;
+          case 'pos':
+            document.getElementById('interface').className = 'col1 usingPost';
+            break;
+          case 'act':
+            document.getElementById('interface').className = 'col1 usingGet usingAction';
+            break;
+          case 'eve':
+            document.getElementById('interface').className = 'col1 usingEvent';
+            break;
+          }
+
+          var http=getHttpObject();
+
+          // Open the file and use handleHttpResponse to deal with the response
+          http.open('GET', escape(EXAMPLE_ROOT + filename), true);
+          http.onreadystatechange = function() {handleHttpResponse(http)};
+          http.send(null);
+        }
+        else
+        {
+          document.getElementById('sample').innerHTML = "<pre>" +
+                                                       "<i>Select An Example...</i></pre>";
+        }
+      }
+
+      /**
+      * receives response from xmlHttpRequest, and fills Sample Code field
+      * with google-code prettified text.
+      * @param http xmlHttp instance to listen for response from
+      */
+      function handleHttpResponse(http)
+      {
+        if (http.readyState == 4)
+        {
+          var code = http.responseText;
+          document.getElementById('sample').innerHTML = "<pre class='prettyprint'>" +
+                                                      code + "</pre>";
+          // Need to also save the raw code to the document, as we canot use eval()
+          // on prettyprinted code
+          rawCode = code;
+          prettyPrint();
+        }
+      }
+
+      /**
+       * runs the code sample.
+       * @param code the code to run
+       */
+      function runSample(code)
+      {
+        if (!connection)
+        {
+          alert("You must login before running a sample");
+          return false;
+        }
+        try
+        {
+          display("-----------------------------------");
+          display("RUNNING SAMPLE");
+          connection.invalidateCache();
+          eval(code);
+        }
+        catch (e)
+        {
+          display("Cannot evaluate code sample: " + e);
+        }
+      }
+
+      /**
+       * Extract the parameter from the url and decode it
+       * @param url url created by SDK to make requests to CommPortal server
+       * @param parameter the parameter to extract from the url
+       * @return the parameter decoded
+       */
+      function extractURLParameter(url, parameter)
+      {
+        var data = "";
+
+        var dataInit = url.indexOf(parameter + "=");
+        if (dataInit >= 0)
+        {
+          var data = url.substring(dataInit, url.length);
+          var dataEnd = data.indexOf("&");
+          dataEnd = dataEnd >= 0 ? dataEnd : data.length;
+          data = data.substring(0, dataEnd);
+          data = decodeURIComponent(data);
+        }
+        return data;
+      }
+
+      /**
+       * fills Requested URL field when making GET request.
+       * @param url url created by SDK to make request to CommPortal server
+       */
+      function getRequestHandler(url)
+      {
+        var patt = /\/session.+\/line.*\/events[\.js]?\?/g;
+        if (!url.match(patt))
+        {
+          document.getElementById('getRequest').innerHTML = "<pre class='url'>" + url + "</pre>";
+          var data = extractURLParameter(url, "request");
+          document.getElementById('getRequestData').innerHTML = "<pre class='prettyprint'>" + data + "</pre>";
+        }
+        else
+        {
+          document.getElementById('eventRequest').innerHTML = "<pre class='url'>" + url + "</pre>";
+        }
+      }
+
+      /**
+       * fills Response field when making GET request.
+       * @param response JSON style data
+       */
+      function getResponseHandler(callbackName, objectIdentity, dataType, getData, getErrors, updateData, updateErrors)
+      {
+        callbackNameString = JSON.stringify(callbackName);
+        objectIdentityString = JSON.stringify(objectIdentity);
+        dataTypeString = JSON.stringify(dataType).replace(/,/g, ', ');
+        getDataString = JSON.stringify(getData);
+        getErrorsString = JSON.stringify(getErrors);
+        updateDataString = JSON.stringify(updateData);
+        updateErrorsString = JSON.stringify(updateErrors);
+
+        if (dataType == "action.js" || dataType == "event.js")
+        {
+          // Glue together the string to display
+          responseString = callbackName + '(' + getDataString + ');';
+        }
+        else
+        {
+          // Glue together the string to display. In the long strings, getDataString
+          // and updateDataString, add spaces after commas between fields to make
+          // word-wrap work
+          responseString = callbackName + '(' + objectIdentityString + ',<br>      '
+                                              + dataTypeString + ',<br>      '
+                                              + getDataString + ',<br>      '
+                                              + getErrorsString + ',<br>      '
+                                              + updateDataString + ',<br>      '
+                                              + updateErrorsString + ');';
+        }
+
+        if (dataType == "event.js")
+        {
+          var responseInnerHTML = document.getElementById('eventResponse').innerHTML;
+
+          eventResponseContent = responseString + "<br><br>" + eventResponseContent;
+
+          document.getElementById('eventResponse').innerHTML = "<pre class='prettyprint'>" + eventResponseContent + "</pre>";
+        }
+        else
+        {
+          document.getElementById('getResponse').innerHTML = "<pre class='prettyprint'>" + responseString + "</pre>";
+        }
+
+        prettyPrint();
+      };
+
+      /**
+       * fills POST-ed Form field when making a POST request.
+       * @param form HTML form element created by SDK to make request
+       */
+      function updateRequestHandler(form)
+      {
+        // Need to return a representation of the whole form object. Do this by
+        // creating a parent element and apparending the form to it as a child,
+        // then calling innerHTML of the parent.
+        myForm = form.cloneNode(true);
+        myParent = document.createElement("parent");
+        myParent.appendChild(myForm);
+        var string = myParent.innerHTML.entityify();
+        document.getElementById('updateRequest').innerHTML = "<pre class='prettyprint'>" + string + "</pre>";
+        prettyPrint();
+      };
+
+      /**
+       * fills Response Redirect field when making a POST request
+       * @param url url redirected to by server.
+       */
+      function updateResponseHandler(url)
+      {
+        document.getElementById('updateResponse').innerHTML = "<pre class'=url'>" + url + "</pre>";
+      };
+
+      /**
+       * This writes text to the output field on the Playground page. Can take
+       * a single argument or an array, which can be string, number, boolean, or null.
+       * This is used in the javascript examples to make it neater to display output.
+       * If using the example elsewhere, this function should be replaced.
+       * @param args objects to be written to page, in order.
+       */
+      function display()
+      {
+        for (var i = 0; i<arguments.length; i++)
+        {
+          var type = typeof(arguments[i]);
+
+          switch (type)
+          {
+          case "string":
+            print(arguments[i]);
+            break;
+          case "number":
+            print(arguments[i]);
+            break;
+          case "boolean":
+            print(arguments[i] ? "True" : "False");
+            break;
+          case "undefined":
+            print("undefined");
+            break;
+          case "object":
+            // typeof() returns "object for null"
+            if (!arguments[i])
+            {
+              print("null");
+            }
+            // If this object is not an array, call its toString() method.
+            else if (arguments[i] instanceof Array)
+            {
+              // Print the array in a nice fashion, using JSON.stringify on each element so
+              // we can add break statements between elements, and not have surplus
+              // commas and brackets.
+              for (var j = 0; j < arguments[i].length; j++)
+              {
+                print(JSON.stringify(arguments[i][j]) + (j == arguments[i].length - 1 ? '' : '<br>'));
+              }
+            }
+            else
+            {
+              // Call the object's toString method to display it.
+              print(arguments[i].toString());
+            }
+            break;
+          }
+        }
+        print("<br>");
+      };
+
+      /**
+       * Prints a string to the output field
+       * @param string string to write to output
+       */
+      function print(string)
+      {
+        document.getElementById('output').innerHTML += string;
+        document.getElementById('output').scrollTop = document.getElementById('output').scrollHeight;
+      }
+
+      /**
+       * Extension to String object to escape HTML tags and converts URL encoded strings into normal strings.
+       */
+      String.prototype.entityify = function ()
+      {
+        var returnString = this.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/&quot;/g, "'");
+        returnString = returnString.replace(/,/g, ', ').replace(/%3A/g, ':').replace(/%2F/g, '/');
+        returnString = returnString.replace(/&gt;&lt;/g, '&gt;<br>&lt;');
+        return returnString.replace(/%3F/g, '?').replace(/%3D/g, '=');
+      };
+
+      /**
+       * Handles errors from the interface between the SDK and the CommPortal server.
+       * This function is used in the javascript examples to make the handling of
+       * errors neater. If using the example elsewhere, this function should be replaced.
+       * @param connection connection object which generated errors
+       * @param error error object
+       */
+      function errorHandler(connection, error)
+      {
+        var type;
+
+        try
+        {
+          display(error["message"]);
+        }
+        catch (e)
+        {
+          display("Failed to find error message");
+        }
+        try
+        {
+          display("Type: " + error["errors"][0]["type"]);
+          type = error["errors"][0]["type"];
+        }
+        catch (e)
+        {
+          try
+          {
+            display("Type: " + error["error"]);
+            type = error["error"];
+          }
+          catch (f)
+          {
+            display("Failed to print error type");
+          }
+        }
+        if (type == "noSuchObject") {
+          display("A noSuchObject error may indicate that this service indication is not available for this subscriber");
+        }
+      }
+
+      /**
+       * Run on load. Populates the server field with the value from a cookie
+       * and activates it.
+       */
+      function loader()
+      {
+        document.getElementById('server').value = getCookie('server');
+        document.getElementById('server').disabled = false;
+        changeSample("None");
+      }
+    </script>
+  </head>
+
+  <body onload="loader()">
+    <div class="row1">
+      <form class="col1">
+        <label for="dataType">Example:</label>
+        <br/>
+        <select id="example" size="17" onchange="changeSample(this.value)">
+          <optgroup label="Voicemail">
+            <option value="getVoicemailCount.js">Fetch Voicemail Count</option>
+            <option value="getVoicemails.js">Fetch Voicemails</option>
+            <option value="postVoicemailsHeard.js">Mark Voicemail as Heard</option>
+            <option value="postVoicemailsUnheard.js">Mark Voicemail as Unheard</option>
+            <option value="postDeleteVoicemails.js">Delete Voicemail</option>
+          </optgroup>
+          <optgroup label="Faxes">
+            <option value="getFaxes.js">Fetch Faxes</option>
+            <option value="postFaxesViewed.js">Mark Fax as Viewed</option>
+            <option value="postFaxesUnviewed.js">Mark Fax as Unviewed</option>
+            <option value="postDeleteFaxes.js">Delete Fax</option>
+          </optgroup>
+          <optgroup label="Contacts">
+            <option value="getContacts.js">Fetch Contacts</option>
+            <option value="postContact.js">Add Contact</option>
+            <option value="postModifyContact.js">Modify Contact</option>
+            <option value="postDeleteContact.js">Delete Contact</option>
+          </optgroup>
+          <optgroup label="Call Lists">
+            <option value="getDialedCalls.js">Fetch Dialed Calls</option>
+            <option value="getMissedCalls.js">Fetch Missed Calls</option>
+          </optgroup>
+          <optgroup label="Account Management">
+            <option value="getBaseInformation.js">Fetch Base Subscriber Information</option>
+            <option value="postSubscriberPIN.js">Update Subscriber's CFS PIN</option>
+            <option value="postSubscriberEASPIN.js">Update Subscriber's EAS PIN</option>
+            <option value="getCustomerInformation.js">Fetch Subscriber Customer Information</option>
+          </optgroup>
+          <optgroup label="Metasphere">
+            <option value="getSecondaryMailboxList.js">Fetch Secondary Mailbox List</option>
+            <option value="postSecondaryMailEnabled.js">Update Whether Secondary Mailbox is Enabled</option>
+            <option value="getGreetings.js">Fetch Metasphere Greetings Information</option>
+            <option value="postOOHEnabled.js">Update Whether Out Of Hours Greeting Enabled</option>
+            <option value="postBusyEnabled.js">Update Whether Busy Greeting Enabled</option>
+            <option value="getDevicesNoGreeting.js">Fetch Devices Information</option>
+            <option value="postFmfmEnabled.js">Update Whether Find Me Follow Me Enabled</option>
+            <option value="getMailboxSettings.js">Fetch Mailbox Settings</option>
+            <option value="getTranscriptionSettings.js">Fetch Transcription Settings</option>
+            <option value="postSkipPinStatus.js">Update Whether PIN Prompt Skipped</option>
+            <option value="postFastLoginStatus.js">Update Whether DN Prompt Skipped</option>
+            <option value="postNewMessageOrder.js">Update Order to Play New Messages</option>
+            <option value="getQuotaInformation.js">Fetch Mailbox Quota Information</option>
+            <option value="getClassOfService.js">Fetch Class of Service Information</option>
+            <option value="getCTDDeviceConfig.js">Fetch Click to Dial Configuration</option>
+            <option value="postUseAutoAnswer.js">Update Whether Auto Answer is Used</option>
+            <option value="postRemotePhoneNumber.js">Update Click to Dial Remote Phone Number</option>
+            <option value="getForwardingConfig.js">Fetch Voicemail and Fax Auto-Forwarding Config</option>
+            <option value="postForwardingStatus.js">Turn Auto-Forwarding Off</option>
+            <option value="postForwardingAddress.js">Turn Auto-Forwarding On</option>
+            <option value="getCodecs.js">List Supported Codecs</option>
+          </optgroup>
+          <optgroup label="Making Calls">
+            <option value="getContactGroups.js">Fetch Contact Groups</option>
+            <option value="postAddContactToGroup.js">Add Contact to Group</option>
+            <option value="getSpeedCalling.js">Fetch Speed Calling Configuration</option>
+            <option value="postSpeedCallingNumber.js">Add Number to Speed Calling</option>
+            <option value="getCallbackRecall.js">Fetch Automatic Recall and Callback Settings</option>
+          </optgroup>
+          <optgroup label="Restrictions and Limits">
+            <option value="getCallBarring.js">Fetch Call Barring Settings</option>
+            <option value="postCallBarring.js">Update Call Barring Settings</option>
+            <option value="getMandatoryAccountCodes.js">Fetch Mandatory Account Code Settings</option>
+            <option value="postMandatoryAccountCodes.js">Update Mandatory Account Code Settings</option>
+            <option value="getDoNotDisturb.js">Fetch Do Not Disturb/SCA Settings</option>
+            <option value="postDoNotDisturb.js">Update Do Not Disturb/SCA Settings</option>
+            <option value="getSelectiveRejection.js">Fetch Selective Call Rejection Settings</option>
+            <option value="postSelectiveRejection.js">Update Selective Call Rejection Settings</option>
+            <option value="postAnonCallRejection.js">Enable Anonymous Call Rejection</option>
+          </optgroup>
+          </optgroup>
+          <optgroup label="Business Groups">
+            <option value="getBusinessGroupChildren.js">Fetch Business Group Children</option>
+          </optgroup>
+          <optgroup label="Transferring and Forwarding">
+            <option value="getBusyCallFwdConfig.js">Fetch Busy Call Forwarding Configuration</option>
+            <option value="postBusyCallFwdEnabled.js">Enable/Disable Busy Call Forwarding</option>
+            <option value="postBusyCallFwdSubscribed.js">Subscribe/Unsubscribe to Busy Call Forwarding</option>
+            <option value="postBusyCallFwdNumber.js">Update Busy Call Forwarding Number</option>
+            <option value="getUnconditionalForwarding.js">Fetch Unconditional Call Forwarding Settings</option>
+            <option value="postUnconditionalForwarding.js">Update Unconditional Call Forwarding Settings</option>
+            <option value="getDelayedForwarding.js">Fetch Delayed Call Forwarding Settings</option>
+            <option value="postDelayedForwarding.js">Update Delayed Call Forwarding Settings</option>
+            <option value="getSelectiveForwarding.js">Fetch Selective Call Forwarding Settings</option>
+            <option value="postSelectiveForwarding.js">Update Selective Call Forwarding Settings</option>
+          </optgroup>
+          <optgroup label="Incoming Call">
+            <option value="eventIncomingCallSubscribe.js">Subscribe to Incoming Call events</option>
+            <option value="eventIncomingCallUnsubscribe.js">Unsubscribe from Incoming Call events</option>
+            <option value="actionTerminateCall.js">Terminate an Incoming Call</option>
+            <option value="actionRedirectCall.js">Redirect an Incoming Call</option>
+          </optgroup>
+          <optgroup label="PBX Information">
+            <option value="getPBXBaseInfo.js">Fetch basic PBX data</option>
+            <option value="getPBXDIC.js">Fetch PBX Direct Inward Calling data</option>
+            <option value="getPBXDIDBaseInfo.js">Fetch basic PBX DID number data</option>
+            <option value="getPBXDIDUnavailableForwarding.js">Fetch PBX DID Unavailable Forwarding data</option>
+          </optgroup>
+        </select>
+      </form>
+
+      <form class="col2">
+        <span>Sample Code:</span>
+          <div class="exampleSelector" id="sample">
+            <pre><i>Select an example...</i></pre>
+          </div>
+      </form>
+    </div>
+    <div class="row2">
+      <form class="col1" onsubmit="loginPressed(); return false">
+        <label for="server">CommPortal Server:</label>
+        <input id="server" type="text" value="Enter Server Name..."></input>
+        <input type="submit" id='login' value="Login"></input>
+      </form>
+      <div class="col2">
+        <button type="button" id="runButton" onclick="runSample(rawCode)">Run Sample Code</button>
+      </div>
+    </div>
+
+    <div class="row3">
+      <div id="interface" class="col1 usingGet">
+        <div class="ifGet">
+          <span>Requested URL:</span>
+          <div id="getRequest" class="smallOutput"><pre class="url"></pre></div><br>
+          <div class="actionData">
+            <span>Decoded Requested Data:</span>
+            <div id="getRequestData" class="smallOutput"><pre></pre></div><br>
+          </div>
+          <span>Response:</span>
+          <div id="getResponse" class="bigOutput"><pre></pre></div>
+        </div>
+        <div class="ifPost">
+          <span>POST-ed form:</span>
+          <div id="updateRequest" class="bigOutput"><pre></pre></div>
+          <span>Response redirect:</span>
+          <div id="updateResponse" class="smallOutput"><pre class="url"></pre></div>
+        </div>
+        <div class="ifEvent">
+          <span>Requested Event URL</span>
+          <div id="eventRequest" class="smallOutput"><pre></pre></div><br>
+          <span>Response:</span>
+          <div id="eventResponse" class="bigOutput"><pre class="url"></pre></div>
+        </div>
+      </div>
+      <div class="col2">
+        <span>Output:</span>
+        <pre id="output"></pre>
+      </div>
+    </div>
+  </body>
+</html>

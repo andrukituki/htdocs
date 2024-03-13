@@ -1,0 +1,453 @@
+<html>
+<head>
+  <title>Contacts example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Contacts Example</h1>
+
+Enter the server address, then press the button to log in,
+and to automatically go on to display the contacts.
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("ContactsTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    // Trigger the next stage of the code
+    doFetchContacts(connection);
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="fetchContactsScript">
+function doFetchContacts(connection)
+{
+  display("Fetching contacts");
+
+  connection.fetchContacts(contactsSuccess, contactsError);
+
+  // The function to be called with the contacts
+  function contactsSuccess(connection, contacts)
+  {
+    display("There are " + contacts.length + " contacts.");
+
+    displayContacts(connection, contacts);
+
+    displayContactDetails(connection, contacts);
+
+    doAddContact(connection);
+  }
+
+  // The function to be called if logging in fails
+  function contactsError(connection, error)
+  {
+    display("Failed to fetch contacts, error: " + error);
+  }
+}
+</script>
+
+<script id="displayContactsScript">
+function displayContacts(connection, contacts)
+{
+  display("Displaying contacts");
+
+  // Build the table contents - start with headers for the columns
+  var table = "<table border='2'><tr><th>Name</th><th>Nickname</th><th>Ways to contact</th></tr>";
+
+  for (var i = 0; i < contacts.length; i++)
+  {
+    var contact = contacts[i];
+
+    if (contact.displayName)
+    {
+      var name = contact.displayName;
+    }
+    else
+    {
+      name = "&nbsp;";
+    }
+
+    if (contact.nickname)
+    {
+      var nickname = contact.nickname;
+    }
+    else
+    {
+      nickname = "&nbsp;";
+    }
+
+    // Count up the number of ways we have for contacting this person
+    var ways = 0;
+    if (contact.email)
+    {
+      // We can contact them via email
+      ways += contact.email.length;
+    }
+    if (contact.phone)
+    {
+      // We can contact them via phone
+      ways += contact.phone.length;
+    }
+    if (contact.address)
+    {
+      // We can contact them via postal address
+      ways += contact.address.length;
+    }
+    if (contact.sms)
+    {
+      // We can contact them via SMS
+      ways++;
+    }
+
+    // Add this contact as a row in the table
+    table += "<tr>" + "<td>" + name +
+             "</td><td>" + nickname +
+             "</td><td>" + ways + "</td>";
+  }
+
+  table += "</table>";
+
+  // Create a DOM element with our table in it
+  var element = document.createElement("div");
+  element.innerHTML = table;
+
+  // Add the table to our output area
+  addToOutput(element);
+}
+</script>
+
+<script id="displayContactDetailsScript">
+function displayContactDetails(connection, contacts)
+{
+  display("Displaying contact details");
+
+  for (var i = 0; i < contacts.length; i++)
+  {
+    // Draw a horizontal rule to separate each contact
+    var rule = document.createElement("hr");
+    addToOutput(rule);
+
+    var contact = contacts[i];
+
+    if (contact.displayName)
+    {
+      display("Name: " + contact.displayName);
+    }
+    if (contact.nickname)
+    {
+      display("Nickname: " + contact.nickname);
+    }
+    if (contact.organization)
+    {
+      display("Organization: " + contact.organization);
+    }
+    if (contact.jobTitle)
+    {
+      display("Job title: " + contact.jobTitle);
+    }
+
+    if (contact.email)
+    {
+      for (var a = 0; a < contact.email.length; a++)
+      {
+        display("email" + a + ": " + contact.email[a]);
+      }
+    }
+    if (contact.phone)
+    {
+      for (var a = 0; a < contact.phone.length; a++)
+      {
+        display(contact.phoneType[a] + " phone: " + contact.phone[a]);
+      }
+    }
+    if (contact.address)
+    {
+      for (var a = 0; a < contact.address.length; a++)
+      {
+        display(contact.addressType[a] + " address::");
+        var address = contact.address[a];
+        if (address.street)
+        {
+          display("Street: " + address.street);
+        }
+        if (address.locality)
+        {
+          display("City: " + address.locality);
+        }
+        if (address.region)
+        {
+          display("State: " + address.region);
+        }
+        if (address.postalcode)
+        {
+          display("ZIP: " + address.postalcode);
+        }
+        if (address.country)
+        {
+          display("Country: " + address.country);
+        }
+
+        displayMapButton(contact, address.displayAddress);
+      }
+    }
+  }
+}
+</script>
+
+<script id="displayMapButtonScript">
+function displayMapButton(contact, address)
+{
+  var encodedAddress = encodeURIComponent(address);
+
+  var button = document.createElement("button");
+  button.setAttribute("onclick", "mapContact(this, \"" + encodedAddress + "\")");
+  button.innerHTML = "Map";
+
+  addToOutput(button);
+}
+</script>
+
+<!--These functions are called from click handlers, so we put them in the global scope -->
+<script id="mapContactScript">
+function mapContact(button, address)
+{
+  display("Displaying contact address on map");
+
+  var mapDiv = document.createElement("div");
+  button.parentNode.insertBefore(mapDiv, button.nextSibling);
+
+  var map = new YMap(mapDiv);
+
+  // Add map type control
+  map.addTypeControl();
+
+  // Set map type to either of: YAHOO_MAP_SAT, YAHOO_MAP_HYB, YAHOO_MAP_REG
+  map.setMapType(YAHOO_MAP_REG);
+
+  // Display the map centered on the address
+  map.drawZoomAndCenter(decodeURIComponent(address), 3);
+
+  // We have displayed the map, so disable the button
+  button.disabled = true;
+}
+</script>
+
+<script id="addContactScript">
+function doAddContact(connection)
+{
+  var address =
+  {
+        street : "1001 Marina Village Parkway",
+      locality : "Alameda",
+        region : "CA",
+    postalcode : "94501",
+       country : "USA"
+  };
+
+  var contact =
+  {
+       givenName : "John",
+      familyName : "Doe",
+        nickname : "JonnyD",
+    organization : "MetaSwitch",
+         address : [ address ],
+     addressType : [ "work" ],
+           phone : [ "5107488230", "5105551234" ],
+       phoneType : [ "work", "cell" ],
+           email : [ "john.doe@metaswitch.com", "jonny.doe@gmail.com" ]
+  };
+
+  display("Adding a new contact " + contact.givenName + " " + contact.familyName);
+
+  connection.addContact(contact, addedContact, errorContact);
+
+  function addedContact(connection)
+  {
+    display("Added contact");
+
+    doModifyContact(connection);
+  }
+
+  function errorContact(connection, error)
+  {
+    display("Error " + error + " adding contact");
+  }
+}
+</script>
+
+<script id="modifyContactScript">
+function doModifyContact(connection)
+{
+  // Fetch the contacts again
+  connection.fetchContacts(contactsSuccess, contactsError);
+
+  // The function to be called with the contacts
+  function contactsSuccess(connection, contacts)
+  {
+    // We look through our contacts for the one we want to modify
+    for (var i = 0; i < contacts.length; i++)
+    {
+      var contact = contacts[i];
+      if (contact.nickname == "JonnyD")
+      {
+        // This is the one we want to modify
+        display("Modify " + contact.nickname + " with id " + contact.uid);
+
+        // Change the name, add the job title, delete the nickname,
+        // and give him a home phone number
+        contact.givenName = "Jonny";
+        contact.jobTitle = "CEO in waiting";
+        delete contact.nickname;
+
+        contact.phone.push("8885678910");
+        contact.phoneType.push("home");
+
+        connection.modifyContact(contact, modifySuccess, modifyError);
+        break;
+      }
+      contact = null;
+    }
+    if (!contact)
+    {
+      display("Failed to find the contact we expected");
+    }
+
+    function modifySuccess(connection)
+    {
+      display("Modified contact");
+
+      doDeleteContact(connection, contact.uid);
+    }
+
+    // The function to be called if case of error
+    function modifyError(connection, error)
+    {
+      display("Failed to modify contacts, error: " + error);
+    }
+  }
+
+  // The function to be called if case of error
+  function contactsError(connection, error)
+  {
+    display("Failed to fetch contacts, error: " + error);
+  }
+
+}
+</script>
+
+<script id="deleteContactScript">
+function doDeleteContact(connection, uid)
+{
+  display("Delete contact " + uid);
+
+  connection.deleteContacts(uid, deleteSuccess, deleteError);
+
+  function deleteSuccess(connection)
+  {
+    display("Deleted contact OK");
+  }
+
+  function deleteError(connection, error)
+  {
+    display("Failed to delete contact, error: " + error);
+  }
+}
+</script>
+
+<!-- This code writes to the document, so we place it last to avoid holding up page loading -->
+<script id="defineYahooAppId">
+// You must replace this id with your own registered id
+var YahooAppId = "JihKT6LV34G6LWepH12HwPJEspKl8.HmzpzcrtrYpSTOBD.1Thb0G1PJ5q_A";
+
+document.write("<scr" + "ipt src='http://api.maps.yahoo.com/ajaxymap?v=3.8&appid=" + YahooAppId + "'></scr" + "ipt>");
+</script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_BusinessGroup_Basic">
+    <xs:annotation>
+      <xs:documentation>
+        Business Group settings for a subscriber.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+        <d:AuthLevel>masterAdmin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="BusinessGroup" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of Business Group fragment to which this subscriber belongs.  It is always the subscriber's primary line that is added to the Business Group (regardless of which DN is specified on the UserID).  This field can only be modified if it does not already have a value.
+            <d:DisplayName>Business Group</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Department" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of department within the Business Group fragment that this subscriber belongs to. Names are separated ' / ', e.g. 'Admin / Accounts'.  Should be set to 'None' if subscriber is not within a department.  To change the department specify the new name.
+            <d:DisplayName>Department</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AccountType" type="tMsph_Subscriber_BusinessGroup_AccountType">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this subscriber is an administrator within this business group fragment.
+            <d:DisplayName>Account Type</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+            <d:Values>
+              <d:Value>Normal</d:Value>
+              <d:Value>Administrator</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AdministrationDepartment" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of department for which this subscriber is an administrator. Names of departments must be separated using ' / ', e.g. 'Admin / Accounts .If the subscriber administers the entire business group fragment set to 'Whole Business Group'.  If the subscriber is not an administrator then this value should be omitted.
+            <d:DisplayName>Administration Department</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SupportsOver10kLines" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the Business Group this subscriber belongs to supports more than 10,000 lines.
+            <d:DisplayName>Supports Over 10k Lines</d:DisplayName>
+            <d:ValidFrom>1.19.10</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AdminsCanEditEmergencyLocations" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether Business Group admins are allowed to manage the list of emergency locations for this Business Group.  If enabled, only root level admins, or top-level department admins in Business Groups with 'Supports Over 10k Lines' set, can change the configuration.
+            <d:DisplayName>Admins Can Edit Emergency Locations</d:DisplayName>
+            <d:ValidFrom>1.33</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,367 @@
+<html>
+<head>
+  <title>Call Lists example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Call Lists Example</h1>
+
+Enter the server address, then press the button to log in,
+and to automatically go on to display the call lists.
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("CallListsTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    // Trigger the next stage of the code
+    doFetchCallLists(connection);
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="fetchCallListsScript">
+function doFetchCallLists(connection)
+{
+  display("Fetching call lists");
+
+  doFetchDialedCalls(connection);
+}
+</script>
+
+<script id="fetchDialedCallsScript">
+function doFetchDialedCalls(connection)
+{
+  display("Fetching dialed calls");
+
+  connection.fetchDialedCalls(dialedSuccess, dialedError);
+
+  // The function to be called with the dialed calls
+  function dialedSuccess(connection, dialedCalls)
+  {
+    display("There are " + dialedCalls.length + " dialed calls.");
+    doDisplayCallTable(dialedCalls);
+
+    doFetchAnsweredCalls(connection);
+  }
+
+  // The function to be called in case of error
+  function dialedError(connection, error)
+  {
+    display("Failed to fetch list of dialed calls, error: " + error);
+  }
+}
+</script>
+
+<script id="displayCallTableScript">
+function doDisplayCallTable(calls)
+{
+  // Determine if the calls have a duration field that we should display
+  if (calls.length && calls[0].Duration !== undefined)
+  {
+    var showDuration = true;
+  }
+
+  // Build the table contents - start with headers for the columns
+  var table = "<table border='2'><tr><th>Number</th><th>Date and time</th>";
+  if (showDuration)
+  {
+    table += "<th>Duration</th>"
+  }
+  table += "</tr>";
+
+  // Add each call as its own row
+  for (var i = 0; i < calls.length; i++)
+  {
+    var call = calls[i];
+    table += "<tr><td>" + call.DirectoryNumber + "</td>" +
+                 "<td>" + call.DateTime + "</td>";
+    if (showDuration)
+    {
+      table += "<td>" + call.Duration + "</td>";
+    }
+    table += "</tr>";
+  }
+
+  table += "</table>";
+
+  // Create a DOM element with our table in it
+  var element = document.createElement("div");
+  element.innerHTML = table;
+
+  // Add the table to our output area
+  addToOutput(element);
+}
+</script>
+
+<script id="fetchAnsweredCallsScript">
+function doFetchAnsweredCalls(connection)
+{
+  display("Fetching answered calls");
+
+  connection.fetchAnsweredCalls(answeredSuccess, answeredError);
+
+  // The function to be called with the answered calls
+  function answeredSuccess(connection, answeredCalls)
+  {
+    display("There are " + answeredCalls.length + " answered calls.");
+    doDisplayCallTable(answeredCalls);
+
+    doFetchMissedCalls(connection);
+  }
+
+  // The function to be called in case of error
+  function answeredError(connection, error)
+  {
+    display("Failed to fetch list of answered calls, error: " + error);
+  }
+}
+</script>
+
+<script id="fetchMissedCallsScript">
+function doFetchMissedCalls(connection)
+{
+  display("Fetching missed calls");
+
+  connection.fetchMissedCalls(missedSuccess, missedError);
+
+  // The function to be called with the missed calls
+  function missedSuccess(connection, missedCalls)
+  {
+    display("There are " + missedCalls.length + " missed calls.");
+    doDisplayCallTable(missedCalls);
+
+    doMixedSortableTable(connection)
+  }
+
+  // The function to be called in case of error
+  function missedError(connection, error)
+  {
+    display("Failed to fetch list of missed calls, error: " + error);
+  }
+}
+</script>
+
+<script id="fetchRejectedCallsScript">
+function doFetchRejectedCalls(connection)
+{
+  display("Fetching rejected calls");
+
+  connection.fetchRejectedCalls(rejectedSuccess, rejectedError);
+
+  // The function to be called with the rejected calls
+  function rejectedSuccess(connection, rejectedCalls)
+  {
+    display("There are " + rejectedCalls.length + " rejected calls.");
+  }
+
+  // The function to be called in case of error
+  function rejectedError(connection, error)
+  {
+    display("Failed to fetch list of rejected calls, error: " + error);
+  }
+}
+</script>
+
+<script src="sorttable.js" id="includeSortable"></script>
+<style id="sortableStyle">
+table.sortable thead
+{
+  background-color: #0f0;
+  color: #000;
+  font-weight: bold;
+  cursor: default;
+}
+</style>
+
+<script id="mixedSortableTable">
+function doMixedSortableTable(connection)
+{
+  var allCalls = [];
+  var combinedTables = 0;
+
+  connection.fetchDialedCalls(dialedSuccess, commonError);
+  connection.fetchAnsweredCalls(answeredSuccess, commonError);
+  connection.fetchMissedCalls(missedSuccess, commonError);
+
+  function dialedSuccess(connection, calls)
+  {
+    combineCalls(allCalls, calls, "dialed");
+  }
+
+  function answeredSuccess(connection, calls)
+  {
+    combineCalls(allCalls, calls, "answered");
+  }
+
+  function missedSuccess(connection, calls)
+  {
+    combineCalls(allCalls, calls, "missed");
+  }
+
+  function commonError(connection, error)
+  {
+  }
+
+  function combineCalls(allCalls, calls, type)
+  {
+    for (var i = 0; i < calls.length; i++)
+    {
+      var call = calls[i];
+
+      var augmentedCall =
+      {
+        // Our augmented fields start with lowercase
+        type            : type,
+        // The fields we take from the original call start with uppercase
+        DateTime        : call.DateTime,
+        DirectoryNumber : call.DirectoryNumber,
+        Duration        : call.Duration
+      }
+
+      allCalls.push(augmentedCall);
+    }
+
+    combinedTables++;
+
+    if (combinedTables == 3)
+    {
+      // We have all 3 sets of calls, so display them
+      displayCombinedTable(connection, allCalls);
+    }
+  }
+}
+</script>
+
+<script id="displayCombinedTable">
+function displayCombinedTable(connection, calls)
+{
+  display("This table of all call types is sortable by clicking on the column headers");
+
+  // Build the table contents - start with headers for the columns
+  var table = "<table class='sortable' border='2'>" +
+    "<tr><th>Type</th><th>Index</th><th>Number</th><th>Date and time</th><th>Duration</th></tr>";
+
+  for (var i = 0; i < calls.length; i++)
+  {
+    var call = calls[i];
+
+    var duration = call.Duration;
+    if (duration === undefined)
+    {
+      // If there was no duration given (this was a missed call), show "-1"
+      duration = "-1";
+    }
+
+    // Add this call as a row in the table
+    table += "<tr><td>" + call.type +
+             "</td><td>" + i +
+             "</td><td>" + call.DirectoryNumber +
+             "</td><td>" + connection.convertDate(call.DateTime).toLocaleString() +
+             "</td><td>" + duration + "</td>";
+  }
+
+  table += "</table>";
+
+  // Create a DOM element with our table in it
+  var element = document.createElement("div");
+  element.innerHTML = table;
+
+  // Add the table to our output area
+  addToOutput(element);
+
+  // Because we dynamically created the table, we need to explicitly
+  // make it sortable.
+  delete sorttable.init.done;
+  sorttable.init();
+}
+</script>
+
+</body>
+</html>

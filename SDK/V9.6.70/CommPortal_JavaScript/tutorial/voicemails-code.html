@@ -1,0 +1,578 @@
+<html>
+<head>
+  <title>Fetch Voicemails example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+
+  <!-- Load the Google Visualization support -->
+  <script src="http://www.google.com/jsapi" id="includeJSAPI"></script>
+  <script type="text/javascript" id="includeVisualizationAPI">
+    google.load('visualization', '1', {packages: ['annotatedtimeline']});
+  </script>
+</head>
+
+<body>
+<h1>CommPortal SDK Fetch Voicemails Example</h1>
+
+Enter the server address, then press the button to log in,
+and to automatically go on to display the voicemails.
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("VoiceMailTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    // Trigger the next stage of the code
+    doFetchVoicemailCount(connection);
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="voicemailsCountScript">
+function doFetchVoicemailCount(connection)
+{
+  display("Fetching voicemail count");
+
+  connection.fetchVoicemailCount(countSuccess, countError);
+
+  // The function to be called with the voicemail counts
+  function countSuccess(connection, total, unheard)
+  {
+    display("There are " + total + " voicemails, " + unheard + " of them are unheard");
+
+    getCodecList();
+  }
+
+  // The function to be called if fetching the count fails
+  function countError(connection, error)
+  {
+    display("Failed to fetch voicemail count, error: " + error);
+  }
+}
+</script>
+
+<script id="getCodecListScript">
+function getCodecList()
+{
+  // Fetch the codecs
+  connection.fetchCodecs(codecSuccess, codecError);
+  
+  function codecSuccess(connection, codecs)
+  {
+    // Create a drop down box of codecs
+    var codecDropDown = "<option disabled selected>Select a Codec</option>";
+    for (var i = 0; i < codecs.length; i++)
+    {
+      var codec = codecs[i];
+      
+      // Build another option entry
+      codecDropDown += "<option value='" +
+                          codec.CodecName + "'" +
+                          ">" +
+                          codec.CodecName + "(" + codec.CodecExtension + ")" +
+                          "</option>";
+    }
+
+    // Create and fill in a Select element
+    var element = document.createElement("select");
+    element.onchange = function() { element.disabled=true; doFetchVoicemailList(element.value); };
+    element.innerHTML = codecDropDown;
+    addToOutput(element);
+  }
+
+  function codecError(connection, error)
+  {
+    display("Failed to fetch codec list, error: " + error);
+  }
+}
+</script>
+
+<script id="voicemailsListScript">
+function doFetchVoicemailList(codec)
+{
+  display("Fetching voicemail list");
+
+  // Refetch the voicemails, this time as a list
+  connection.fetchVoicemails(voicemailsSuccess, voicemailsError, codec);
+
+  // The function to be called with the voicemail list
+  function voicemailsSuccess(connection, voicemails)
+  {
+    // First a very simple table to display the voicemails
+    displayVoicemailList(connection, voicemails);
+
+    // We also use a more complex example display format
+    displayVoicemailTimeline(connection, voicemails);
+
+    // This display format includes some action buttons
+    displayVoicemailActions(connection, voicemails);
+  
+    // Check whether transcriptions are enabled
+    doFetchTranscriptionEnabled(connection);
+  }
+
+  // The function to be called if fetching the list fails
+  function voicemailsError(connection, error)
+  {
+    display("Failed to fetch voicemail list, error: " + error);
+  }
+}
+</script>
+
+<script id="voicemailsDisplayScript">
+function displayVoicemailList(connection, voicemails)
+{
+  display("Displaying voicemail list");
+
+  // Build the table contents - start with headers for the columns
+  var table = "<table border='2'><tr><th>Caller</th><th>Date and time</th><th>File</th></tr>";
+
+  for (var i = 0; i < voicemails.length; i++)
+  {
+    var voicemail = voicemails[i];
+
+    // We will change the appearance of voicemails that have not been heard yet
+    if (voicemail.Read)
+    {
+      // The voicemail has already been listened to
+      var appearance = "";
+    }
+    else
+    {
+      // The voicemail has not been listened to - give it a distinct appearance
+      var appearance = " style='background-color:yellow'";
+    }
+
+    // The number may have been withheld
+    var caller = voicemail.From;
+    if (!caller)
+    {
+      caller = "Not Available";
+    }
+
+    // Add this voicemail as a row in the table
+    table += "<tr" + appearance + ">" + "<td>" + caller +
+             "</td><td>" + voicemail.Received +
+             "</td><td>" + voicemail.AudioFile + "</td>";
+  }
+
+  table += "</table>";
+
+  // Create a DOM element with our table in it
+  var element = document.createElement("div");
+  element.innerHTML = table;
+
+  // Add the table to our output area
+  addToOutput(element);
+}
+</script>
+
+<script id="voicemailsTimelineScript">
+function displayVoicemailTimeline(connection, voicemails)
+{
+  display("Displaying voicemail timeline");
+
+  var container = document.createElement("div");
+  container.style.height = "250px";
+  container.style.width = "100%";
+
+  addToOutput(container);
+
+  var visualization = new google.visualization.AnnotatedTimeLine(container);
+
+  var data = new google.visualization.DataTable();
+  data.addColumn("datetime", "Received");
+  data.addColumn("number",   "Height");
+  data.addColumn("string",   "From");
+  data.addColumn("string",   "Details");
+
+  data.addRows(voicemails.length);
+
+  for (var i = 0; i < voicemails.length; i++)
+  {
+    var voicemail = voicemails[i];
+
+    var received = connection.convertDate(voicemail.Received);
+
+    var caller = voicemail.From;
+    if (!caller)
+    {
+      caller = "Not Available";
+    }
+
+    var details = [];
+
+    details.push(voicemail.Size + " bytes");
+    if (voicemail.Urgent)
+    {
+      details.push("Urgent");
+    }
+    if (voicemail.Private)
+    {
+      details.push("Private");
+    }
+    details = details.join(", ");
+
+    if (!voicemail.Read)
+    {
+      details = "<b>" + details + "</b>";
+    }
+
+    // Add a simple link to allow the voicemail to be played
+    if (voicemail.HasBody)
+    {
+      details = "<a href='#' onclick='return play(\"" + voicemail.AudioFile +
+               "\");'>Play</a> " + details;
+    }
+
+    data.setValue(i, 0, received);
+    data.setValue(i, 1, 1);   // Fixed height so everything shows in a line
+    data.setValue(i, 2, caller);
+    data.setValue(i, 3, details);
+  }
+
+  visualization.draw(data, {displayAnnotations:true,
+                            allowHtml:true,
+                            max:2,
+                            min:0.75,
+                            scaleType:"maximize",
+                            scaleColumns:[]
+                           });
+}
+</script>
+
+<script id="audioScript">
+/**
+ * Play a wav file, by using the browser's inbuilt ability to play embedded
+ * sounds.  No control offered, but generally works.
+ */
+function play(audioFile)
+{
+  var soundObject = document.getElementById("soundObject");
+  soundObject = document.createElement("embed");
+  soundObject.setAttribute("src", audioFile);
+  soundObject.setAttribute("hidden", true);
+  soundObject.setAttribute("autostart", true);
+
+  document.body.appendChild(soundObject);
+
+  return false;
+}
+</script>
+
+<script id="voicemailsActionsScript">
+function displayVoicemailActions(connection, voicemails)
+{
+  display("Displaying voicemails with actions");
+
+  // Build the table contents - start with headers for the columns
+  var table = "<table border='2'><tr><th>id</th><th>Actions</th></tr>";
+
+  for (var i = 0; i < voicemails.length; i++)
+  {
+    var voicemail = voicemails[i];
+
+    // We will change the appearance of voicemails that have not been heard yet
+    if (voicemail.Read)
+    {
+      // The voicemail has already been listened to
+      var appearance = "";
+    }
+    else
+    {
+      // The voicemail has not been listened to - make it bold
+      var appearance = " style='background-color:yellow'";
+    }
+
+    var id = voicemail.Id;
+
+    var buttons =
+      "<button onclick='deleteVM(\"" + id + "\")'>Delete</button>" +
+      "<button onclick='markVMAsHeard(\"" + id + "\")'>Mark heard</button>" +
+      "<button onclick='markVMAsUnheard(\"" + id + "\")'>Mark unheard</button>";
+
+    // Add this voicemail as a row in the table
+    table += "<tr" + appearance + ">" + "<td>" + id +
+             "</td><td>" + buttons + "</td>";
+  }
+
+  table += "</table>";
+
+  // Create a DOM element with our table in it
+  var element = document.createElement("div");
+  element.innerHTML = table;
+
+  // Add the table to our output area
+  addToOutput(element);
+}
+</script>
+
+<!--These functions are called from click handlers, so we put them in the global scope -->
+<script id="deleteFunction">
+function deleteVM(id)
+{
+  display("Deleting voicemail with id " + id);
+
+  connection.deleteVoicemails(id, deleteSuccess, deleteError);
+
+  function deleteSuccess(connection)
+  {
+    display("Deleted voicemail with id " + id);
+
+    showVoicemailsCount(connection);
+  }
+
+  function deleteError(connection, error)
+  {
+    display("Deleting voicemail with id " + id + " gave error " + error);
+
+    showVoicemailsCount(connection);
+  }
+}
+</script>
+
+<script id="markAsHeardFunction">
+function markVMAsHeard(id)
+{
+  display("Marking voicemail id " + id + " as heard");
+
+  connection.markVoicemailsAsHeard(id, heardSuccess, heardError);
+
+  function heardSuccess(connection)
+  {
+    display("Marked voicemail id " + id + " as heard");
+
+    showVoicemailsCount(connection);
+  }
+
+  function heardError(connection, error)
+  {
+    display("Marking voicemail id " + id + " as heard gave error " + error);
+
+    showVoicemailsCount(connection);
+  }
+}
+</script>
+
+<script id="markAsUnheardFunction">
+function markVMAsUnheard(id)
+{
+  display("Marking voicemail id " + id + " as unheard");
+
+  connection.markVoicemailsAsUnheard(id, unheardSuccess, unheardError);
+
+  function unheardSuccess(connection)
+  {
+    display("Marked voicemail id " + id + " as unheard");
+
+    showVoicemailsCount(connection);
+  }
+
+  function unheardError(connection, error)
+  {
+    display("Marking voicemail id " + id + " as unheard gave error " + error);
+
+    showVoicemailsCount(connection);
+  }
+}
+</script>
+
+<script id="showCountFunction">
+function showVoicemailsCount(connection)
+{
+  connection.fetchVoicemailCount(countSuccess2, countError2);
+
+  function countSuccess2(connection, total, unheard)
+  {
+    display("Now " + total + " voicemails with " + unheard + " unheard");
+  }
+
+  function countError2(connection, error)
+  {
+    display("Error counting voicemails " + error);
+  }
+}
+</script>
+
+<script id="transcriptionSettingsScript">
+function doFetchTranscriptionEnabled(connection)
+{
+  display("Checking if voicemail transcriptions enabled");
+
+  connection.fetchTranscriptionEnabled(checkSettingSuccess, checkSettingError);
+
+  // The function to be called with the transcription setting.
+  function checkSettingSuccess(connection, transcriptsEnabled)
+  {
+    if (transcriptsEnabled)
+    {
+      display("Transcripts are enabled.");
+      connection.fetchVoicemails(displayVoicemailTranscripts, voicemailsError);
+    }
+    else
+    {
+      display("Transcripts are not enabled for this subscriber");
+    }
+  }
+
+  // The function to be called if fetching transcription settings fails.
+  function checkSettingError(connection, error)
+  {
+    display("Failed to check if transcriptions are enabled, error: " + error);
+  }
+  
+  // The function to be called if fetching the list fails
+  function voicemailsError(connection, error)
+  {
+    display("Failed to fetch voicemail list, error: " + error);
+  }
+}
+</script>
+
+<script id="voicemailsTranscriptionScript">
+function displayVoicemailTranscripts(connection, voicemails)
+{
+  display("Displaying voicemail list");
+
+  // Build the table contents - start with headers for the columns
+  var table = "<table border='2'><tr><th>Caller</th><th>Transcript</th><th>Audio</th></tr>";
+
+  for (var i = 0; i < voicemails.length; i++)
+  {
+    var voicemail = voicemails[i];
+   
+    // The number may have been withheld
+    var caller = voicemail.From;
+    if (!caller)
+    {
+      caller = "Not Available";
+    }
+
+    var appearance = "";
+    var transcription = "";
+
+    // We will change the appearance of voicemails without a transcription. We can check the
+    // TranscriptionStatus to see if this is the case.
+    if (voicemail.TranscriptionStatus == "available")
+    {
+      // The voicemail has a transcription, so give it a green background.
+      appearance = " style='background-color:#8BFEA8'";
+      transcription = voicemail.SimpleTranscriptionText;
+    }
+    else if (voicemail.TranscriptionStatus == "pending")
+    {
+      // We are still waiting for this voicemail to be transcribed. Give it an orange background.
+      appearance = " style='background-color:#FFCC99'";
+      transcription = "Voicemail transcription pending."
+    }
+    else
+    {
+      // There is no transcription for this voicemail. Give it a red background.
+      appearance = " style='background-color:#FF9999'";
+      transcription = "Voicemail transcription unavailable. Status: " + voicemail.TranscriptionStatus;
+    }
+
+    table += "<tr" + appearance + ">" + "<td>" + caller +
+             "</td><td>" + transcription + 
+             "</td><td>" + "<a href='#' onclick='return play(\"" + voicemail.AudioFile +
+             "\");'>Audio</a></td>";
+
+  }
+
+  table += "</table>";
+
+  // Create a DOM element with our table in it
+  var element = document.createElement("div");
+  element.innerHTML = table;
+
+  // Add the table to our output area
+  addToOutput(element);
+}
+</script>
+
+</body>
+</html>

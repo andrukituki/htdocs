@@ -1,0 +1,236 @@
+<html>
+<head>
+<title>Greetings Update - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Greetings Update - CommPortal SDK Tutorial</h1>
+
+In this tutorial, we'll use the CommPortal API to make changes to a
+subscriber's greetings including updating the audio and changing the active
+default.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+By the way, if you've worked through the <a href="login.html">Login</a>
+tutorial, the early stages of this will be second nature to you know.  In that
+case, feel free to skip straight to <a href="#fetchingGreetings">Fetching
+Greetings</a>.
+
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>fetchCodecs()</b>
+  <li><b>fetchGreetings()</b>
+  <li><b>updateDefaultGreeting()</b>
+  <li><b>uploadGreetingsAudio()</b>
+  <li><b>reconnect()</b>
+  <li><b>updateGreetingAudio()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+There's one difference from the previous tutorial: we've coded our
+<i>doLogin()</i> function so that, when the user successfully logs in,
+we automatically proceed to the <i>populateGreetingTypeList()</i> function
+covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="fetchingGreetings"></a>
+<h2>Fetching Greetings</h2>
+
+So, just to recap: we've opened a connection to CommPortal, we've allowed the
+subscriber to log in, and we've arranged to call our <i>listCodecs()</i> and
+<i>populateGreetingTypeList()</i> function as soon as they have. 
+
+<p>
+Here is the <i>listCodecs()</i> function.
+
+<code id="listCodecsScript"></code>
+
+<p>
+This simple code fetches the list of supported codecs from CommPortal and
+prints the codec names and extensions so that we know what kinds of files
+we are allowed to upload. Each codec in the returned list has three fields.
+
+<dl>
+  <dt>CodecName</dt>
+  <dd>The name of the codec which should be used when specifying a codec on greetings downloads.</dd>
+
+  <dt>CodecExtension</dt>
+  <dd>The file extension used by this codec.</dd>
+
+  <dt>CodecContentType</dt>
+  <dd>The Content Type used by this codec.</dd>
+</dl>
+
+<p>
+Here's the <i>populateGreetingTypeList()</i> function - we'll discuss exactly 
+what it does below.
+
+<code id="populateGreetingTypeListScript"></code>
+
+<p>
+This code is similar to the previous tutorial as we fetch the current greetings
+details and then use them to construct a drop down menu with all of the
+greeting types for the subscriber.
+
+<p>
+However, unlike the previous tutorial we want to make changes to the greetings
+config. Greetings can optionally be recorded and/or set as the default for
+a subscriber. To handle these cases we use a drop down list with an onChange
+action which only shows the parts of the UI which can be used with the selected
+type of greeting.
+
+<p>
+While we are constructing the drop down list we also take the opportunity to
+create 3 lookup tables which will allow us to quickly lookup the properties
+of a given greeting type.
+
+<code class="html" id="selectTypeStep"></code>
+
+<p>
+Once the list has been constructed we call into <i>greetingChosen()</i>.
+
+<code id="greetingChosenScript"></code>
+
+This function fills in the summary part of the UI to describe in words the
+properties of the selected type of greeting. We also hide/show the correct
+parts of the UI depending on these properties.
+
+<h2>Set Greeting As Default</h2>
+
+<p>
+The simplest change which we can make to a subscriber's greetings config is to
+change the default greeting type. For greeting types which support being set
+as the default we display the following form.
+
+<code class="html" id="setDefaultStep"></code>
+
+This form relies on the following small function to call into the CommPortal
+API to change which greeting is the default.
+
+<code id="setDefaultScript"></code>
+
+The success callback from the call to <i>updateDefaultGreeting()</i> calls
+back into <i>populateGreetingTypeList()</i> to update the fetched data.
+
+<h2>Updating Greetings Audio</h2>
+
+<p>
+We can only update the audio for Greetings which have the property
+"IsRecorable: true".
+
+<p>
+Updating the audio for a greeting is similar to
+<a href="voicemails-send.html">sending a voicemail</a> in that
+there are two steps which must be completed. Firstly we must upload an audio
+file to be temporarily stored in our session. Once this is done we can send
+a request to use this audio file to update a particular greeting type.
+
+<p>
+We use a simple form to allow the user to select an audio file to use for
+their greeting.
+
+<code class="html" id="chooseFileStep"></code>
+
+<p>
+As stated in the Sending a Voicemail tutorial, the code for handling file
+uploads requires that we pass in an extra parameter. Here it is; the details
+are given below.
+
+<code id="uploadScript"></code>
+
+<p>
+The <i>doUpload()</i> function is called when the user clicks the "Upload File"
+button. This passes the id of the form which was used to select a file for
+upload along with the usual success and failure callbacks. The CommPortal
+API submits this form and then calls one of the callback functions as normal.
+
+<p>
+Once the audio has been successfully uploaded we immediately call the
+<i>updateGreetingAudio()</i> function to use the audio for the selected
+greeting type. Finally, the call to the <i>populateGreetingTypeList()</i>
+within <i>updateAudioSuccess()</i> ensures that the greetings information
+shown on screen is up to date.
+
+<hr>
+
+<a name="workingExample"></a>
+<h1>Working example - Update Greetings</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="greetings-updatecode.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial tackles the subject of handling people as
+<a href="contacts.html">contacts</a> using the CommPortal SDK.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<html>
+<head>
+  <title>Core Data and Error Handling - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Core data and Error Handling Example</h1>
+
+Enter the server address, then press the button to log in.
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<form id="coreData">
+  <h2>Core Data</h2>
+  <button disabled="disabled" id="coreButton" onclick="doCoreData(connection); return false;">Core Data</button>
+</form>
+
+<form id="errorHandling">
+  <h2>Error Handling</h2>
+  <button disabled="disabled" id="errorButton" onclick="doErrorExercise(connection); return false;">Error Exercise</button>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("CoreDataTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    doEnableButtons();
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="enableButtonsScript">
+function doEnableButtons()
+{
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++)
+  {
+    button = buttons[i];
+
+    button.disabled = false;
+  }
+
+  display("Now use the other buttons to drive the example");
+}
+</script>
+
+<script id="coreDataScript">
+function doCoreData(connection)
+{
+  display(">>> Fetching subscriber settings");
+
+  connection.fetchData("Meta_Subscriber_MetaSphere_SubscriberSettings",
+                       dataSuccess,
+                       dataFailure);
+
+  function dataSuccess(connection, dataType, data, objectIdentity)
+  {
+    display("Data type:" + dataType);
+    display("Subscriber name:" + data.DisplayName);
+    display("Data as JSON:" + JSON.stringify(data));
+
+    doSubscriberName(connection);
+  }
+
+  function dataFailure(connection, error)
+  {
+    display("Failed to fetch data object: " + error);
+  }
+}
+</script>
+
+<script id="fetchSubscriberNameScript">
+function doSubscriberName(connection)
+{
+  display(">>> Fetching subscriber name directly");
+
+  connection.fetchSubscriberName(dataSuccess,
+                                 dataFailure);
+
+  function dataSuccess(connection, name)
+  {
+    display("Subscriber name via fetchSubscriberName:" + name);
+
+    doMoreCoreData(connection);
+  }
+
+  function dataFailure(connection, error)
+  {
+    display("Failed to fetch subscriber name: " + error);
+  }
+}
+</script>
+
+
+<script id="moreCoreDataScript">
+function doMoreCoreData(connection)
+{
+  display(">>> Fetching core data");
+
+  connection.fetchData("Meta_Subscriber_MetaSphere_SubscriberSettings",
+                       dataSuccess,
+                       dataFailure);
+
+  function dataSuccess(connection, dataType, data, objectIdentity)
+  {
+    display("Data type:" + dataType);
+
+    // Add white space after commas in the JSON representation to make this
+    // more wordwrap friendly
+    var asJSON = JSON.stringify(data).replace(/","/g, '", "');
+    display("Data as JSON:" + asJSON);
+
+    doMultipleCoreData(connection);
+  }
+
+  function dataFailure(connection, error)
+  {
+    display("Failed to fetch more data objects: " + error);
+  }
+}
+</script>
+
+<script id="multipleCoreDataScript">
+function doMultipleCoreData(connection)
+{
+  display(">>> Fetching multiple core data. Note that this will return errors for some subscribers, where the data is not available.")
+
+  var dataTypes =
+  [
+    'Session',
+
+    'MessageCounts',
+    'Messages',
+
+    'Meta_Subscriber_MetaSphere_Greetings',
+    'Meta_Subscriber_MetaSphere_AccountSettings',
+    'Meta_Subscriber_MetaSphere_ClassOfService',
+    'Meta_Subscriber_MetaSphere_MailboxSettings',
+    'Meta_Subscriber_MetaSphere_VoicemailMessages',
+
+    'Meta_BGNumberBlock_BaseInformation',
+    'Meta_BusinessGroup_BaseInformation',
+    'Meta_BusinessGroup_ChildrenList_BGNumberBlock',
+    'Meta_BusinessGroup_ChildrenList_CallPickupGroup',
+    'Meta_BusinessGroup_ChildrenList_Department',
+    'Meta_BusinessGroup_ChildrenList_MADN',
+    'Meta_BusinessGroup_ChildrenList_ManagedDevice',
+    'Meta_BusinessGroup_ChildrenList_Subscriber',
+    'Meta_BusinessGroup_DialingPlan_IntercomCodeRangesList',
+    'Meta_BusinessGroup_DialingPlan_ShortCodesList',
+    'Meta_BusinessGroup_FacilityGroupLimits',
+    'Meta_BusinessGroup_MandatoryAccountCodes',
+    'Meta_CallPickupGroup_BaseInformation',
+    'Meta_CallPickupGroup_MembersList',
+    'Meta_CallPickupGroup_PossibleMembersList',
+    'Meta_Department_BaseInformation',
+    'Meta_Global_MetaSphere_Configuration',
+    'Meta_MADN_BaseInformation',
+    'Meta_MADN_MembersList',
+    'Meta_MADN_PossibleMembersList',
+    'Meta_MLHG_BaseInformation',
+    'Meta_MLHG_ChildrenList_MLHGPilotDN',
+    'Meta_MLHG_MembersList',
+    'Meta_MLHG_PossibleMembersList',
+    'Meta_ManagedDevice_BaseInformation',
+    'Meta_PersistentProfile_UC9000_PhoneProfiles',
+    'Meta_SubscriberDevice_MetaSphere_CTDDeviceConfig',
+    'Meta_SubscriberDevice_MetaSphere_ICM',
+    'Meta_Subscriber_3-WayCalling',
+    'Meta_Subscriber_AnonymousCallRejection',
+    'Meta_Subscriber_AutomaticCallback',
+    'Meta_Subscriber_AutomaticRecall',
+    'Meta_Subscriber_BaseInformation',
+    'Meta_Subscriber_BusyCallForwarding',
+    'Meta_Subscriber_CallBarring',
+    'Meta_Subscriber_CallHold',
+    'Meta_Subscriber_CallLists',
+    'Meta_Subscriber_CallTransfer',
+    'Meta_Subscriber_CallWaiting',
+    'Meta_Subscriber_CallerIDPresentation',
+    'Meta_Subscriber_CallingNameAndNumberDeliveryOverIP',
+    'Meta_Subscriber_CallingNameDelivery',
+    'Meta_Subscriber_CallingNumberDelivery',
+    'Meta_Subscriber_CustomerInformation',
+    'Meta_Subscriber_Dash911',
+    'Meta_Subscriber_DelayedCallForwarding',
+    'Meta_Subscriber_DoNotDisturb',
+    'Meta_Subscriber_Find-me-follow-me',
+    'Meta_Subscriber_GroupMembershipsList',
+    'Meta_Subscriber_LineClassCodes',
+    'Meta_Subscriber_ManagedDevicesList',
+    'Meta_Subscriber_MandatoryAccountCodes',
+    'Meta_Subscriber_MetaSphere_AccountSettings',
+    'Meta_Subscriber_MetaSphere_AllMessages',
+    'Meta_Subscriber_MetaSphere_AutoForwarding',
+    'Meta_Subscriber_MetaSphere_CallList',
+    'Meta_Subscriber_MetaSphere_CallTree_Announcements',
+    'Meta_Subscriber_MetaSphere_CallTree_BaseInformation',
+    'Meta_Subscriber_MetaSphere_CallTree_DialByExtensionList',
+    'Meta_Subscriber_MetaSphere_CallTree_Nodes',
+    'Meta_Subscriber_MetaSphere_CallTree_Schedules',
+    'Meta_Subscriber_MetaSphere_CallerTransfer',
+    'Meta_Subscriber_MetaSphere_ClassOfService',
+    'Meta_Subscriber_MetaSphere_ContactGroups',
+    'Meta_Subscriber_MetaSphere_Devices',
+    'Meta_Subscriber_MetaSphere_DevicesNoGreetingInfo',
+    'Meta_Subscriber_MetaSphere_FMFM_Rule',
+    'Meta_Subscriber_MetaSphere_FaxMessageCounts',
+    'Meta_Subscriber_MetaSphere_FaxMessages',
+    'Meta_Subscriber_MetaSphere_Greetings',
+    'Meta_Subscriber_MetaSphere_InHoursSchedule',
+    'Meta_Subscriber_MetaSphere_InitFlags',
+    'Meta_Subscriber_MetaSphere_LiveMessage',
+    'Meta_Subscriber_MetaSphere_MailboxSettings',
+    'Meta_Subscriber_MetaSphere_MessageOrdering',
+    'Meta_Subscriber_MetaSphere_MessageSecurity',
+    'Meta_Subscriber_MetaSphere_OutdialSubscriberSettings',
+    'Meta_Subscriber_MetaSphere_OverrideSubscriberSettings',
+    'Meta_Subscriber_MetaSphere_PagerSubscriberSettings',
+    'Meta_Subscriber_MetaSphere_PublicHolidays',
+    'Meta_Subscriber_MetaSphere_QuotaInformation',
+    'Meta_Subscriber_MetaSphere_ReminderRule',
+    'Meta_Subscriber_MetaSphere_RemindersList',
+    'Meta_Subscriber_MetaSphere_Schedules',
+    'Meta_Subscriber_MetaSphere_SecondaryMailbox',
+    'Meta_Subscriber_MetaSphere_SecondaryMailboxList',
+    'Meta_Subscriber_MetaSphere_SubscriberCapabilities',
+    'Meta_Subscriber_MetaSphere_SubscriberSettings',
+    'Meta_Subscriber_MetaSphere_UC9000Notifications',
+    'Meta_Subscriber_MetaSphere_VoicemailMessageCounts',
+    'Meta_Subscriber_MetaSphere_VoicemailMessages',
+    'Meta_Subscriber_PersonalCommunicationManager',
+    'Meta_Subscriber_PriorityCall',
+    'Meta_Subscriber_RegularReminderCalls',
+    'Meta_Subscriber_ReminderCalls',
+    'Meta_Subscriber_RemoteAccessToCallForwarding',
+    'Meta_Subscriber_SelectiveCallForwarding',
+    'Meta_Subscriber_SelectiveCallRejection',
+    'Meta_Subscriber_SpeedCalling',
+    'Meta_Subscriber_TeenServiceLine1',
+    'Meta_Subscriber_TeenServiceLine2',
+    'Meta_Subscriber_TeenServiceLine3',
+    'Meta_Subscriber_UC9000_Contacts',
+    'Meta_Subscriber_UC9000_ForwardingDestinations',
+    'Meta_Subscriber_UC9000_PhoneProfiles',
+    'Meta_Subscriber_UnconditionalCallForwarding',
+    'Meta_Subscriber_Voicemail',
+    'Meta_Subscriber_WebServices',
+    'Meta_Subscriber_Stand-AloneCommPortalWebSelfCare',
+    'Meta_Subscriber_BusinessGroupAdministration'
+  ];
+
+  var count = dataTypes.length;
+
+  connection.fetchData(dataTypes,
+                       dataSuccess,
+                       dataFailure);
+
+  function dataSuccess(connection, dataType, data, objectIdentity)
+  {
+    display("Data type:" + dataType);
+
+    var asJSON = JSON.stringify(data).replace(/","/g, '", "');
+    display("Data as JSON:" + asJSON);
+
+    // We count the data objects we receive, so that we can move on to the
+    // next example
+    if (--count == 0)
+    {
+      doFetchRawData(connection);
+    }
+  }
+
+  function dataFailure(connection, error)
+  {
+    display("ERROR FETCHING " + error.dataType + " : " + error.errors[0].type);
+
+    // We count the data objects we receive, so that we can move on to the
+    // next example
+    if (--count == 0)
+    {
+      doFetchRawData(connection);
+    }
+  }
+}
+</script>
+
+<script id="fetchRawDataScript">
+function doFetchRawData(connection)
+{
+  display(">>> Fetching raw data");
+
+  connection.fetchRawData("Meta_Subscriber_MetaSphere_SubscriberSettings",
+                          dataSuccess,
+                          dataFailure);
+
+  function dataSuccess(connection, dataType, data, objectIdentity)
+  {
+    display("Data type:" + dataType);
+
+    var asJSON = JSON.stringify(data).replace(/","/g, '", "');
+    display("Data as JSON:" + asJSON);
+
+    doUpdateData(connection);
+  }
+
+  function dataFailure(connection, error)
+  {
+    display("Failed to fetch raw data: " + error);
+  }
+}
+</script>
+
+<script id="updateDataScript">
+function doUpdateData(connection)
+{
+  display(">>> Fetching raw data for Call Waiting service. Note that this will fail for subscribers who do not have Call Waiting." );
+
+  connection.fetchRawData("Meta_Subscriber_CallWaiting",
+                          dataSuccess,
+                          dataFailure);
+
+  var originallySubscribed;
+
+  function dataSuccess(connection, dataType, data, objectIdentity)
+  {
+    // Save off the original setting - note this is raw data so we need the
+    // field name to be suffixed with "._" to get at the actual value.
+    // If either data.Subscribed or data.Subscribed._ is not present then
+    // the bracked expression will give "undefined", so we use !! (not not)
+    // to effectively cast it to a boolean, so we only even have true or
+    // false as the value we hold on to.
+    originallySubscribed = !!(data.Subscribed && data.Subscribed._);
+
+    display(originallySubscribed ? "Already subscribed to Call Waiting" :
+                                   "Not subscribed to Call Waiting");
+
+    if (data.Subscribed === undefined)
+    {
+      // Create a new object
+      data.Subscribed = { "_" : true };
+    }
+    else
+    {
+      // Update the field to the opposite value
+      data.Subscribed._ = !originallySubscribed;
+    }
+
+    // Save the data back to the server
+    connection.saveData(dataType,
+                        data,
+                        saveSuccess,
+                        saveFailure);
+  }
+
+  function dataFailure(connection, error)
+  {
+    display("Failed to fetch Call Waiting data: " + error);
+  }
+
+  function saveSuccess(connection)
+  {
+    display("Saved new Call Waiting setting");
+
+    // This data object is simple enough that we can actually build it from
+    // scratch ourself as a JavaScript object literal
+    var data = { Subscribed : { "_" : originallySubscribed } };
+
+    // Save the new data back to the server
+    connection.saveData("Meta_Subscriber_CallWaiting",
+                        data,
+                        resaveSuccess,
+                        resaveFailure);
+  }
+
+  function saveFailure(connection, error)
+  {
+    display("Failed to save Call Waiting data: " + error);
+  }
+
+  function resaveSuccess(connection)
+  {
+    display("Resaved original Call Waiting setting");
+  }
+
+  function resaveFailure(connection, error)
+  {
+    display("Failed to resave original Call Waiting setting: " + error);
+  }
+}
+</script>
+
+<script id="errorExerciseScript">
+function doErrorExercise(connection)
+{
+  // Create a new unconnected connection, and try making a call on that
+  display("Making an API call on a disconnected connection - expect an error");
+  var notConnected = new CommPortal();
+  notConnected.fetchVoicemails(successCallback,
+                               failureCallback);
+
+  // Wait a second then do the next error example
+  setTimeout(function() { doErrorExercise2(connection); }, 1000);
+}
+
+// The rest of these examples use our real connection
+function doErrorExercise2(connection)
+{
+  // Cancelling a call when there is no call in progress is an error
+  display("Cancelling a call when we have not made a call - expect an error");
+  connection.cancelCall(successCallback,
+                        failureCallback);
+
+  // Wait a second then do the next error example
+  setTimeout(function() { doErrorExercise3(connection); }, 1000);
+}
+
+
+function doErrorExercise3(connection)
+{
+  // We ask for a made up data type
+  display("Trying to fetch a made up data type - expect an error");
+  connection.fetchData("wobble",
+                       successCallback,
+                       failureCallback);
+
+  // Wait a second then do the next error example
+  setTimeout(function() { doErrorExercise4(connection); }, 1000);
+}
+
+function doErrorExercise4(connection)
+{
+  // We try and save data to the same made up data type
+  display("Trying to save a made up data type - expect an error");
+  connection.saveData("wobble",
+                      "{}",
+                      successCallback,
+                      failureCallback);
+}
+
+// We dont expect this success callback to be called!
+function successCallback(connection)
+{
+  display("Method unexpectedly succeeded!");
+}
+
+
+function failureCallback(connection, error)
+{
+  var sessionId = connection.getSessionId();
+
+  var output = [];
+  for (var i in error)
+  {
+    if (error.hasOwnProperty(i))
+    {
+      var value = error[i];
+      if (typeof value == "object")
+      {
+        value = JSON.stringify(value);
+      }
+      else if (typeof value == "string")
+      {
+        value = '"' + value + '"';
+      }
+
+      output.push(i + "=" + value);
+    }
+  }
+
+  display("Session " + sessionId + " Error " + output.join(", "));
+}
+</script>
+
+</body>
+</html>

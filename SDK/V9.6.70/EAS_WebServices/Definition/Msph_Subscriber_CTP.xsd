@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_CTP">
+    <xs:annotation>
+      <xs:documentation>
+        Cut-through Paging service indication.  Used to enable or disable cut-through paging for the specified subscriber.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="CTPEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether cut-through paging is enabled for this subscriber.
+            <d:DisplayName>CTP Enabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

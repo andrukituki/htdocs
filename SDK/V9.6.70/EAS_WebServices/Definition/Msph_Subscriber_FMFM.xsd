@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_FMFM">
+    <xs:annotation>
+      <xs:documentation>
+        Subscriber FMFM service indication.  Used to manage a FMFM configuration for a subscriber's devices.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Device" type="tMsph_Subscriber_FMFM_Device">
+        <xs:annotation>
+          <xs:documentation>
+            Settings related to a specific device.
+            <d:DisplayName>Device</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_Device_FMFM_Target_ScheduleEntry">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="Days" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The days when the FMFM schedule applies. This should take the form of a string of numbers where 0 corresponds to Monday and 6 to Sunday, in numerical order. For example, Monday, Wednesday and Friday would be represented as '024'.
+            <d:DisplayName>Days</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="StartTime" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM Target schedule start time in the format HHmm using 24 hour clock.
+            <d:DisplayName>Start Time</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="EndTime" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM Target schedule end time in the format HHmm using 24 hour clock.
+            <d:DisplayName>End Time</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tMsph_Device_FMFM_Target_Schedule">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="ScheduleName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM target schedule name.
+            <d:DisplayName>Schedule Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ScheduleEntry" type="tMsph_Device_FMFM_Target_ScheduleEntry">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM target schedule entry.
+            <d:DisplayName>Schedule Entry</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tMsph_Device_FMFM_Target">
+    <xs:annotation>
+      <xs:documentation>On a ShUpdate, any FMFM targets included will replace existing FMFM targets that were previously stored for the device. If no FMFM targets are supplied on a ShUpdate any existing FMFM targets for the device will be removed.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="PhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM target phone number.
+            <d:DisplayName>Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="RingDuration" type="tMsph_Device_FMFM_Target_RingDuration">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM Target ring duration in seconds. This must be between 1 second and 120 seconds.
+            <d:DisplayName>Ring Duration</d:DisplayName>
+            <d:Type>Integer range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Range>1 - 120</d:Range>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="RingListPosition" type="tMsph_Device_FMFM_Target_RingListPosition">
+        <xs:annotation>
+          <xs:documentation>
+            For sequential mode, the position of this target in the list of targets to be rung, where 1 is first. Ring list position should be a number between 1 and the maximum number of Find-Me-Follow-Me targets allowed per device.
+            <d:DisplayName>Ring List Position</d:DisplayName>
+            <d:Type>Integer range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Range>1 - 2147483647</d:Range>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Schedule" type="tMsph_Device_FMFM_Target_Schedule">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM target schedule.
+            <d:DisplayName>Schedule</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tMsph_Subscriber_FMFM_Device">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="PhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The phone number of this device.
+            <d:DisplayName>Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FMFMEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether FMFM is enabled for the subscriber.
+            <d:DisplayName>FMFM Enabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FMFMMode" type="TMsph_Device_FMFM_FMFMMode">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM mode - sequential or simultaneous.
+            <d:DisplayName>FMFM Mode</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Values>
+              <d:Value>Simultaneous</d:Value>
+              <d:Value>Sequential</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CallerNameRequested" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether caller name should be requested.
+            <d:DisplayName>Caller Name Requested</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Target" type="tMsph_Device_FMFM_Target">
+        <xs:annotation>
+          <xs:documentation>
+            FMFM target.
+            <d:DisplayName>Target</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="TMsph_Device_FMFM_FMFMMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Simultaneous" />
+      <xs:enumeration value="Sequential" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tMsph_Device_FMFM_Target_RingDuration">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="120" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tMsph_Device_FMFM_Target_RingListPosition">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="1" />
+      <xs:maxInclusive value="2147483647" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

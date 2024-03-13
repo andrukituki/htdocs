@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_InitFlags">
+    <xs:annotation>
+      <xs:documentation>
+        Used to make modifications to a subscriber's TUI-related settings.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedCallerLanguageSetting" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber's CallerLanguage Setting has been set appropriately (so that it need not be reset on first time access).
+            <d:DisplayName>Initialized CallerLanguage Setting</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedIntroduction" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber has been  through the system introduction.
+            <d:DisplayName>Initialized Introduction</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedRecordedName" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber's Recorded Name has been set appropriately (so that it need not be re-recorded on first time access). It is set whenever the greeting is explicitly set up, which may be via a UI or through an API such as this.
+            <d:DisplayName>Initialized Recorded Name</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedPIN" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber's PIN has been set appropriately (so that it need not be reset on first time access). It is set whenever the subscriber's PIN is set explicitly, either via a UI, through an API such as this or through business logic on creation.
+            <d:DisplayName>Initialized PIN</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedPostponed" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber has postponed initialization for this device.
+            <d:DisplayName>Initialized Postponed</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedRecordedGreeting" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber's Recorded Greeting has been set appropriately (so that it need not be re-recorded on first time access). It is set wheneverthe greeting is explicitly set up, which may be via a UI or through an API such as this.
+            <d:DisplayName>Initialized Recorded Greeting</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedSecondaryMailbox" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber has been through the secondary mailbox tutorial.
+            <d:DisplayName>Initialized Secondary Mailbox</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedSkipPINSetting" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber's SkipPIN Setting has been set appropriately (so that it need not be reset on first time access).
+            <d:DisplayName>Initialized SkipPIN Setting</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedScheduledGreetings" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber has been through the scheduled greetings initialization (for any device).
+            <d:DisplayName>Initialized Scheduled Greetings</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AMSInitRequired" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether Accession Messaging Service initialization is required for this subscriber (for any device).
+            <d:DisplayName>AMSInitRequired</d:DisplayName>
+            <d:ValidFrom>1.15.11</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Device" type="tMsph_Subscriber_InitFlags_Device">
+        <xs:annotation>
+          <xs:documentation>
+            Settings related to a specific device.
+            <d:DisplayName>Device</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedPassword" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber's Password has been set appropriately (so that it need not be reset on first time access). It is set whenever the subscriber's password is set explicitly, either via a UI, through an API such as this or through business logic on creation.
+            <d:DisplayName>Initialized Password</d:DisplayName>
+            <d:ValidFrom>1.12</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_Subscriber_InitFlags_Device">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="PhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The phone number of this device.
+            <d:DisplayName>Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedCallerLanguageSetting" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the device's CallerLanguage Setting has been set appropriately (so that it need not be reset on first time access).  Note that this flag affects only a single device; use the subscriber-level flags to set flags across all devices.
+            <d:DisplayName>Initialized CallerLanguage Setting</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedIntroduction" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the device has been  through the system introduction.  Note that this flag affects only a single device; use the subscriber-level flags to set flags across all devices.
+            <d:DisplayName>Initialized Introduction</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedRecordedName" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber's Recorded Name for this device has been set appropriately (so that it need not be re-recorded on first time access).  Note that this flag affects only a single device; use the subscriber-level flags to set flags across all devices.
+            <d:DisplayName>Initialized Recorded Name</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedPostponed" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber has postponed initialization for this device.  Note that this flag affects only a single device; use the subscriber-level flags to set flags across all devices.
+            <d:DisplayName>Initialized Postponed</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedRecordedGreeting" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the device's Recorded Greeting has been set appropriately (so that it need not be re-recorded on first time access).  Note that this flag affects only a single device; use the subscriber-level flags to set flags across all devices.
+            <d:DisplayName>Initialized Recorded Greeting</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedSecondaryMailbox" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber has been through the secondary mailbox tutorial for this device.  Note that this flag affects only a single device; use the subscriber-level flags to set flags across all devices.
+            <d:DisplayName>Initialized Secondary Mailbox</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedSkipPINSetting" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the device's SkipPIN Setting has been set appropriately (so that it need not be reset on first time access).  Note that this flag affects only a single device; use the subscriber-level flags to set flags across all devices.
+            <d:DisplayName>Initialized SkipPIN Setting</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InitializedScheduledGreetings" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether the subscriber has been through the scheduled greetings initialization for this device.  Note that this flag affects only a single device; use the subscriber-level flags to set flags across all devices.
+            <d:DisplayName>Initialized Scheduled Greetings</d:DisplayName>
+            <d:ValidFrom>1.7</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AMSInitRequired" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag to indicate whether Accession Messaging Service initialization is required for this device.
+            <d:DisplayName>AMSInitRequired</d:DisplayName>
+            <d:ValidFrom>1.15.11</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

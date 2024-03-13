@@ -1,0 +1,361 @@
+<html>
+<head>
+  <title>Update Greetings example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+
+</head>
+
+<body>
+<h1>CommPortal SDK Update Greetings Example</h1>
+
+Enter the server address, then press the button to log in,
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<div>
+<div id="selectTypeStep" style="display: none;">
+  <div id="defaultTypeSummary"></div>
+  <br/>
+  Select the greeting type you want to update:
+  <div id="selectTypeInput">
+    <select id="greetingTypeSelect" onChange="greetingChosen(this.value);">
+    </select>
+  </div>
+  <div id="selectTypeSummary"></div>
+  <br/>
+</div>
+</div>
+
+<div>
+<div id="setDefaultStep" style="display: none;">
+  <form name="setDefaultForm" id="setDefaultForm" onsubmit="doSetDefault(); return false" method="post">
+    <input type="submit" id="uploadFileButton" value="Set as Default"/>
+  </form>
+  <br/>
+</div>
+</div>
+
+<div>
+<div id="chooseFileStep" style="display: none;">
+  Press the button to select an audio file to use for the greeting.<br/>
+  This must be in one of the supported codecs defined in the EAS Integration Guide. The codecs enabled on your system are listed in the output below.
+
+  <form name="chooseFileForm" id="chooseFileForm" enctype="multipart/form-data" onsubmit="doUpload(); return false" method="post">
+    <div id="chooseFile">
+      Greeting audio:
+      <input name="uploadFile" type="file" style="width:300px"></input>
+      <br/>
+    </div>
+
+    <input type="submit" id="uploadFileButton" value="Upload File"/>
+  </form>
+</div>
+</div>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("GreetingsUpdateTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    listCodecs();
+    
+    // Trigger the next stage of the code
+    populateGreetingTypeList();    
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="listCodecsScript">
+function listCodecs()  
+{
+  connection.fetchCodecs(codecSuccess, codecError);
+  function codecSuccess(connection, codecs)
+  {
+    var codecStr = "";
+    for (var i = 0; i < codecs.length; i++)
+    {
+      codecStr += codecs[i].CodecName + "(" + codecs[i].CodecExtension + ")";
+      if (i < (codecs.length - 1)) codecStr += ", ";
+    }
+    display("Enabled Codecs: " + codecStr);
+  }
+
+  function codecError(connection, error)
+  {
+    display("Failed to fetch codec list, error: " + error);
+  }
+}
+</script>
+
+<script id="populateGreetingTypeListScript">
+// Lookup tables from greeting type to true/false flags for easy lookup later
+var isRecorded = {};
+var isRecordable = {};
+var isAvailableForDefault = {};
+
+function populateGreetingTypeList(selectedGreetingType)
+{
+  // Fetch the greetings data
+  connection.fetchGreetings(greetingsSuccess, greetingsError);
+
+  // The function to be called with the greetings list
+  function greetingsSuccess(connection, greetingsdata)
+  {
+    // Fill in the current default greeting type
+    var element = document.getElementById("defaultTypeSummary");
+    element.innerHTML = "Current Default Type: " +
+                        greetingsdata.defaultGreetingType;
+
+    // Create a drop down box of greeting types
+    var greetingDropDown = "";
+    var greetings = greetingsdata.greetingsList;
+    for (var i = 0; i < greetings.length; i++)
+    {
+      var greeting = greetings[i];
+
+      // Fill in our lookup maps
+      isRecorded[greeting.greetingType] = greeting.isRecorded;
+      isRecordable[greeting.greetingType] = greeting.recordable;
+      isAvailableForDefault[greeting.greetingType] = greeting.availableForDefault;
+
+      // Build another option entry
+      var selectedStr = "";
+      if (selectedGreetingType == greeting.greetingType)
+      {
+        selectedStr = " selected='selected'";
+      }
+      greetingDropDown += "<option value='" +
+                          greeting.greetingType + "'" +
+                          selectedStr +
+                          ">" +
+                          greeting.greetingType +
+                          "</option>";
+
+      // If we don't already know which greeting type is selected
+      // it will be the first one we encounter
+      if (!selectedGreetingType)
+      {
+        selectedGreetingType = greeting.greetingType;
+      }
+    }
+
+    // Fill in the Select form element
+    document.getElementById("selectTypeStep").style.display = "block";
+    document.getElementById("greetingTypeSelect").innerHTML = greetingDropDown;
+
+    // Update the summary about the chosen type
+    greetingChosen(selectedGreetingType);
+  }
+
+  // The function to be called if fetching the list fails
+  function greetingsError(connection, error)
+  {
+    display("Failed to fetch greetings list, error: " + error);
+  }
+}
+</script>
+
+<script id="greetingChosenScript">
+function greetingChosen(chosenGreetingType)
+{
+  var isTypeRecorded = isRecorded[chosenGreetingType];
+  var isTypeRecordable = isRecordable[chosenGreetingType];
+  var isTypeAvailableForDefault = isAvailableForDefault[chosenGreetingType];
+
+  var typeSummary = chosenGreetingType +
+                    ": Is Recorded: " + isTypeRecorded +
+                    ", Is Recordable: " + isTypeRecordable +
+                    ", Is Available for Default: " + isTypeAvailableForDefault;
+
+  document.getElementById("selectTypeSummary").innerHTML = typeSummary;
+
+  // Display the correct UI depending on what can be done with this greeting
+  // type
+  if (isTypeRecordable)
+  {
+    document.getElementById("chooseFileStep").style.display = "block";
+  }
+  else
+  {
+    document.getElementById("chooseFileStep").style.display = "none";
+  }
+
+  if (isTypeAvailableForDefault)
+  {
+    document.getElementById("setDefaultStep").style.display = "block";
+  }
+  else
+  {
+    document.getElementById("setDefaultStep").style.display = "none";
+  }
+}
+</script>
+
+<script id="setDefaultScript">
+function doSetDefault()
+{
+  var chosenGreetingType = document.getElementById("greetingTypeSelect").value;
+  connection.updateDefaultGreeting(chosenGreetingType,
+                                   greetingsDefaultSuccess,
+                                   greetingsDefaultError);
+
+  function greetingsDefaultSuccess(connection)
+  {
+    display("Updated default greeting type!");
+    populateGreetingTypeList(chosenGreetingType);
+  }
+
+  function greetingsDefaultError(connection, error)
+  {
+    display("Failed to update the default greeting type, error: " + error);
+  }
+}
+</script>
+
+<script id="uploadScript">
+function doUpload()
+{
+  display("Uploading file");
+
+  connection.uploadGreetingsAudio("chooseFileForm",
+                                  uploadSuccess,
+                                  uploadFailure);
+}
+
+function uploadSuccess(connection)
+{
+  display("Upload successful!");
+
+  var chosenGreetingType = document.getElementById("greetingTypeSelect").value;
+  connection.updateGreetingAudio(chosenGreetingType,
+                                 updateAudioSuccess,
+                                 updateAudioFail);
+
+  function updateAudioSuccess(connection)
+  {
+    display("Updated greeting audio!");
+    populateGreetingTypeList(chosenGreetingType);
+  }
+
+  function updateAudioFail(connection, error)
+  {
+    display("Failed to update greeting audio, error: " + error);
+  }
+}
+
+function uploadFailure(connection, error)
+{
+  display("Upload failed, error: " + error);
+}
+</script>
+
+<script id="updateAudioScript">
+function doUpdateAudio()
+{
+  display("Updating Greeting Audio");
+
+  var element = document.getElementById("greetingTypeSelect");
+  var chosenGreetingType = element.value;
+
+  connection.updateGreetingAudio(chosenGreetingType,
+                                 updateSuccess,
+                                 updateFailure);
+
+  function updateSuccess()
+  {
+    display("Updated!");
+  }
+
+  function updateFailure()
+  {
+    display("Failed!");
+  }
+}
+</script>
+
+</body>
+</html>

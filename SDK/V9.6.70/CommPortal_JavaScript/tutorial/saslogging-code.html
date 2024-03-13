@@ -1,0 +1,231 @@
+<html>
+<head>
+  <title>Service Assurance Server Logging - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Service Assurance Server Logging Example</h1>
+
+Enter the server address and the client version, then press the button to log in.
+<br/><br/>
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+    Client Version:
+    <input type="text" id="clientversion" value="1.0" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<form id="loggedOperations">
+  <h2>Logged Operations</h2>
+  <div id="saveDataLogTextDiv">
+    Update Summary:
+    <input type="text" id="savedatalogtext" value="Skip Pin Toggled" style="width:300px"></input>
+    <br/><br/>
+  </div>
+  <button disabled="disabled" id="toggleSkipPinButton" onclick="toggleSkipPin(connection); return false;">Toggle Skip Pin</button>
+  <br/><br/>
+  <div id="sasLogTextDiv">
+    SAS Summary Log Text:
+    <input type="text" id="sassummarylogtext" value="SAS Summary Log Text" style="width:300px"></input>
+    <br/><br/>
+    SAS Detail Log Text:
+    <input type="text" id="sasdetaillogtext" value="SAS Detail Log Text" style="width:300px"></input>
+    <br/><br/>
+  </div>
+  <button disabled="disabled" id="makeSASLogButton" onclick="doMakeSASLog(connection); return false;">
+    Make SAS Log
+  </button>
+  <button disabled="disabled" id="makeSASErrorLogButton" onclick="doMakeSASErrorLog(connection); return false;">
+    Make SAS Error Log
+  </button>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+  display("Using CommPortal server " + server);
+
+  var clientVersion = document.getElementById("clientversion").value;
+  connection.setClientVersion(clientVersion);
+  display("Client version set to: " + clientVersion);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  createConnection();
+
+  display("Logging in");
+  connection.login("PhoneCallsTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    doEnableButtons();
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="enableButtonsScript">
+function doEnableButtons()
+{
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++)
+  {
+    button = buttons[i];
+
+    button.disabled = false;
+  }
+
+  display("Now use the other buttons to drive the example");
+}
+</script>
+
+<script id="toggleSkipPinScript">
+function toggleSkipPin(connection)
+{
+  display(">>> Fetching raw data for MetaSphere EAS Mailbox Settings");
+
+  var logtext = document.getElementById("savedatalogtext").value;
+
+  connection.fetchRawData("Meta_Subscriber_MetaSphere_MailboxSettings",
+                          dataSuccess,
+                          dataFailure);
+
+  var skipPinEnabled;
+
+  function dataSuccess(connection, dataType, data, objectIdentity)
+  {
+    // Save off the original setting - note this is raw data so we need the
+    // field name to be suffixed with "._" to get at the actual value.
+    // If either data.SkipPinStatus or data.SkipPinStatus._ is not present then
+    // the bracked expression will give "undefined", so we use !! (not not)
+    // to effectively cast it to a boolean, so we only ever have true or
+    // false as the value we hold on to.
+    skipPinEnabled = !!(data.SkipPinStatus &&
+                        data.SkipPinStatus._);
+
+    display("Skip Pin was " + (skipPinEnabled ? "enabled" : "disabled"));
+
+    // Update the field to the opposite value
+    data.SkipPinStatus._ = !skipPinEnabled;
+
+    // Save the data back to the server
+    connection.saveData(dataType,
+                        data,
+                        saveSuccess,
+                        saveFailure,
+                        null,
+                        logtext);
+  }
+
+  function dataFailure(connection, error)
+  {
+    display("Failed to fetch Mailbox Settings data: " + error);
+  }
+
+  function saveSuccess(connection)
+  {
+    display("Skip Pin has now been toggled");
+  }
+
+  function saveFailure(connection, error)
+  {
+    display("Failed to save Mailbox Settings data: " + error);
+  }
+}
+</script>
+
+<script id="makeSASLogScript">
+function doMakeSASLog(connection)
+{
+  var summaryText = document.getElementById("sassummarylogtext").value;
+  var detailText = document.getElementById("sasdetaillogtext").value;
+  connection.makeSASLog(summaryText, detailText);
+  display("SAS log made");
+}
+</script>
+
+<script id="makeSASErrorLogScript">
+function doMakeSASErrorLog(connection)
+{
+  var summaryText = document.getElementById("sassummarylogtext").value;
+  var detailText = document.getElementById("sasdetaillogtext").value;
+  connection.makeSASErrorLog(summaryText, detailText);
+  display("SAS error log made");
+}
+</script>
+
+</body>
+</html>

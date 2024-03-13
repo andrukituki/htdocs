@@ -1,0 +1,467 @@
+<html>
+<head>
+<title>Contacts - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Contacts - CommPortal SDK Tutorial</h1>
+
+In this tutorial, we'll make our first foray away from strict telephony data
+to look at how <i>people</i> are represented by CommPortal API.  CommPortal
+refers to them as Contacts - though other systems you use might say "friends"
+or "address book" when they mean essentially the same thing.
+
+<p>
+By the end of this example, you'll be able to list the contacts, to add to or
+update them, and you'll have some idea how to search through the data.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  As always, feel free to use this code in your own application
+- you can download the example application as a single file, or you can copy
+just the relevant code fragments out of this web page.
+
+<p>
+Once again, if you've worked through previous tutorials then the initial
+section will be very familiar.  It's just a refresher from the
+<a href="login.html">Login</a> tutorial, so feel free to skip straight to
+<a href="#fetchContacts">Fetching the Contact List</a>.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>fetchContacts()</b>
+  <li><b>addContact()</b>
+  <li><b>modifyContact()</b>
+  <li><b>deleteContacts()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a> or any of the other tutorials, you'll be
+familiar with what we're doing here.  We use a form to enter a suitable
+CommPortal URL, but in a real application you could just hard-code the
+right value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API, and you might
+also recognize this code from the <a href="voicemails.html">voicemail</a>
+tutorial.  Once again we've provided a Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+This time, we've coded our <i>doLogin()</i> function to call the
+<i>doFetchContacts()</i> function covered in the next section, once the user's
+successfully logged in.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="fetchContacts"></a>
+<h2>Fetching the List of Contacts</h2>
+
+So, running through that again: we've opened a connection to CommPortal, we've
+allowed the subscriber to log in, and we've arranged to call our
+<i>doFetchContacts()</i> function as soon as they have.
+
+<p>
+Now for the interesting bit!  Here's the first function - we'll discuss exactly
+what it does below.
+
+<code id="fetchContactsScript"></code>
+
+<p>
+By now, you should recognize the way we provide two functions to CommPortal's
+<b>fetchContacts()</b> call - one to call back with the result, the
+other to use if there's a problem.  If you're not sure what's going on here,
+our <a href="hello.html">Hello World</a> tutorial runs through the API's
+asynchronous model.
+
+<p>
+You'll also be unsurprised to see the <b>connection</b> object passed back to
+our <i>contactsSuccess</i> function.  But the real data's in the second
+parameter to that function, the <b>contacts</b> array.  We'll work with this
+array in the following sections.
+
+<p>
+It's worth saying at this point that the array of contacts received
+isn't in any specific order.  After all, it's hard for CommPortal to know what
+order makes sense for your application: family name, nickname, or something else?
+In the real world, you might need to sort them as required - but for the sake of
+simplicity, our example program just works in whatever order they happen to
+be given to us.
+
+<h2>Displaying the contacts list in a table</h2>
+
+<p>
+The individual contacts are the most complex objects we have seen so far in
+the CommPortal API.  That's because people are complex too - most of us have
+more than one street address, several email accounts and <i>way</i> too many
+phone numbers!  Many people have both a work and a personal identity... and to
+make things worse, as we'll note again later, people's names, addresses and
+phone numbers aren't necessarily unique to them.
+
+<p>
+So let's break it down.  A contact object may contain the following fields.
+
+<dl>
+  <dt>givenName</dt>
+  <dd>The first or given name of the person</dd>
+
+  <dt>familyName</dt>
+  <dd>The surname or family name of the person</dd>
+
+  <dt>displayName</dt>
+  <dd>A convenient combination of the given and family names</dd>
+
+  <dt>nickname</dt>
+  <dd>A familiar name or nickname of the person</dd>
+
+  <dt>organization</dt>
+  <dd>The organization the person is associated with - often their employer</dd>
+
+  <dt>jobTitle</dt>
+  <dd>The person's job title</dd>
+
+  <dt>sms</dt>
+  <dd>The person's sms contact details</dd>
+
+  <dt>uid</dt>
+  <dd>An id that identifies this contact object for other API calls</dd>
+
+  <dt>phone</dt>
+  <dd>An array of up to 5 phone numbers that can be used to contact the person</dd>
+
+  <dt>phoneType</dt>
+  <dd>
+    This array mirrors the phone array field, and for each entry provides a
+    type for the corresponding number - one of "home", "work", "cell", "fax" or
+    empty.
+  </dd>
+
+  <dt>email</dt>
+  <dd>An array of up to 2 email addresses that can be used to contact the person</dd>
+
+  <dt>address</dt>
+  <dd>
+    An array of up to 2 postal addresses that can be used to contact the person.
+    See below for more details on the structure of this address object.
+  </dd>
+
+  <dt>addressType</dt>
+  <dd>
+    This array mirrors the address array field, and for each entry provides a
+    type for the corresponding address - one of "home" or "work"
+  </dd>
+</dl>
+
+Each of the postal addresses in the <b>address</b> array itself may contain
+the following fields.
+
+<dl>
+  <dt>street</dt>
+  <dd>The street part of the address</dd>
+
+  <dt>locality</dt>
+  <dd>The locality part of the address - for a US address this is typically the city</dd>
+
+  <dt>region</dt>
+  <dd>For a US address this typically holds the State (or state abbreviation)</dd>
+
+  <dt>postalcode</dt>
+  <dd>For a US address this holds the ZIP code</dd>
+
+  <dt>country</dt>
+  <dd>As it says, the country part of the address</dd>
+
+  <dt>displayAddress</dt>
+  <dd>A convenience field - which joins together the various parts of the address into one value</dd>
+</dl>
+
+<p>
+These properties of a contact are based in part on the
+<a href="http://en.wikipedia.org/wiki/VCard">vCard format</a>
+for electronic business cards.
+
+<p>
+For our first example using this data, we'll display the list of contacts in a
+table.  To keep this simple, we'll show just a few fields from the full set
+available:
+</p>
+<ul>
+  <li>The full name of the person</li>
+  <li>Their nickname</li>
+  <li>A count of how many ways we know of to contact them</li>
+</ul>
+
+Here's the code to show these details.
+
+<code id="displayContactsScript"></code>
+
+The HTML we're building here is pretty simple, so not much needs explaining.
+We create a table header, then fill in one row for each contact.  We actually
+display the table we've built using the <i>addToOutput()</i> function, which
+we've provided ourselves and you'll find in the full example code.
+
+<p>
+Of passing interest is the fact that we check for names and nicknames
+being present, and if they're missing we use a "non breaking space".  If we
+naively output an empty string, the table cell would be displayed without
+a border - which rather ruins the neat table we're trying to display.
+
+<h2>Displaying everything about a person</h2>
+
+Actually, although we tried to keep things simple above with
+a compact table of just some of the contacts' details, it turns out that
+it's a similar amount of code to display everything we can.
+
+<code id="displayContactDetailsScript"></code>
+
+This time, we check each field for its existence, and if found we display a
+label and the value.  For the fields that can have multiple entries (holding
+phone, email, and postal addresses), we loop through all the values.
+
+<p>
+The main point of this example is to show how to use the mirror "Type" arrays,
+which help explain the meanings of the multiple phone numbers and postal
+addresses.  The types are short English words which we can display directly.
+In a real system, of course, you might choose to interpret them programmatically
+- perhaps to choose an icon to display.
+
+<p>
+Geographical services are very popular these days... so if a contact has a
+postal address, there are lots of fun things we can do.  For the moment, just
+note that we call <i>displayMapButton()</i> to add a map button.
+We'll explain that more in the next section.
+
+<h2>Displaying contacts on a map</h2>
+
+So, how can we turn the street address returned by CommPortal into a map?
+The first stage is to add a button alongside the address, to allow the user to
+ask for a map.  This code therefore creates a button element, which when pressed
+passes the "this" object (the button which was pressed), and the appropriate
+address to a later <i>mapContact()</i> routine.
+
+<p>
+There's just one wrinkle here: the address is a pretty free-format string,
+so may contain some characters such as &amp; or quotes which could cause us
+JavaScript problems.  To avoid that happening, we call encodeURIComponent()
+on the address.  This standard JavaScript function guarantees us a string
+that is safe from these problems - though it does mean we must remember the
+corresponding decodeURIComponent() later!
+
+<code id="displayMapButtonScript"></code>
+
+For the map itself, just as with the Voicemails tutorial, the way to get
+impressive results with a minimum of effort is to integrate with a third-party
+component.  There are lots of mapping services out there to choose from -
+each with its own features, and its own terms and conditions.
+The service we've chosen to use here is Yahoo Maps, since its licensing
+terms are quite open and it offers an easy, one-step process to go from an
+address to a map.
+
+<p>
+To use the Yahoo Maps API we need to provide an application id, and then to
+include the API file.
+
+<code id="defineYahooAppId"></code>
+
+If you copy the above code, you must go and get your own application id from the
+<a href="https://developer.yahoo.com/wsregapp/">Yahoo Developer Network</a>.
+Yahoo use the AppId for rate limiting, so if you skip getting your own the
+service may not work - you'll be competing for resources with other members of
+Innovators.
+
+<p>
+There's one other trick it's worth pointing out in this code fragment: the
+splitting up of the "&lt;script>" tag into two parts.  This is just so that
+certain tools don't get confused into thinking that this JavaScript string
+delimits the outer script tag that contains it.
+
+<p>
+Once we have the API in place, the code to display the map is quite simple:
+
+<code id="mapContactScript"></code>
+
+You'll see we create a new div element that will hold the map, which we
+insert into the page just after the button (that's why we passed the
+<i>button</i> parameter to this routine).  We then tell the Yahoo YMap component
+about the div, and make a few calls to configure it, before passing the
+address in to it to be displayed.  Remember we previously called
+<i>encodeURIComponent()</i> on the address to avoid problem when we inserted it into
+the HTML, so we need to undo that now using <i>decodeURIComponent()</i>.
+And as a final flourish, we disable the button, since it makes no sense to use
+it twice.
+
+<p>
+You can check out the Yahoo developer site for more details on the
+<a href="http://developer.yahoo.com/maps/ajax/">Yahoo Map component</a>.
+
+<h2>Adding Contacts</h2>
+
+We've seen how to work with the contacts already stored in CommPortal; now,
+let's look at how we'd add to them.  In our example, we'll add a contact
+record for our friend John Doe - who we'll imagine works at MetaSwitch's North
+American headquarters in Alameda, CA.
+
+<p>
+Adding a contact uses the <b>addContact()</b> API call.
+The call itself is straightforward, but we do need to form our contact
+object quite carefully.  To make this clearer, the example here first builds
+an address object, and then uses that when filling in the contact object itself.
+
+<code id="addContactScript"></code>
+
+Note that we specify the given and family parts of the name separately - we
+can't supply the combined displayName and expect CommPortal to work it out.
+Similarly, we're not allowed to use the displayAddress to set the street
+address, but instead provide the various parts individually.
+
+<p>
+As you can see, you don't have to supply a value for every possible field
+in the contact - and where multiple values are permitted, you can supply any
+number of values (including zero), up to the maximum permitted.
+
+<p>
+One final thing to note: when creating a new contact, leave
+the uid field empty.  That's filled in automatically by CommPortal, on the
+server when it stores the contact.
+
+<h2>Modifying contacts</h2>
+
+A short while later, our friend John Doe changes his name to "Jonny" and shoots
+for the job of MetaSwitch CEO.  He also gives us his home phone number, which
+we didn't have before.  How can we update our contact record to cover all
+these changes?
+
+<p>
+Here's the code; we'll discuss how it works below.
+
+<code id="modifyContactScript"></code>
+
+<p>
+You'll notice this is a two-stage process, using two CommPortal API calls.
+First we use <b>fetchContacts()</b> to get the list of contacts from the
+CommPortal server - now including, of course, John Doe, who we added in
+above.  We've already discussed <b>fetchContacts()</b>, and you'll remember
+that it calls us back with an array of contact records.
+
+<p>
+It's worth noting that however individualistic our friends
+and colleagues are, you'll very often get contacts which appear alike.
+Many people in the world have the same name, a lot of people share the same
+switchboard number, and dozens of people might live or work at the same
+address.  But we won't worry about any of that for now; we simply walk
+through the array and find the first contact whose nickname matches what we
+added above.
+
+<p>
+After finding our friend, we make the changes we need directly to his
+contact structure.  We change the existing givenName field, add an entry for
+the jobTitle, and for completeness, delete the existing nickname.  We also
+add to the phone numbers (which are stored in an array) using the convenient
+JavaScript <i>push()</i> method.
+
+<p>
+Once the new contact record is ready to go, we simply call the
+<b>modifyContact()</b> API.  How does CommPortal know which contact to change?
+Well, because this was an existing contact, it already has a uid filled in by
+the CommPortal server; we didn't (and mustn't) change that, so CommPortal can
+use it to match up.
+Incidentally, modifying a contact doesn't change its uid.  We make use of this
+fact by passing the contact.uid value on to the next stage of our illustration,
+in the call to <i>doDeleteContact()</i>.
+
+<h2>Deleting contacts</h2>
+
+Having gone to all this trouble over our friend Jonny Doe, we get bad news:
+he didn't make MetaSwitch CEO after all.  Being fickle, we decide to
+purge him from our contacts list.
+
+<p>
+Deleting a contact is a bit different from modifying one.  Rather than pass
+the CommPortal API a whole contact object, we just need to specify the uid.
+In a real program you'd still probably need to use <b>fetchContacts()</b> to find
+the contact's uid, but in our example we cunningly held onto it when we
+modified the same contact above.
+
+<p>
+Unsurprisingly, the API function we need is called <b>deleteContacts()</b>.
+Note the plural: we're just passing in one uid, but if we had a number of
+contacts we wanted to delete at once we could instead pass in an array of values.
+
+<code id="deleteContactScript"></code>
+
+<!--
+<h2>Matching phone numbers with contacts</h2>
+
+<div class="notWritten">
+This part of the tutorial is not yet available.
+</div>
+
+<h2>Searching contacts</h2>
+
+<div class="notWritten">
+This part of the tutorial is not yet available.
+</div>
+-->
+
+<hr>
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="contacts-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial tackles the subject of handling the various
+<a href="calllists.html">lists of phone calls</a> that the CommPortal API
+maintains.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

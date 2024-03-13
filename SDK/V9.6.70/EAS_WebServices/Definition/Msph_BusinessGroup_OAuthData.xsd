@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_BusinessGroup_OAuthData">
+    <xs:annotation>
+      <xs:documentation>
+        Indication for setting and retrieving a mapping from user OAuth identifier(s) to EAS subscriber phone number for lookups during CommPortal logins via OAuth authorization.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>masterAdmin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Subscriber" type="tSubscriber">
+        <xs:annotation>
+          <xs:documentation>
+            A single subscriber OAuth mapping in this Business Group.
+            <d:DisplayName>Subscriber</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tSubscriber">
+    <xs:annotation>
+      <xs:documentation>A single subscriber OAuth mapping in a Business Group.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="PhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Subscriber's phone number.
+            <d:DisplayName>PhoneNumber</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AADEmailAddress" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Subscriber's Azure AD email address.
+            <d:DisplayName>AADEmailAddress</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

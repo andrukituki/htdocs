@@ -1,0 +1,38 @@
+//-----------------------------------------------------------------------------
+// File: SEAccessFactoryInterface.idl
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Highly Confidential Material
+//
+//-----------------------------------------------------------------------------
+
+#ifndef SEAccessFactoryInterface_idl
+#define SEAccessFactoryInterface_idl
+
+#include "SEExceptions.idl"
+#include "SEAccessInterface.idl"
+
+/**
+ * This interface acts solely as a factory for creating instances of the
+ * SEAccessInterface.
+ */
+interface SEAccessFactoryInterface
+{
+  /**
+   * Each invocation of createsSEAccess returns an identical, generic
+   * SEAccessInterface instance; this instance only becomes associated with a
+   * specific SE as a result of subsequent method invocations on the
+   * SEAccessInterface.  The client application is obliged to call the destroy
+   * method on the SEAccessInterface when it has finished using it.
+   *
+   * @return SEAccessInterface instance.
+   *
+   * @throws ElementOperationFailedException  If the request failed for any
+   *   reason, for example if the EMS Server does not have enough memory to
+   *   complete the request.  See SEExceptions.idl.
+   */
+  SEAccessInterface createSEAccess()
+      raises (ElementOperationFailedException);
+};
+
+#endif

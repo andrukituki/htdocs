@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://www.metaswitch.com/srb/soap/sh"
+      xmlns:apachesoap="http://xml.apache.org/xml-soap"
+      xmlns:impl="http://www.metaswitch.com/srb/soap/sh"
+      xmlns:intf="http://www.metaswitch.com/srb/soap/sh"
+      xmlns:tns1="http://www.metaswitch.com/srb/soap/sh"
+      xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+      xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/"
+      xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <wsdl:types>
+    <schema elementFormDefault="qualified"
+        targetNamespace="http://www.metaswitch.com/srb/soap/sh"
+        xmlns:m="http://www.metaswitch.com/srb/soap/sh"
+        xmlns:u="http://www.metaswitch.com/srb/soap/sh/userdata"
+        xmlns="http://www.w3.org/2001/XMLSchema">
+      <import namespace="http://www.metaswitch.com/srb/soap/sh/userdata" schemaLocation="userData.xsd"/>
+
+      <element name="ShPull">
+        <complexType>
+          <sequence>
+            <element maxOccurs="1" minOccurs="1" name="UserIdentity" type="m:tUserIdentity" />
+            <element maxOccurs="1" minOccurs="1" name="DataReference" type="m:tDataReference" />
+            <element maxOccurs="1" minOccurs="1" name="ServiceIndication" type="string" />
+            <element maxOccurs="1" minOccurs="1" name="OriginHost" type="string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="ShPullResponse">
+        <complexType>
+          <sequence>
+            <element maxOccurs="1" minOccurs="1" name="ResultCode" type="m:tResultCode" />
+            <element maxOccurs="1" minOccurs="1" name="ExtendedResult" type="m:tExtendedResult" />
+            <element maxOccurs="1" minOccurs="0" name="UserData" type="u:tUserData" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="ShUpdate">
+        <complexType>
+          <sequence>
+            <element maxOccurs="1" minOccurs="1" name="UserIdentity" type="m:tUserIdentity" />
+            <element maxOccurs="1" minOccurs="1" name="DataReference" type="m:tDataReference" />
+            <element maxOccurs="1" minOccurs="1" name="UserData" type="u:tUserData" />
+            <element maxOccurs="1" minOccurs="1" name="OriginHost" type="string" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <element name="ShUpdateResponse">
+        <complexType>
+          <sequence>
+            <element maxOccurs="1" minOccurs="1" name="ResultCode" type="m:tResultCode" />
+            <element maxOccurs="1" minOccurs="1" name="ExtendedResult" type="m:tExtendedResult" />
+          </sequence>
+        </complexType>
+      </element>
+
+      <simpleType name="tDataReference">
+        <restriction base="int">
+          <minInclusive value="0" />
+          <maxInclusive value="0" />
+        </restriction>
+      </simpleType>
+
+      <simpleType name="tUserIdentity">
+        <restriction base="string">
+          <!--     <pattern value="[0-9]*" /> -->
+        </restriction>
+      </simpleType>
+
+      <simpleType name="tResultCode">
+        <restriction base="int">
+          <minInclusive value="1000" />
+          <maxInclusive value="9999" />
+        </restriction>
+      </simpleType>
+
+      <complexType name="tExtendedResult">
+        <sequence>
+          <element maxOccurs="1" minOccurs="1" name="ExtendedResultCode" type="int" />
+          <element maxOccurs="1" minOccurs="0" name="ExtendedResultDetail" type="string" />
+          <element maxOccurs="1" minOccurs="1" name="ExtendedSubResults" type="m:tExtendedSubResults" />
+          <element name="ExtendedResultSystem" maxOccurs="unbounded" minOccurs="0" type="m:tResultSystem" />
+          <any minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+      </complexType>
+
+      <complexType name="tExtendedSubResults">
+        <sequence>
+          <element minOccurs="0" maxOccurs="unbounded" name="SubResult" type="m:tSubResult" />
+        </sequence>
+      </complexType>
+
+      <complexType name="tSubResult">
+        <sequence>
+          <element maxOccurs="1" minOccurs="1" name="SubResultCode" type="int" />
+          <element maxOccurs="1" minOccurs="1" name="SubResultDetail" type="string" />
+          <element maxOccurs="1" minOccurs="1" name="SubResultSource" type="string" />
+          <element name="SubResultSystem" maxOccurs="unbounded" minOccurs="0" type="m:tResultSystem" />
+          <any minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+      </complexType>
+	  
+      <complexType name="tResultSystem">
+        <simpleContent>
+          <extension base="string">
+            <attribute name="type" type="string" />
+          </extension>
+        </simpleContent>
+      </complexType>
+
+    </schema>
+  </wsdl:types>
+
+  <wsdl:message name="ShPull">
+    <wsdl:part element="tns1:ShPull" name="parameters"/>
+  </wsdl:message>
+
+  <wsdl:message name="ShPullResponse">
+    <wsdl:part element="tns1:ShPullResponse" name="parameters"/>
+  </wsdl:message>
+
+  <wsdl:message name="ShUpdate">
+    <wsdl:part element="tns1:ShUpdate" name="parameters"/>
+  </wsdl:message>
+
+  <wsdl:message name="ShUpdateResponse">
+    <wsdl:part element="tns1:ShUpdateResponse" name="parameters"/>
+  </wsdl:message>
+
+  <wsdl:portType name="Sh">
+
+    <wsdl:operation name="ShPull">
+      <wsdl:input message="impl:ShPull" name="ShPull"/>
+      <wsdl:output message="impl:ShPullResponse" name="ShPullResponse"/>
+    </wsdl:operation>
+
+    <wsdl:operation name="ShUpdate">
+      <wsdl:input message="impl:ShUpdate" name="ShUpdate"/>
+      <wsdl:output message="impl:ShUpdateResponse" name="ShUpdateResponse"/>
+    </wsdl:operation>
+
+  </wsdl:portType>
+
+  <wsdl:binding name="ShSOAP" type="impl:Sh">
+
+    <wsdlsoap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+    <wsdl:operation name="ShPull">
+      <wsdlsoap:operation soapAction=""/>
+
+      <wsdl:input name="ShPull">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+
+      <wsdl:output name="ShPullResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+
+    </wsdl:operation>
+
+    <wsdl:operation name="ShUpdate">
+      <wsdlsoap:operation/>
+
+      <wsdl:input name="ShUpdate">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:input>
+
+      <wsdl:output name="ShUpdateResponse">
+        <wsdlsoap:body use="literal"/>
+      </wsdl:output>
+
+    </wsdl:operation>
+
+  </wsdl:binding>
+
+  <wsdl:service name="ShService">
+    <wsdl:port binding="impl:ShSOAP" name="ShService">
+      <!-- address location needs to be changed to the Web Services server. -->
+      <wsdlsoap:address location="http://&&METAVIEW_SERVER_NAME&&:8087/mvweb/services/ShService" />
+    </wsdl:port>
+  </wsdl:service>
+
+</wsdl:definitions>
+

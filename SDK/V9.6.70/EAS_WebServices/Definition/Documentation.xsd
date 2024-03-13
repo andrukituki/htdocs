@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/documentation" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.0">
+  <xs:element name="DisplayName">
+                <xs:annotation>
+                        <xs:documentation>
+                                The human-readable name of this field.
+                        </xs:documentation>
+                </xs:annotation>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:string">
+          <xs:attribute ref="firstVersion" />
+          <xs:attribute ref="lastVersion" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ValidFrom" type="tVersion">
+                <xs:annotation>
+                        <xs:documentation>
+                                The earliest version in which this field or service indication is valid.
+
+                                If this element is absent, the field or service indication is valid back
+                                to the first version supported by the SDP Server.
+                        </xs:documentation>
+                </xs:annotation>
+        </xs:element>
+  <xs:element name="ValidTo" type="tVersion">
+                <xs:annotation>
+                        <xs:documentation>
+                                The latest version in which this field or service indication is valid.
+
+                                If this element is absent, the field or service indication is valid up
+                                to the version of the SDP Server.
+                        </xs:documentation>
+                </xs:annotation>
+        </xs:element>
+        <xs:element name="Identifiers">
+                <xs:annotation>
+                        <xs:documentation>
+                                This lists the identifiers that must be provided in the user identity
+                                when requesting this service indication.  Each identifier refers to a
+                                particular field on a particular object, either this one or an ancestor.
+                                For example, requesting Business Group configuration requires you to
+                                specify the name of the MetaSwitch and the name of the Business Group.
+                        </xs:documentation>
+                </xs:annotation>
+                <xs:complexType>
+                        <xs:sequence>
+                                <xs:element name="Identifier" minOccurs="1" maxOccurs="unbounded" type="xs:string" />
+                        </xs:sequence>
+                </xs:complexType>
+        </xs:element>
+  <xs:element name="BaseAccess">
+                <xs:annotation>
+                        <xs:documentation>
+                                 When this field may be read or changed. This carries six characters.
+                                  - The first is not relevant to the Sh interface.
+                                  - The second determines the write permission whilst the object is
+                                    being created - that is, whether the field can be set on an
+                                    Sh-Update request with a sequence number of 0.  "W" indicates that
+                                    the field is writeable, and "-" that it is not.
+                                  - The third determines whether the field can be read (whether it will
+                                    typically be included on an Sh-Pull response) whilst the object is
+                                    disabled.  "R" indicates that it is readable, and "-" that it is
+                                    not.
+                                  - The fourth determines whether it is writeable whilst the object is
+                                    disabled.
+                                  - The fifth and sixth determine the read and write permissions,
+                                    respectively, whilst the object is enabled.
+
+                                 For example, RW--R- would indicate that you may set the field when you
+                                 create the object, and it will be returned on an Sh-Pull whilst the
+                                 object is enabled.  However, you may not change the field via an
+                                 Sh-Update after the object has been created, and it will not be
+                                 returned on an Sh-Pull whilst the object is disabled.
+                        </xs:documentation>
+                </xs:annotation>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="tBaseAccess">
+          <xs:attribute ref="firstVersion" />
+          <xs:attribute ref="lastVersion" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+        <xs:element name="Type">
+                <xs:annotation>
+                        <xs:documentation>
+                                What type of field this is.  The schema provides detailed information
+                                about the format of the field and its value, but this provides a
+                                general classification.
+                                 - String: a general type that may or may not be further restricted.
+                                 - Integer: a numeric field.
+                                 - Integer range: a numeric field whose value must be within a
+                                   particular range.
+                                 - Choice of values: the field's value must be one of a particular set
+                                   of values.
+                                 - Combination of values: the field's value is a combination of zero
+                                   or more of a particular set of sub-values.
+                                 - Custom: the field's type does not fit into one of the above
+                                   categories.
+                        </xs:documentation>
+                </xs:annotation>
+                <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                                <xs:enumeration value="String" />
+                                <xs:enumeration value="Integer" />
+                                <xs:enumeration value="Integer range" />
+                                <xs:enumeration value="Choice of values" />
+                                <xs:enumeration value="Combination of values" />
+                                <xs:enumeration value="Custom" />
+                        </xs:restriction>
+                </xs:simpleType>
+        </xs:element>
+  <xs:element name="Mandatory">
+                <xs:annotation>
+                        <xs:documentation>
+                                Whether the field must be provided.  Mandatory fields must be provided
+                                on a creation request, and cannot later be set to be empty.
+
+                                If this element is absent, the field is not mandatory.
+                        </xs:documentation>
+                </xs:annotation>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="tYesNo">
+          <xs:attribute ref="firstVersion" />
+          <xs:attribute ref="lastVersion" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DefaultValue">
+                <xs:annotation>
+                        <xs:documentation>
+                                The value that will apply to this field if you do not specify one.
+
+                                If this element is absent, the field has no default value.
+                        </xs:documentation>
+                </xs:annotation>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:anySimpleType">
+          <xs:attribute ref="firstVersion" />
+          <xs:attribute ref="lastVersion" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SwitchableDefault">
+                <xs:annotation>
+                        <xs:documentation>
+                                Whether this field is a switchable default field (i.e. inherits a
+                                default value that may be overridden).
+
+                                If this element is absent, the field is not a switchable default.
+                        </xs:documentation>
+                </xs:annotation>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="tYesNo">
+          <xs:attribute ref="firstVersion" />
+          <xs:attribute ref="lastVersion" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+        <xs:element name="MaxLength" type="xs:int">
+                <xs:annotation>
+                        <xs:documentation>
+                                The maximum number of characters allowed in the value of this field.
+                        </xs:documentation>
+                </xs:annotation>
+        </xs:element>
+  <xs:element name="ResetOnly">
+                <xs:annotation>
+                        <xs:documentation>
+                                Whether, on an Sh-Update, the field may only be set to a value of 0.
+
+                                If this element is absent, the field is not reset-only.
+                        </xs:documentation>
+                </xs:annotation>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="tYesNo">
+          <xs:attribute ref="firstVersion" />
+          <xs:attribute ref="lastVersion" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Range">
+                <xs:annotation>
+                        <xs:documentation>
+                                The valid range of values, for fields whose value must fall within a
+                                certain range.
+                        </xs:documentation>
+                </xs:annotation>
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:int">
+          <xs:attribute ref="firstVersion" />
+          <xs:attribute ref="lastVersion" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CombinationValues" type="tCombinationValues">
+                <xs:annotation>
+                        <xs:documentation>
+                                The field's value is a combination or zero or more of these sub-values.
+                        </xs:documentation>
+                </xs:annotation>
+        </xs:element>
+  <xs:element name="Values" type="tValues">
+                <xs:annotation>
+                        <xs:documentation>
+                                The field's value must be one of these sub-values.
+                        </xs:documentation>
+                </xs:annotation>
+        </xs:element>
+  <xs:attribute name="firstVersion" type="tVersion">
+                <xs:annotation>
+                        <xs:documentation>
+                                The above attributes of a field, such as whether it is mandatory, can
+                                change between versions.  This indicates the earliest version at which
+                                the associated information applies.
+                        </xs:documentation>
+                </xs:annotation>
+        </xs:attribute>
+  <xs:attribute name="lastVersion" type="tVersion">
+                <xs:annotation>
+                        <xs:documentation>
+                                The above attributes of a field, such as whether it is mandatory, can
+                                change between versions.  This indicates the latest version at which
+                                the associated information applies.
+                        </xs:documentation>
+                </xs:annotation>
+        </xs:attribute>
+  <xs:simpleType name="tBaseAccess">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[RW-]{6}" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tYesNo">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Yes" />
+      <xs:enumeration value="No" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tVersion">
+    <xs:restriction base="xs:string">
+                        <xs:pattern value="[1-9]\.[0-9](\.[0-9]{1,2})?" />
+                </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tCombinationValues">
+    <xs:sequence>
+      <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:anySimpleType">
+              <xs:attribute name="display" type="xs:string"/>
+                          <xs:attribute ref="firstVersion" />
+                          <xs:attribute ref="lastVersion" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tValues">
+    <xs:sequence>
+      <xs:element name="Value" minOccurs="0" maxOccurs="unbounded">
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:anySimpleType">
+                          <xs:attribute ref="firstVersion" />
+                          <xs:attribute ref="lastVersion" />
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

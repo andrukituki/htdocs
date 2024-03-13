@@ -1,0 +1,66 @@
+<html>
+<head>
+  <title>Hello World - a CommPortal SDK example</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>Hello World - CommPortal SDK example</h1>
+
+<form onsubmit="pressed(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Press me to Login" style="margin-left:125px"/>
+</form>
+
+<script>
+// The subscriber number will be placed in here later
+var subscriberNumber = null;
+
+// This function is called when the button is pressed
+function pressed()
+{
+  var server = document.getElementById("server").value;
+  var connection = new CommPortal(server);
+
+  connection.login(loginSuccess, handleError);
+}
+
+// The function to be called if we get an error
+function handleError(connection, error)
+{
+  alert("Got error: " + error);
+}
+
+// The function to be called when succesfully logged in
+function loginSuccess(connection, sessionId)
+{
+  connection.fetchSubscriberNumber(gotNumber, handleError);
+}
+
+// The function called when we fetch the subscriber number
+function gotNumber(connection, number)
+{
+  subscriberNumber = number;
+
+  connection.fetchVoicemailCount(gotCount, handleError);
+}
+
+// The function called when we get the count of voicemails
+function gotCount(connection, total, unheard)
+{
+  alert("Hello " + subscriberNumber +
+        ", you have " + unheard + " new voicemails");
+
+  // We no longer need the connection, so log out
+  connection.logout();
+}
+</script>
+
+</body>
+</html>

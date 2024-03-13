@@ -1,0 +1,4238 @@
+//-----------------------------------------------------------------------------
+// File: SettingsUserInterface.idl
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Highly Confidential Material
+//
+//-----------------------------------------------------------------------------
+
+#ifndef SettingsUserInterface_idl
+#define SettingsUserInterface_idl
+
+#include "SEExceptions.idl"
+
+//-----------------------------------------------------------------------------
+//
+// Structures and typedefs.
+//
+//-----------------------------------------------------------------------------
+
+/**
+ * DualString encapsulates a string value where there is a programmatic
+ * internal form and an NLS-enabled display form.  Typically, when using
+ * the value of a DualString object, methods will either accept a DualString
+ * object or will require the internal field value.
+ **/
+struct DualString
+{
+  string internal;
+  string display;
+};
+
+/**
+ * Defines SequenceOfDualStrings to be a sequence of DualStrings.  We use this
+ * to provide an unbounded number of DualStrings; an IDL sequence is
+ * unbounded, but an array is not.
+ **/
+typedef sequence<DualString> SequenceOfDualStrings;
+
+/**
+ * Define SequenceOfNames to be a sequence of strings.  We use this to provide
+ * an unbounded number of strings.
+ **/
+typedef sequence<string> SequenceOfNames;
+
+/**
+ * Define SequenceOfOctets to be a sequence of octets.  We use this to provide
+ * an unbounded number of octets.
+ **/
+typedef sequence<octet> SequenceOfOctets;
+
+/**
+ * Define SequenceOfIntegers to be a sequence of 32-bit integers.
+ * We use this to provide an unbounded number of integers.
+ **/
+typedef sequence<long> SequenceOfIntegers;
+
+/**
+ * Define SequenceOfSequenceOfIntegers to be a sequence of SequenceOfIntegers.
+ * We use this to provide an unbounded number of integers.
+ **/
+typedef sequence<SequenceOfIntegers> SequenceOfSequenceOfIntegers;
+
+/**
+ * Define SequenceOfIndices to be a sequence of strings to hold all forms
+ * of index value.  We use this because we want an unbounded number of
+ * strings - an IDL sequence is unbounded, but an array is not.
+ **/
+typedef sequence<string> SequenceOfIndices;
+
+/**
+ * Define SequenceOfIdentifiers to be a sequence of strings to hold all forms
+ * of identifier values.  We use this because we want an unbounded number of
+ * strings - an IDL sequence is unbounded, but an array is not.
+ **/
+typedef sequence<string> SequenceOfIdentifiers;
+
+/**
+ * The SettingsUserInterface provides the client application with methods to:
+ * enumerate fields; obtain detailed type information that describes each of
+ * the fields including ranges, units and default values; get and set field
+ * values; query lists of possible values for fields.
+ */
+interface SettingsUserInterface
+{
+    //-------------------------------------------------------------------------
+    //
+    // Field type constants as returned by the getFormatByIndex and
+    // getFormatByName.
+    //
+    //-------------------------------------------------------------------------
+
+    /**
+     * 32-bit integer field.
+     */
+    const long TYPE_INT32          = 1;
+
+    /**
+     * 64-bit integer.
+     */
+    const long TYPE_INT64          = 2;
+
+    /**
+     * String field.
+     */
+    const long TYPE_STRING         = 3;
+
+    /**
+     * Boolean field.
+     */
+    const long TYPE_BOOLEAN        = 4;
+
+    /**
+     * 32-bit integer field with a specified range.
+     */
+    const long TYPE_INT32_RANGE    = 5;
+
+    /**
+     * Array of 32-bit integers field.
+     */
+    const long TYPE_INT32_ARRAY    = 6;
+
+    /**
+     * 32-bit integer field with a specified set of values: a 'one of' field.
+     */
+    const long TYPE_INT32_MAP      = 7;
+
+    /**
+     * Array of octets field.
+     */
+    const long TYPE_BYTE_ARRAY     = 8;
+
+    /**
+     * 32-bit integer bit mask field.
+     */
+    const long TYPE_BIT_MASK       = 9;
+
+    /**
+     * Unsigned 64-bit integer (unsigned long) field.
+     */
+    const long TYPE_UNSIGNED_LONG  = 10;
+
+    /**
+     * 64-bit integer field with a specified range.
+     */
+    const long TYPE_LONG_RANGE     = 11;
+
+
+    //-------------------------------------------------------------------------
+    //
+    // Field format constants as returned by the getFormatByIndex and
+    // getFormatByName.  These formats affect the way in which field values are
+    // written to strings and also the interpretation of the values passed on
+    // setFieldAsXXX methods.
+    //
+    //-------------------------------------------------------------------------
+
+    /**
+     * If the field is of an integer type, then it is written as a signed
+     * decimal.  If the field is of TYPE_BYTE_ARRAY then it is written as a
+     * series of hex strings, with each byte corresponding to 2 hex characters.
+     * There are spaces between bytes e.g.  "FF FF FF".
+     */
+    const long FORMAT_DEFAULT             = 0;
+
+    /**
+     * Written as a hexadecimal string preceded by "0x" or "0X".
+     */
+    const long FORMAT_HEX                 = 1;
+
+    /**
+     * Written as an unsigned decimal.
+     */
+    const long FORMAT_UNSIGNED            = 2;
+
+    /**
+     * Written in IP address format e.g. "255. 255. 255. 255".
+     */
+    const long FORMAT_4_BYTE_DOTTED_DEC   = 3;
+
+    /**
+     * Written in pointcode format e.g. "255-255-255".
+     */
+    const long FORMAT_3_BYTE_DASHED_DEC   = 4;
+
+    /**
+     * Written as an ASCII string where each byte corresponds to an
+     * ASCII character.  Applies to fields of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_ASCII               = 5;
+
+    /**
+     * Writes as plain text only.  Applies to fields of TYPE_STRING only.
+     */
+    const long FORMAT_BODY_TEXT           = 6;
+
+    /**
+     * Write the string highlighted to mark the text as a header.
+     * Applies to fields of TYPE_STRING only.
+     */
+    const long FORMAT_HEADING             = 7;
+
+    /**
+     * This indicates that the value is a time in UTC format - specifying the
+     * seconds since 00:00:00 1 Jan 1970 if it is 32-bit or the milliseconds
+     * since 00:00:00 1 Jan 1970 if it is 64-bit.
+     * Written as UTC time e.g. "00:00:00 1 Jan 1970". Fields with this format
+     * treat integer values as implicitly unsigned.
+     */
+    const long FORMAT_TIMESTAMP           = 8;
+
+    /**
+     * Written as a 64-bit unsigned hexadecimal string split into four lots of
+     * four characters e.g. "FFFF FFFF FFFF FFFF". This is not applicable for
+     * 32-bit quantities.  Fields with this format treat integer values as
+     * implicitly unsigned.
+     */
+    const long FORMAT_LOG_CORRELATOR      = 9;
+
+    /**
+     * This indicates that the value is a Version Level version number.  The
+     * value is written in the form Vx.y.z where x, y and z are integers
+     * between 0 and 255.  y and z are padded with 1 leading zero if they are 1
+     * digit in length.  If y is two digits long and ends with a zero, this
+     * zero is stripped.  e.g.  for V1.04, the version is:
+     *
+     * -  stored as: 0x01040000
+     * -  written as: V1.04.00
+     */
+    const long FORMAT_VERSION_LEVEL       = 10;
+
+    /**
+     * This indicates that the value is a Service Level version number.  The
+     * value is written in the form SUx Py.z where x, y and z are integers
+     * between 0 and 255.  z is padded with 1 leading zero if it is 1 digit in
+     * length.  e.g.  for Update 5 Patch 6.7, the version is:
+     *
+     * -  stored as: 0x05060700
+     * -  written as: SU5 P6.07
+     */
+    const long FORMAT_SERVICE_LEVEL       = 11;
+
+    /**
+     * This indicates that the value is a Boot Level version number.  The
+     * value is written in the form Bx Py.z where x, y and z are integers
+     * between 0 and 255.  z is padded with 1 leading zero if it is 1
+     * digit in length.  e.g.  for 9 Patch 10.11, the version is:
+     *
+     * -  stored as: 0x090A1100
+     * -  written as: B9 P10.11
+     */
+    const long FORMAT_BOOT_LEVEL          = 12;
+
+    /**
+     * This indicates that the value is an array of decimal integers, each
+     * separated by a single dot.
+     */
+    const long FORMAT_OID                 = 13;
+
+    /**
+     * This indicates that the value is an IP address e.g.  "255.255.255.255".
+     */
+    const long FORMAT_IP_ADDRESS_V4       = 14;
+
+    /**
+     * Write the string highlighted to mark the text as a header at a level
+     * below that of FORMAT_HEADING.  Applies to fields of TYPE_STRING only.
+     */
+    const long FORMAT_MINOR_HEADING       = 15;
+
+    /**
+     * Written as an ASCII string on multiple lines where each byte corresponds
+     * to an ASCII character.  The value should ideally be displayed in a fixed
+     * width font, with no wrapping. Applies to fields of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_ASCII_MULTI_FIXED_NOWRAP = 16;
+
+    /**
+     * Written as an ASCII string on multiple lines where each byte corresponds
+     * to an ASCII character.  The value should ideally be displayed in a
+     * standard, non-fixed width font, with wrapping. Applies to fields
+     * of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_ASCII_MULTI_VAR_WRAPPED  = 17;
+
+    /**
+     * This indicates that the value is an EMS Boot Level version number.  The
+     * value is written in the form EMSx where x is an integer between 0 and
+     * 255.  x is padded with leading zeros to make it 3 digits in length.
+     * e.g.  for boot level 13, the version is:
+     *
+     * -  stored as: 0x0D000000
+     * -  written as: EMS013
+     */
+    const long FORMAT_EMS_BOOT_LEVEL           = 18;
+
+    /**
+     * This indicates that the value is displayed as a four digit integer.
+     * This means that a number will be padded with leading zeros as necessary.
+     */
+    const long FORMAT_4_DIGIT_INT              = 19;
+
+    /**
+     * Write the string highlighted to mark the text as a header.  Field group
+     * headers act as the heading of a group of similar fields, e.g.  alarm
+     * fields.  Applies to fields of TYPE_STRING only.
+     */
+    const long  FORMAT_FIELD_GROUP_HEADING     = 20;
+
+
+    /**
+     * Display a byte or int32 as a graph where each value in the array
+     * corresponds to a point on the graph.
+     */
+    const long FORMAT_GRAPH                    = 21;
+
+    /**
+     * This indicates that the value represents a PKCS12 key store.
+     **/
+    const long FORMAT_PKCS12                   = 22;
+
+    /**
+     * This indicates that the field offers a choice of integers.  Applies to
+     * fields of TYPE_STRING only.
+     **/
+    const long FORMAT_CHOICE_OF_INTEGERS       = 23;
+
+    /**
+     * This indicates that the value is displayed as a two digit integer.
+     * This means that a number will be padded with leading zeros as necessary.
+     */
+    const long FORMAT_2_DIGIT_INT              = 24;
+
+    /**
+     * This indicates that the value is an IP address, and can be in either the
+     * IPV4, or the IPV6 format (xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx), or
+     * the IPV4/IPV6 hybrid format.
+     */
+    const long FORMAT_IP_ADDRESS_V4_OR_V6      = 25;
+
+    /**
+     * This indicates that the value is an IP address, and can only be in the
+     * the IPV6 format (xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx), or the IPV4/
+     * IPV6 hybrid format.
+     */
+    const long FORMAT_IP_ADDRESS_V6      	   = 26;
+
+    /**
+     * Written as a unicode string in UTF-8 format.
+     * Applies to fields of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_UTF8                     = 27;
+
+    /**
+     * Written as a unicode string in UTF-8 format on multiple lines.
+     * The value should ideally be displayed in a fixed width font, with no
+     * wrapping. Applies to fields of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_UTF8_MULTI_FIXED_NOWRAP  = 28;
+
+    /**
+     * Written as a unicode string in UTF-8 format on multiple lines.
+     * The value should ideally be displayed in a standard, non-fixed width
+     * font, with wrapping. Applies to fields of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_UTF8_MULTI_VAR_WRAPPED  = 29;
+
+    /**
+     * Written as a true ASCII string (no Latin-1 characters) where each byte
+     * corresponds to an ASCII character.  Applies to fields of TYPE_BYTE_ARRAY
+     * only.
+     */
+    const long FORMAT_STRICT_ASCII            = 30;
+
+    /**
+     * Written as a true ASCII string (no Latin-1 characters) on multiple lines
+     * where each byte corresponds to an ASCII character.  The value should
+     * ideally be displayed in a fixed width font, with no wrapping. Applies to
+     * fields of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_STRICT_ASCII_MULTI_FIXED_NOWRAP = 31;
+
+    /**
+     * Written as a true ASCII string (no Latin-1 characters) on multiple lines
+     * where each byte corresponds to an ASCII character.  The value should
+     * ideally be displayed in a standard, non-fixed width font, with wrapping.
+     * Applies to fields of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_STRICT_ASCII_MULTI_VAR_WRAPPED  = 32;
+
+    /**
+     * Written as a domain name string, specified as a series of valid
+     * (alphanumeric, hyphen or period) characters or a space, not a mix of
+     * both.  The string is in ASCII format and it is assumed that Unicode
+     * strings have been converted to IDNA format.  For our purposes, spaces
+     * should not be included because we do not want to define a domain name as
+     * a space character.
+     * Applies to fields of TYPE_BYTE_ARRAY only.
+     */
+    const long FORMAT_DOMAIN_NAME_IDNA        = 33;
+
+    /**
+     * This indicates that the value is an IP address, and can be in either the
+     * IPV4, or the IPV6 format (xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx), or
+     * the IPV4/IPV6 hybrid format, but IPv6 support is disabled, so its
+     * value can be only IPV4. This way, this field should be treated by the
+     * client exactly as if the field had the format FORMAT_IP_ADDRESS_V4
+     */
+    const long FORMAT_IP_ADDRESS_V4_ENABLED_V6_DISABLED = 34;
+
+    /**
+     * This indicates that the field offers a choice of resources.  Applies to
+     * fields of TYPE_STRING only.
+     **/
+    const long FORMAT_CHOICE_OF_RESOURCES = 35;
+
+    /**
+     * Written as a unicode string in UTF-8 format on multiple lines.
+     * The value should ideally be displayed in a fixed width font, with no
+     * wrapping. Applies to fields of TYPE_BYTE_ARRAY only.
+     * This format is identical to FORMAT_UTF8_MULTI_FIXED_NOWRAP_LONG,
+     * except that it should be displayed with a large number of lines by
+     * default.
+     */
+    const long FORMAT_UTF8_MULTI_FIXED_NOWRAP_LONG  = 36;
+
+    //-------------------------------------------------------------------------
+    //
+    // SE activation state constants as returned by getState.  These bit
+    // constants are used to interpret the security permissions information
+    // returned by the getAccessFlagsByStateByIndex/ByName methods.  Each
+    // constant defines 2 bits that contain the read/write information for the
+    // particular SE state.  See also the declaration of ACCESS_READ_BITS and
+    // ACCESS_WRITE_BITS in the SEAccessInterface.  For more details see the
+    // "MetaSwitch Class 5 Softswitch: Integration and Customization manual".
+    //
+    //-------------------------------------------------------------------------
+
+    /**
+     * Initial SE state before creation is complete.  An SE is only in this
+     * state after an attachToNew invocation, not an attachTo.  The SE leaves
+     * this state when the first doAction(APPLY) complete successfully.  The
+     * index fields may be writeable.
+     */
+    const long STATE_CREATING  = 0x03;
+
+    /**
+     * The SE is fully created and so the index fields are always
+     * read only in this state.  The state cannot return to STATE_CREATING.
+     * STATE_DISABLED is a lower state of activation that STATE_ENABLED.
+     */
+    const long STATE_DISABLED  = 0x0c;
+
+    /**
+     * The SE is fully created and so the index fields are always
+     * read only in this state.  The state cannot return to STATE_CREATING.
+     * This is the highest state of activation.
+     */
+    const long STATE_ENABLED   = 0x30;
+
+    //-------------------------------------------------------------------------
+    //
+    // Accessor methods
+    //
+    //-------------------------------------------------------------------------
+
+    /**
+     * Returns a 32-bit integer representation of the field value. If the
+     * field is a Switchable Default field, and the use-default flag is set,
+     * then this returns the default value.  Otherwise this returns the specific
+     * value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned Boolean out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A 32-bit integer representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown when fieldName could not be mapped to the
+     *                   name of a field in the settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32, INT32_MAP, INT32_RANGE  and
+     *                   INT32_ARRAY field types.
+     */
+    long getFieldAsIntByName(in string fieldName,
+                       out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a 32-bit integer representation of the field value. If the
+     * field is a Switchable Default field, and the use-default flag is set,
+     * then this returns the default value.  Otherwise this returns the specific
+     * value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned Boolean out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A 32-bit integer representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown when fieldIndex could not be mapped to a
+     *                   field in the settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32, INT32_MAP, INT32_RANGE  and
+     *                   INT32_ARRAY field types.
+     */
+    long getFieldAsIntByIndex(in long fieldIndex,
+                       out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a 64-bit long integer representation of the field value.If the
+     * field is a Switchable Default field, and the use-default flag is set,
+     * then this returns the default value.  Otherwise this returns the specific
+     * value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A long integer representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT64.
+     */
+    long long getFieldAsLongByName(in string fieldName,
+                             out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a 64-bit long integer representation of the field value. If the
+     * field is a Switchable Default field, and the use-default flag is set,
+     * then this returns the default value.  Otherwise this returns the specific
+     * value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A long integer representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT64.
+     */
+    long long getFieldAsLongByIndex(in long fieldIndex,
+                             out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a String representation of the field value. If the field
+     * is a Switchable Default field, and the use-default flag is set,
+     * then this returns the default value.  Otherwise this returns the
+     * specific value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A String representation of the field value. All field types
+     *         can be represented as a String.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    string getFieldAsStringByName(in string fieldName,
+                            out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns a String representation of the field value. If the field
+     * is a Switchable Default field, and the use-default flag is set,
+     * then this returns the default value.  Otherwise this returns the
+     * specific value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A String representation of the field value. All field types
+     *         can be represented as a String.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     */
+    string getFieldAsStringByIndex(in long fieldIndex,
+                            out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns a DualString representation of the field value. The _internal_
+     * field contains the elementName. The _display_ field contains the
+     * displayName as either NLS text or plain text depending on whether
+     * setNLSLocale has been called on the ClientSessionInterface.
+     * If the field is a Switchable Default field, and the use-default
+     * flag is set, then this returns the default value.  Otherwise this
+     * returns the specific value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A DualString representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException if the isReference method returns false.
+     */
+    DualString getFieldAsReferenceByName(in string fieldName,
+                                         out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a DualString representation of the field value. The _internal_
+     * field contains the elementName. The _display_ field contains the
+     * displayName as either NLS text or plain text depending on whether
+     * setNLSLocale has been called on the ClientSessionInterface.
+     * If the field is a Switchable Default field, and the use-default
+     * flag is set, then this returns the default value.  Otherwise this
+     * returns the specific value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A DualString representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException if the isReference method returns false.
+     */
+    DualString getFieldAsReferenceByIndex(in long fieldIndex,
+                                          out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a boolean representation of the field value. If the field is
+     * a Switchable Default field, and the use-default flag is set, then this
+     * returns the default value.  Otherwise this returns the specific value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A boolean representation of the field value. Valid for BOOLEAN
+     *         and parseable STRING fields.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BOOLEAN & some parseable STRINGs.
+     */
+    boolean getFieldAsBooleanByName(in string fieldName,
+                              out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a boolean representation of the field value. If the field is
+     * a Switchable Default field, and the use-default flag is set, then this
+     * returns the default value.  Otherwise this returns the specific value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A boolean representation of the field value. Valid for BOOLEAN
+     *         and parseable STRING fields.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BOOLEAN & some parseable STRINGs.
+     */
+    boolean getFieldAsBooleanByIndex(in long fieldIndex,
+                              out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a byte array representation of the field value. If the field is
+     * a Switchable Default field, and the use-default flag is set, then this
+     * returns the default value.  Otherwise this returns the specific value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return An octet array representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     */
+    SequenceOfOctets getFieldAsByteArrayByName(in string fieldName,
+                                         out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a byte array representation of the field value. If the field is
+     * a Switchable Default field, and the use-default flag is set, then this
+     * returns the default value.  Otherwise this returns the specific value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return An octet array representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     */
+    SequenceOfOctets getFieldAsByteArrayByIndex(in long fieldIndex,
+                                         out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a SequenceOfIntegers representation of the field value.
+     * If the field is a Switchable Default field, and the use-default
+     * flag is set, then this returns the default value.  Otherwise this
+     * returns the specific value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A SequenceOfIntegers representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     */
+    SequenceOfIntegers getFieldAsIntArrayByName(in string fieldName,
+                                          out boolean isAssigned)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a SequenceOfIntegers representation of the field value.
+     * If the field is a Switchable Default field, and the use-default
+     * flag is set, then this returns the default value.  Otherwise this
+     * returns the specific value.
+     *
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   Returns false if the field is a Switchable default
+     *                   with the use-default flag is not assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A SequenceOfIntegers representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     */
+    SequenceOfIntegers getFieldAsIntArrayByIndex(in long fieldIndex,
+                                          out boolean isAssigned)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+
+    /**
+     * Returns a 32-bit integer representation of the field value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned Boolean out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A 32-bit integer representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown when fieldName could not be mapped to the
+     *                   name of a field in the settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32, INT32_MAP, INT32_RANGE  and
+     *                   INT32_ARRAY field types.
+     */
+    long getSpecificValueAsIntByName(in string fieldName,
+                       out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a 32-bit integer representation of the field value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned Boolean out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A 32-bit integer representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown when fieldIndex could not be mapped to a
+     *                   field in the settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32, INT32_MAP, INT32_RANGE  and
+     *                   INT32_ARRAY field types.
+     */
+    long getSpecificValueAsIntByIndex(in long fieldIndex,
+                       out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a 64-bit long integer representation of the field value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A long integer representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT64.
+     */
+    long long getSpecificValueAsLongByName(in string fieldName,
+                             out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a 64-bit long integer representation of the field value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A long integer representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT64.
+     */
+    long long getSpecificValueAsLongByIndex(in long fieldIndex,
+                             out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a String representation of the field value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A String representation of the field value. All field types
+     *         can be represented as a String.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    string getSpecificValueAsStringByName(in string fieldName,
+                            out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns a String representation of the field value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A String representation of the field value. All field types
+     *         can be represented as a String.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     */
+    string getSpecificValueAsStringByIndex(in long fieldIndex,
+                            out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns a DualString representation of the field value. The _internal_
+     * field contains the elementName. The _display_ field contains the
+     * displayName as either NLS text or plain text depending on whether
+     * setNLSLocale has been called on the ClientSessionInterface.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A DualString representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException if the isReference method returns false.
+     */
+    DualString getSpecificValueAsReferenceByName(in string fieldName,
+                                         out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a DualString representation of the field value. The _internal_
+     * field contains the elementName. The _display_ field contains the
+     * displayName as either NLS text or plain text depending on whether
+     * setNLSLocale has been called on the ClientSessionInterface.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A DualString representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException if the isReference method returns false.
+     */
+    DualString getSpecificValueAsReferenceByIndex(in long fieldIndex,
+                                          out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a boolean representation of the field value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A boolean representation of the field value. Valid for BOOLEAN
+     *         and parseable STRING fields.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BOOLEAN & some parseable STRINGs.
+     */
+    boolean getSpecificValueAsBooleanByName(in string fieldName,
+                              out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a boolean representation of the field value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A boolean representation of the field value. Valid for BOOLEAN
+     *         and parseable STRING fields.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BOOLEAN & some parseable STRINGs.
+     */
+    boolean getSpecificValueAsBooleanByIndex(in long fieldIndex,
+                              out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a byte array representation of the field value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return An octet array representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     */
+    SequenceOfOctets getSpecificValueAsByteArrayByName(in string fieldName,
+                                         out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a byte array representation of the field value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return An octet array representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     */
+    SequenceOfOctets getSpecificValueAsByteArrayByIndex(in long fieldIndex,
+                                         out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a SequenceOfIntegers representation of the field value.
+     *
+     * @param fieldName  String name of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A SequenceOfIntegers representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     */
+    SequenceOfIntegers getSpecificValueAsIntArrayByName(in string fieldName,
+                                          out boolean isAssigned)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a SequenceOfIntegers representation of the field value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A SequenceOfIntegers representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     */
+    SequenceOfIntegers getSpecificValueAsIntArrayByIndex(in long fieldIndex,
+                                          out boolean isAssigned)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns an 32-bit integer representation of the field default value.
+     *
+     * @param fieldName  String name of the field.
+     * @param hasDefault BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A 32-bit integer representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32, INT32_MAP, INT32_RANGE and
+     *                   INT32_ARRAY.
+     *
+     */
+    long getDefaultAsIntByName(in string fieldName,
+                         out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns an 32-bit integer representation of the field default value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param hasDefault BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A 32-bit integer representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32, INT32_MAP, INT32_RANGE and
+     *                   INT32_ARRAY.
+     *
+     */
+    long getDefaultAsIntByIndex(in long fieldIndex,
+                         out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a 64-bit long representation of the field default value.
+     *
+     * @param fieldName  String name of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored
+     *
+     * @return A 64-bit long integer representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT64.
+     */
+    long long getDefaultAsLongByName(in string fieldName,
+                               out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a 64-bit long representation of the field default value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored
+     *
+     * @return A 64-bit long integer representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT64.
+     */
+    long long getDefaultAsLongByIndex(in long fieldIndex,
+                               out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a String representation of the field default value.
+     * All field types can be represented as a String.
+     *
+     * @param fieldName  String name of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored.
+     *
+     * @return A String representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    string getDefaultAsStringByName(in string fieldName,
+                              out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns a String representation of the field default value.
+     * All field types can be represented as a String.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored.
+     *
+     * @return A String representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     */
+    string getDefaultAsStringByIndex(in long fieldIndex,
+                              out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns a DualString representation of the field default value. The
+     * _internal_ field contains the elementName. The _display_ field contains
+     * the displayName as either NLS text or plain text depending on whether
+     * setNLSLocale has been called on the ClientSessionInterface.
+     *
+     * @param fieldName  String name of the field.
+     * @param hasDefault BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has a default.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A DualString representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException if the isReference method returns false.
+     */
+    DualString getDefaultAsReferenceByName(in string fieldName,
+                                         out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a DualString representation of the field value. The _internal_
+     * field contains the elementName. The _display_ field contains the
+     * displayName as either NLS text or plain text depending on whether
+     * setNLSLocale has been called on the ClientSessionInterface.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param isAssigned BooleanHolder out parameter, indicating whether
+     *                   or not the value of the field has been assigned.
+     *                   If false, the returned value should be ignored.
+     *
+     * @return A DualString representation of the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException if the isReference method returns false.
+     */
+    DualString getDefaultAsReferenceByIndex(in long fieldIndex,
+                                          out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a boolean representation of the field default value.
+     *
+     * @param fieldName  String name of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored.
+     *
+     * @return A boolean representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BOOLEAN and parseable STRING fields.
+     */
+    boolean getDefaultAsBooleanByName(in string fieldName,
+                                out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a boolean representation of the field default value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored.
+     *
+     * @return A boolean representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BOOLEAN and parseable STRING fields.
+     */
+    boolean getDefaultAsBooleanByIndex(in long fieldIndex,
+                                out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a byte array representation of the field default value.
+     *
+     * @param fieldName  String name of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored.
+     *
+     * @return A byte array representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     */
+    SequenceOfOctets getDefaultAsByteArrayByName(in string fieldName,
+                                           out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a byte array representation of the field default value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored.
+     *
+     * @return A byte array representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     */
+    SequenceOfOctets getDefaultAsByteArrayByIndex(in long fieldIndex,
+                                           out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a SequenceOfIntegers representation of the field default value.
+     *
+     * @param fieldName  String name of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored.
+     *
+     * @return A SequenceOfIntegers representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     */
+    SequenceOfIntegers getDefaultAsIntArrayByName(in string fieldName,
+                                            out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns a SequenceOfIntegers representation of the field default value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param hasDefault BooleanHolder in/out parameter, indicating whether
+     *                   or not the field has a valid default value. If false,
+     *                   the return value should be ignored.
+     *
+     * @return A SequenceOfIntegers representation of the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     */
+    SequenceOfIntegers getDefaultAsIntArrayByIndex(in long fieldIndex,
+                                            out boolean hasDefault)
+       raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns true if the use-default flag is set for this field.  Otherwise
+     * returns false.  If the use-default flag is set and this is a Switchable
+     * Default field, then the default value will be set and returned by the
+     * setFieldAs*() and getFieldAs*() methods.  Otherwise, the specific value
+     * will be set and returned as normal.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @param isAssigned  BooleanHolder out parameter, indicating whether
+     *                            the use default flag is assigned.  This will
+     *                            always be returned false for non-switchable
+     *                            default fields.  If false, the return value
+     *                            should be ignored.
+     *
+     * @return boolean indicating whether or not the field is using
+     * the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean getUseDefaultFlagByName(in string fieldName, out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if the use-default flag is set for this field.  Otherwise
+     * returns false. If the use-default flag is set and this is a Switchable
+     * Default field, then the default value will be set and returned by the
+     * setFieldAs*() and getFieldAs*() methods.  Otherwise, the specific value
+     * will be set and returned as normal.
+     *
+     * @param fieldIndex string field index
+     *
+     * @param isAssigned  BooleanHolder out parameter, indicating whether
+     *                            the use default flag is assigned.  This will
+     *                            always be returned false for non-switchable
+     *                            default fields.  If false, the return value
+     *                            should be ignored.
+     *
+     * @return boolean indicating whether or not the field is using
+     * the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean getUseDefaultFlagByIndex(in long fieldIndex, out boolean isAssigned)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if the field is a start of clause field for which the
+     * clause has been selected.  Otherwise returns false.
+     *
+     * If the clause is selected, then this and all consecutive fields upto and
+     * including the end-of-clause field are valid.  If the clause is not
+     * selected then these fields are not valid.
+     *
+     * See also isStartOfClauseByName(), isEndOfClauseByName and
+     * setClauseIsSelectedByName().
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @param isStartOfClause BooleanHolder out parameter, indicating whether
+     *                            the field is a start of clause.  If false,
+     *                            the return value should be ignored.
+     *
+     * @return boolean indicating whether or not the field has the clause selected.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean getClauseIsSelectedByName(in string fieldName,
+                                      out boolean isStartOfClause)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if the field is a start of clause field for which the
+     * clause has been selected.  Otherwise returns false.
+     *
+     * If the clause is selected, then this and all consecutive fields upto and
+     * including the end-of-clause field are valid.  If the clause is not
+     * selected then these fields are not valid.
+     *
+     * See also isStartOfClauseByIndex(), isEndOfClauseByIndex and
+     * setClauseIsSelectedByIndex().
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @param isStartOfClause BooleanHolder out parameter, indicating whether
+     *                            the field is a start of clause.  If false,
+     *                            the return value should be ignored.
+     *
+     * @return boolean indicating whether or not the field has the clause selected.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean getClauseIsSelectedByIndex(in long fieldIndex,
+                                       out boolean isStartOfClause)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the selected entry in an exclusive group.
+     * Otherwise returns false.  If this field is also a lower range
+     * field of a range pair, then the corresponding upper range field is
+     * assumed to be selected and deselected at the same time as this field.
+     *
+     * See isExclusiveGroupEntryByName() for more details.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @param isExclusiveGroupEntry BooleanHolder out parameter, indicating whether
+     *                            the field is in an exclusive group.  If false,
+     *                            the return value should be ignored.
+     *
+     * @return boolean indicating whether or not the field is the selected entry
+     *                            in an exclusive group.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean getGroupEntryIsSelectedByName(in string fieldName,
+                                          out boolean isExclusiveGroupEntry)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the selected entry in an exclusive group.
+     * Otherwise returns false.  If this field is also a lower range
+     * field of a range pair, then the corresponding upper range field is
+     * assumed to be selected and deselected at the same time as this field.
+     *
+     * See isExclusiveGroupEntryByIndex() for more details.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @param isExclusiveGroupEntry BooleanHolder out parameter, indicating whether
+     *                            the field is in an exclusive group.  If false,
+     *                            the return value should be ignored.
+     *
+     * @return boolean indicating whether or not the field is the selected entry
+     *                            in an exclusive group.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean getGroupEntryIsSelectedByIndex(in long fieldIndex,
+                                           out boolean isExclusiveGroupEntry)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the field format specifier.  The format specifier indicates
+     * the desired String format for field output and input.  See the
+     * declaration of the field format constants above.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return A 32-bit integer specifier of the field format.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getFormatByName(in string fieldName)
+       raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the field format specifier. The format specifier indicates
+     * the desired String format for field output and input.  See the
+     * declaration of the field format constants above.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return A 32-bit integer specifier of the field format.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     */
+    long getFormatByIndex(in long fieldIndex)
+       raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is an array field with a fixed length.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return True if the field is of TYPE_BYTE_ARAY or TYPE_INT32_ARAY with a
+     *         fixed array length; false if it can have any length.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_ARRAY, BYTE_ARRAY.
+     */
+    boolean isFixedLengthByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns true if this field is an array field with a fixed length.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return True if the field is of TYPE_BYTE_ARAY or TYPE_INT32_ARAY with a
+     *         fixed array length; false if it can have any length.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_ARRAY, BYTE_ARRAY.
+     */
+    boolean isFixedLengthByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns true if the field is intended to contain an SE reference.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return True if the field is intended to contain an SE reference;
+     *         false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isReferenceByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if the field is intended to contain an SE reference.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return True if the field is intended to contain an SE reference;
+     *         false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isReferenceByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Applies to signed integer fields that represent counts. The value
+     * may only be reset to zero.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return True if the field can only be set to the value 0;
+     *         false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isResetOnlyByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Applies to signed integer fields that represent counts. The value
+     * may only be reset to zero.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return True if the field can only be set to the value 0;
+     *         false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isResetOnlyByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Care should be taken in exposing password fields as unmasked text to
+     * users.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return True if the field contains a password;
+     *         false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isPasswordByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Care should be taken in exposing password fields as unmasked text to
+     * users.
+     *
+     * @param fieldIndex  Integer index of the field.
+     *
+     * @return True if the field contains a password;
+     *         false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isPasswordByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * All mandatory fields must be filled in before performing an APPLY action.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return True if the field is flagged as manadatory;
+     *         false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isMandatoryByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * All mandatory fields must be filled in before performing an APPLY action.
+     *
+     * @param fieldIndex  Integer index of the field.
+     *
+     * @return True if the field is flagged as manadatory;
+     *         false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isMandatoryByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if any field value has been set since setModified was
+     * last set to false; returns false if no field values have been set.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return True if any field has been modified since setModified was
+     *         set to false; otherwise false.
+     */
+    boolean isModified();
+
+    /**
+     * Indicates whether this is an index field.  If it is, then the value
+     * is used in the construction of the SE's programmatic name.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return True if the field is an index field. False otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isIndexByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Indicates whether this is an index field.  If it is, then the value
+     * is used in the construction of the SE's programmatic name.
+     *
+     * @param fieldIndex  Integer index of the field.
+     *
+     * @return True if the field is an index field. False otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     */
+    boolean isIndexByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Indicates whether this field is a reserved internal field.
+     *
+     * IMPORTANT: Users of the EMS CORBA API should not query or alter the
+     * value of fields of this type in any way.  This is field
+     * is reserved for internal system use only.
+     *
+     * @param fieldName  String name of this field.
+     *
+     * @return True if this is a reserved internal field; false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     */
+    boolean isInternalByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Indicates whether this field is a reserved internal field.
+     *
+     * IMPORTANT: Users of the EMS CORBA API should not query or alter the
+     * value of fields of this type in any way.  This is field
+     * is reserved for internal system use only.
+     *
+     * @param fieldIndex  Integer index of the field.
+     *
+     * @return True if this is a reserved internal field; false otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     */
+    boolean isInternalByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is a Switchable Default field.  Otherwise
+     * returns false.  If the use-default flag is set and this is a
+     * Switchable Default field, then the default value will be set and
+     * returned by the setFieldAs*() and getFieldAs*() methods. Otherwise,
+     * the specific value will be set and returned as normal.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return boolean indicating whether or not the field is a Switchable
+     *         Default.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isSwitchableDefaultByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is a Switchable Default field.  Otherwise
+     * returns false. If the use-default flag is set and this is a
+     * Switchable Default field, then the default value will be set and
+     * returned by the setFieldAs*() and getFieldAs*() methods. Otherwise,
+     * the specific value will be set and returned as normal.
+     *
+     * @params fieldIndex Integer index of the field.
+     *
+     * @return boolean indicating whether or not the field is a Switchable
+     *         Default.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isSwitchableDefaultByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the start of a clause.  Otherwise returns
+     * false.
+     *
+     * A start-of-clause field and all consecutive fields up to the end-of-clause
+     * field are only valid when the clause is actually selected.  The clause
+     * selection is handled by the start-of-clause field.  See also
+     * getClauseSelectedByName() and setClauseSelectedByName().
+     *
+     * Note that a field may be both the start-of-clause and end-of-clause.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return boolean indicating whether or not the field is the start of a clause.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isStartOfClauseByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the start of a clause.  Otherwise returns
+     * false.
+     *
+     * A start-of-clause field and all consecutive fields up to the end-of-clause
+     * field are only valid when the clause is actually selected.  The clause
+     * selection is handled by the start-of-clause field.  See also
+     * getClauseSelectedByIndex() and setClauseSelectedByIndex().
+     *
+     * Note that a field may be both the start-of-clause and end-of-clause.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return boolean indicating whether or not the field is the start of a clause.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isStartOfClauseByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is an assistant field.  Otherwise returns
+     * false.
+     *
+     * Setting and adjusting an assistant field will result in fields being
+     * set based on the assistant field. For example, on an Access Device
+     * selecting and adjusting the "set fields from media gateway" assistant
+     * field defaults the subsequent fields.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return boolean indicating whether or not the field is an assistant field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isAssistantFieldByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     *
+     * Returns true if this field is an assistant field.  Otherwise returns
+     * false.
+     *
+     * Setting and adjusting an assistant field will result in fields being
+     * set based on the assistant field. For example, on an Access Device
+     * selecting and adjusting the "set fields from media gateway" assistant
+     * field defaults the subsequent fields.
+
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return boolean indicating whether or not the field is an assistant field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isAssistantFieldByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the end of a clause.  Otherwise returns
+     * false.
+     *
+     * An end-of-clause field and all previous, consecutive fields up to the
+     * start-of-clause field are only valid when the clause is actually
+     * selected.  The clause selection is handled by the start-of-clause field.
+     * See also getClauseSelectedByName() and setClauseSelectedByName().
+     *
+     * Note that a field may be both the start-of-clause and end-of-clause.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return boolean indicating whether or not the field is the end of a clause.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isEndOfClauseByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the end of a clause.  Otherwise returns
+     * false.
+     *
+     * An end-of-clause field and all previous, consecutive fields up to the
+     * start-of-clause field are only valid when the clause is actually
+     * selected.  The clause selection is handled by the start-of-clause field.
+     * See also getClauseSelectedByIndex() and setClauseSelectedByIndex().
+     *
+     * Note that a field may be both the start-of-clause and end-of-clause.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return boolean indicating whether or not the field is the end of a clause.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isEndOfClauseByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is a member of an exclusive group.  Otherwise
+     * returns false.
+     *
+     * An exclusive group is formed from the consecutive exclusive-group-entry
+     * fields in the Settings, the only exception is for an upper-range-of-pair
+     * field which does not need to mark itself as part of a group since that
+     * is done by the corresponding lower-range-of-pair field.
+     *
+     * Only the selected group entry field is valid, and only one entry in each
+     * group may be selected at any one time.  Setting a field as the selected
+     * group entry will automatically deselect it from the other fields in the
+     * group.  See also getGroupEntryIsSelectedByName() and
+     * setGroupEntryIsSelectedByName().
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return boolean indicating whether or not the field is in an exclusive group.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isExclusiveGroupEntryByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is a member of an exclusive group.  Otherwise
+     * returns false.
+     *
+     * An exclusive group is formed from the consecutive exclusive-group-entry
+     * fields in the Settings, the only exception is for an upper-range-of-pair
+     * field which does not need to mark itself as part of a group since that
+     * is done by the corresponding lower-range-of-pair field.
+     *
+     * Only the selected group entry field is valid, and only one entry in each
+     * group may be selected at any one time.  Setting a field as the selected
+     * group entry will automatically deselect it from the other fields in the
+     * group.  See also getGroupEntryIsSelectedByIndex() and
+     * setGroupEntryIsSelectedByIndex().
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return boolean indicating whether or not the field is in an exclusive group.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isExclusiveGroupEntryByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the lower-range of a pair of fields used
+     * to configure a range of values.  Otherwise returns false.
+     *
+     * If this field is the lower-range of a pair, the next field in the
+     * Settings will be the corresponding upper-range of pair.
+     *
+     * When a range field is also a member of an exclusive group, then both the
+     * lower and upper range fields are bound together as a single group entry.
+     * The selection of the group entry is handled by the lower range field and
+     * not by the upper range field.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return boolean indicating whether or not the field is the lower range
+     *                 of a pair of range fields.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isLowerRangeOfPairByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the lower-range of a pair of fields used
+     * to configure a range of values.  Otherwise returns false.
+     *
+     * If this field is the lower-range of a pair, the next field in the
+     * Settings will be the corresponding upper-range of pair.
+     *
+     * When a range field is also a member of an exclusive group, then both the
+     * lower and upper range fields are bound together as a single group entry.
+     * The selection of the group entry is handled by the lower range field and
+     * not by the upper range field.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return boolean indicating whether or not the field is the lower range
+     *                 of a pair of range fields.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isLowerRangeOfPairByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the upper-range of a pair of fields used
+     * to configure a range of values.  Otherwise returns false.
+     *
+     * If this field is the upper-range of a pair, the previous field in the
+     * Settings will be the corresponding lower-range of pair.
+     *
+     * When a range field is also a member of an exclusive group, then both the
+     * lower and upper range fields are bound together as a single group entry.
+     * The selection of the group entry is handled by the lower range field and
+     * not by the upper range field.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return boolean indicating whether or not the field is the upper range
+     *                 of a pair of range fields.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isUpperRangeOfPairByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if this field is the upper-range of a pair of fields used
+     * to configure a range of values.  Otherwise returns false.
+     *
+     * If this field is the upper-range of a pair, the previous field in the
+     * Settings will be the corresponding lower-range of pair.
+     *
+     * When a range field is also a member of an exclusive group, then both the
+     * lower and upper range fields are bound together as a single group entry.
+     * The selection of the group entry is handled by the lower range field and
+     * not by the upper range field.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return boolean indicating whether or not the field is the upper range
+     *                 of a pair of range fields.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    boolean isUpperRangeOfPairByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if all index fields have been assigned a value.
+     *
+     * @param fieldName  If the return value is false, this out parameter
+     *                   holds the name of the first unassigned
+     *                   index field. Otherwise its value is null.
+     *
+     * @return True if all index fields have been assigned a value,
+     *         or if no index fields have been registered.
+     */
+    boolean checkIndexFieldsAssignedByName(inout string fieldName);
+
+    /**
+     * Returns true if all index fields have been assigned a value.
+     *
+     * @param fieldIndex If the return value is false, this out parameter
+     *                   holds the index of the first unassigned
+     *                   index field. Otherwise its value is -1.
+     *
+     * @return True if all index fields have been assigned a value,
+     *         or if no index fields have been registered.
+     */
+    boolean checkIndexFieldsAssignedByIndex(inout long fieldIndex);
+
+    /**
+     * Returns true if all registered mandatory fields have been assigned
+     *
+     * @param  fieldName  If the return value is false, this out parameter
+     *                    holds the field name of the first unassigned
+     *                    index field. Otherwise its value is null.
+     *
+     * @return True if all registered mandatory fields have been assigned a
+     *         value, or if no mandatory fields have been registered.
+     */
+    boolean checkMandatoryFieldsAssignedByName(inout string fieldName);
+
+    /**
+     * Returns true if all registered mandatory fields have been assigned
+     *
+     * @param  fieldIndex If the return value is false, this out parameter
+     *                    holds the field index of the first unassigned
+     *                    index field. Otherwise its value is -1.
+     *
+     * @return True if all registered mandatory fields have been assigned a
+     *         value, or if no mandatory fields have been registered.
+     */
+    boolean checkMandatoryFieldsAssignedByIndex(inout long fieldIndex);
+
+    /**
+     * Returns true if the named field has been modified since
+     * setModified(false) was last invoked.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return True if the field has been modified; false otherwise
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isFieldModifiedByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if the indexed field has been modified since
+     * setModified(false) was last invoked.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return True if the field has been modified; false otherwise
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     */
+    boolean isFieldModifiedByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the minimum value of an integer range field.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return The minimum (inclusive) value of an integer range field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_RANGE.
+     */
+    long getMinRangeByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the minimum value of an integer range field.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return The minimum (inclusive) value of an integer range field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_RANGE.
+     */
+    long getMinRangeByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the maximum value of an integer range field.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return The maximum (inclusive) value of an integer range field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_RANGE.
+     */
+    long getMaxRangeByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the maximum value of an integer range field.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @return The maximum (inclusive) value of an integer range field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_RANGE.
+     */
+    long getMaxRangeByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the minimum value of an integer range field as a String.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return The minimum (inclusive) value of an integer range field as a
+     *         String, taking into account the field format specifier.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_RANGE.
+     */
+    string getMinRangeAsStringByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the minimum value of an integer range field as a String.
+     *
+     * @param fieldIndex  Integer index of the field.
+     *
+     * @return The minimum (inclusive) value of an integer range field as a
+     *         String, taking into account the field format specifier.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_RANGE.
+     */
+    string getMinRangeAsStringByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the maximum value of an integer range field as a String.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @return The maximum (inclusive) value of an integer range field as a
+     *         String, taking into account the field format specifier.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_RANGE.
+     */
+    string getMaxRangeAsStringByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the maximum value of an integer range field as a String.
+     *
+     * @param  fieldIndex  Integer index of the field.
+     *
+     * @return The maximum (inclusive) value of an integer range field as a
+     *         String, taking into account the field format specifier.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_RANGE.
+     */
+    string getMaxRangeAsStringByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the maximum length of a STRING or ARRAY field type.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return The maximum character length of a STRING or ARRAY field type.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: STRING, INT32_ARRAY, BYTE_ARRAY.
+     **/
+    long getMaxLengthByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the maximum length of a STRING or ARRAY field type.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return The maximum character length of a STRING or ARRAY field type.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field does not exist in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: STRING, INT32_ARRAY, BYTE_ARRAY.
+     **/
+    long getMaxLengthByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException, FieldBadTypeException);
+
+    /**
+     * Returns the field type specifier.  See the declaration of the field type
+     * constants above.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return The field type specifier. One of the following: INT32, STRING,
+     *         BOOLEAN, INT32_RANGE, INT32_MAP, INT_64, BYTE_ARRAY, BIT_MASK or
+     *         INT32_ARRAY.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getTypeByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the field type specifier.  See the declaration of the field type
+     * constants above.
+     *
+     * @param  fieldIndex  Integer index of the field.
+     *
+     * @return The field type specifier. One of the following: TYPE_INT32,
+     *         TYPE_INT64, TYPE_STRING, TYPE_BOOLEAN, TYPE_INT32_RANGE,
+     *         TYPE_INT32_MAP, TYPE_BYTE_ARRAY, TYPE_BIT_MASK or
+     *         TYPE_INT32_ARRAY
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getTypeByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the state-dependent accessibility for a field.  See
+     * getAccessFlagsByStateByIndex for more details.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return Long containing state-dependent accessibility flags.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getAccessFlagsByStateByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the state-dependent accessibility for a field.  See the
+     * "MetaSwitch Class 5 Softswitch: Integration and Customization manual"
+     * for more details on security and access permissions.
+     *
+     * The value returned is a bit mask.  Each bit set indicates that the field
+     * is readable or writeable.  The bits relating to each state are defined
+     * by the STATE_ constants defined in the SEAccessInterface.  The bits
+     * relating to read and write are defined by the ACCESS_READ_BITS and
+     * ACCESS_WRITE_BITS constants respectively.
+     *
+     * So if the readability in the enabled state is required, perform a
+     * logical and on the value returned by this method, the ACCESS_READ_BITS
+     * and the STATE_ENABLED constants.  The resulting value is the most
+     * inclusive possible access: the value should be logically and'd with the
+     * access granted to the User Type.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return Long containing state-dependent accessibility information.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getAccessFlagsByStateByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Describes the read/write privileges granted to each User Type.  See the
+     * getAccessFlagsByGroupByIndex method for more details.
+     *
+     * @param fieldName   String name of the field.
+     *
+     * @return 64-bit     integer containing the accessFlags assigned to each
+     *                    User group. See the MetaSwitch Class 5 Softswitch:
+     *                    Integration and Customization manual for more
+     *                    details.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                    Thrown if the specified field is not registered in
+     *                    the Settings.
+     */
+    long long getAccessFlagsByGroupByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the User Type-dependent accessibility for a field.  See the
+     * "MetaSwitch Class 5 Softswitch: Integration and Customization manual"
+     * for more details on security and access permissions.
+     *
+     * The value returned is a bit mask.  Each bit set indicates that the field
+     * is readable or writeable for that particular User Type.  The bits
+     * relating to each User Type are defined by the USER_TYPE_ constants
+     * defined in the SEAccessInterface.  The bits relating to read and write
+     * are defined by the ACCESS_READ_BITS and ACCESS_WRITE_BITS constants
+     * respectively.
+     *
+     * So if the readability for the Super User is required, perform a logical
+     * and on the value returned by this method, the ACCESS_READ_BITS and the
+     * USER_TYPE_SUPERUSER constants.  The resulting value is the most
+     * inclusive possible access: the value should be logically and'd with the
+     * access granted in each SE activation state.
+     *
+     * @param fieldIndex
+     *                    Integer index of the field.
+     *
+     * @return 64-bit     integer containing the accessFlags assigned to each
+     *                    User group. See the MetaSwitch Class 5 Softswitch:
+     *                    Integration and Customization manual for more
+     *                    details.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                    Thrown if the specified field is not registered in
+     *                    the Settings.
+     */
+    long long getAccessFlagsByGroupByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the current field accessibility as determined by the SE's state
+     * and the client session's permissions.  See getCurrentAccessByIndex for
+     * more details.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return Long detailing the current access permissions.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getCurrentAccessByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the current field accessibility as determined by the SE's state
+     * and the client session's permissions.  Field access is expressed by
+     * three bits: a read bit (see IS_READABLE), a write bit (see IS_WRITEABLE)
+     * and a visibility bit (see IS_VISIBLE).  If the respective bit is set
+     * it indicates that the field is readable/writeable/visible.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return Long detailing the current access permissions.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getCurrentAccessByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Provides the current SE's activation state.  For more details see
+     * the "MetaSwitch Class 5 Softswitch: Integration and Customization
+     * manual".
+     *
+     * @return Long with the value of STATE_CREATING, STATE_ENABLED or
+     *         STATE_DISABLED.
+     */
+    long getState();
+
+    /**
+     * Returns a boolean indicating field visibility.  See the
+     * getCurrentAccessByIndex method and the declaration of IS_VISIBLE
+     * for more details.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return true if the field is currently visible to a user
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isVisibleByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns a boolean indicating field visibility.  See the
+     * getCurrentAccessByIndex method and the declaration of IS_VISIBLE
+     * for more details.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return true if the field is currently visible to a user
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean isVisibleByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the units of measurement for this field in the form of an NLSIID.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return Integer representation of the field's units.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getUnitsByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the units of measurement for this field in the form of an NLSIID.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return String representation of the field's units.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    long getUnitsByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if the field provides an array of possible values.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return True if the field can return a string array of possible values
+     *         from a call to getPossibleValuesAsStrings. False otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean hasPossibleValuesByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if the field provides an array of possible values.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return True if the field can return a string array of possible values
+     *         from a call to getPossibleValuesAsStrings. False otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean hasPossibleValuesByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns true if the field has a registered AdjustmentProvider.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return True if the field has a registered AdjustmentProvider.
+     *         The implication of this being true is that changing the value
+     *         of this field has a knock on effect on other fields.
+     *         False otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean hasAdjustmentsByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException);
+    /**
+     * Returns true if the field has a registered AdjustmentProvider.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return True if the field has a registered AdjustmentProvider.
+     *         The implication of this being true is that changing the value
+     *         of this field has a knock on effect on other fields.
+     *         False otherwise.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean hasAdjustmentsByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns a String array containing the string values that map to
+     * internal numerical values in mapping and bit-mask fields.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return A string array of external values for BIT_MASK and INT32_MAP
+     *         fields. These are the human-readable "keys" that map to internal
+     *         programmatic values.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_MAP or BIT_MASK.
+     */
+    SequenceOfNames getExternalStringValuesByName(in string fieldName)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a String array containing the string values that map to
+     * internal numerical values in mapping and bit-mask fields.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return A string array of external values for BIT_MASK and INT32_MAP
+     *         fields. These are the human-readable "keys" that map to internal
+     *         programmatic values.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_MAP or BIT_MASK.
+     */
+    SequenceOfNames getExternalStringValuesByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a copy of the array of internal programmatic values for a
+     * integer mapping field.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @return A SequenceOfIntegers of internal values for an INT32_MAP field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_MAP.
+     */
+    SequenceOfIntegers getInternalIntValuesByName(in string name)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a copy of the array of internal programmatic values for a
+     * integer mapping field.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @return A SequenceOfIntegers of internal values for an INT32_MAP field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown when the field is not of one of the
+     *                   following types: INT32_MAP.
+     */
+    SequenceOfIntegers getInternalIntValuesByIndex(in long fieldIndex)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Returns a String array containing the possible values for a field.
+     *
+     * @param  fieldName String of the field name.
+     * @param  filter    String representing a filter for selecting values.
+     *                   The filter must have been returned from a previous
+     *                   invocation of this method. Set to the empty string
+     *                   to have this parameter ignored.
+     * @param  maxValues Maximum number of possible values to return.
+     * @param  moreValues  BooleanHolder out parameter that returns true if
+     *                   there are more possible values to be displayed.
+     *                   False otherwise.
+     * @param  hasFilters  BooleanHolder out parameter that returns true if
+     *                   the returned String array includes filter values.
+     *                   False otherwise.
+     * @param  numEntries  IntHolder out parameter that returns the actual
+     *                   number of returned elements.
+     * @param  whyNoValues  StringHolder out parameter that optionally returns
+     *                   an NLS string indicating why there are no possible
+     *                   values.  Only valid if numEntries is zero.  Note that
+     *                   this may not be filled in even if numEntries is zero.
+     *
+     * @return A DualString array of possible values for this field. If
+     *         hasFilters is false, the DualStrings contain possible
+     *         values for the field. If hasFilters is true, the
+     *         DualStrings contain filters (wildcards) representing a number of
+     *         possible values.  To expand these filters, invoke this method
+     *         again, supplying a filter as a parameter.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldNoRegisteredPVPException
+     *                   Thrown if no possible values provider has been
+     *                   registered for this field.
+     * @throws ElementDeletedException
+     *                   Thrown if the underlying element has been deleted.
+     * @throws ElementOperationFailedException
+     *                   Thrown if a non-specific failure occurs.
+     * @throws LockTimeoutException
+     *                   Thrown if this operation takes too long.
+     * @throws InvalidFilterException
+     *                   Thrown if the filter suppled is not valid. This is
+     *                   not expected if the filter was returned on a previous
+     *                   call to this method for the same field.
+     * @throws InvalidNameException
+     *                   See SEExceptions.idl.
+     * @throws ElementUnavailableException
+     *                   Thrown if the underlying element is not available;
+     *                   usually due to a communications failure.
+     * @throws ElementBrokenException
+     *                   Thrown if the element is in an inconsistent state.
+     */
+    SequenceOfDualStrings getPossibleValuesAsStringsByName(in string fieldName,
+                                                        in string filter,
+                                                        in long maxValues,
+                                                        out boolean moreValues,
+                                                        out boolean hasFilters,
+                                                        out long numEntries,
+                                                        out string whyNoValues)
+        raises (FieldNameOrIndexNotFoundException,
+                FieldNoRegisteredPVPException,
+                ElementDeletedException,
+                ElementOperationFailedException,
+                LockTimeoutException,
+                InvalidFilterException,
+                InvalidNameException,
+                ElementUnavailableException,
+                ElementBrokenException);
+
+    /**
+     * Returns a String array containing the possible values for a field.
+     *
+     * @param  fieldIndex Integer index of the field.
+     * @param  filter    String representing a filter for selecting values.
+     *                   The filter must have been returned from a previous
+     *                   invocation of this method. Set to the empty string
+     *                   to have this parameter ignored.
+     * @param  maxValues Maximum number of possible values to return.
+     * @param  moreValues  BooleanHolder out parameter that returns true if
+     *                   there are more possible values to be displayed.
+     *                   False otherwise.
+     * @param  hasFilters  BooleanHolder out parameter that returns true if
+     *                   the returned String array includes filter values.
+     *                   False otherwise.
+     * @param  numEntries  IntHolder out parameter that returns the actual
+     *                   number of returned elements.
+     * @param  whyNoValues  StringHolder out parameter that optionally returns
+     *                   an NLS string indicating why there are no possible
+     *                   values.  Only valid if numEntries is zero.  Note that
+     *                   this may not be filled in even if numEntries is zero.
+     *
+     * @return A DualString array of possible values for this field. If
+     *         hasFilters is false, the DualStrings contain possible
+     *         values for the field. If hasFilters is true, the
+     *         DualStrings contain filters (wildcards) representing a number of
+     *         possible values.  To expand these filters, invoke this method
+     *         again, supplying a filter as a parameter.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldNoRegisteredPVPException
+     *                   Thrown if no possible values provider has been
+     *                   registered for this field.
+     * @throws ElementDeletedException
+     *                   Thrown if the underlying element has been deleted.
+     * @throws ElementOperationFailedException
+     *                   Thrown if a non-specific failure occurs.
+     * @throws LockTimeoutException
+     *                   Thrown if this operation takes too long.
+     * @throws InvalidFilterException
+     *                   Thrown if the filter suppled is not valid. This is
+     *                   not expected if the filter was returned on a previous
+     *                   call to this method for the same field.
+     * @throws InvalidNameException
+     *                   See SEExceptions.idl.
+     * @throws ElementUnavailableException
+     *                   Thrown if the underlying element is not available;
+     *                   usually due to a communications failure.
+     * @throws ElementBrokenException
+     *                   Thrown if the element is in an inconsistent state.
+     */
+    SequenceOfDualStrings getPossibleValuesAsStringsByIndex(in long fieldIndex,
+        in string filter,
+        in long maxValues,
+        out boolean moreValues,
+        out boolean hasFilters,
+        out long numEntries,
+        out string whyNoValues)
+        raises (FieldNameOrIndexNotFoundException,
+                FieldNoRegisteredPVPException,
+                ElementDeletedException,
+                ElementOperationFailedException,
+                LockTimeoutException,
+                InvalidFilterException,
+                InvalidNameException,
+                ElementUnavailableException,
+                ElementBrokenException);
+
+    /**
+     * Called after a previous call to getPossibleValuesAsStrings, this
+     * returns the next "batch" of possible values for this field.
+     *
+     * @param  fieldName String of the field name.
+     * @param  lastValue The last value in the sequence returned from a
+     *                   previous invocation of getPossibleValuesAsStrings() or
+     *                   getNextPossibleValuesAsStrings() which
+     *                   indicated that there were more values to be returned.
+     * @param  filter    String representing the filter used to select values,
+     *                   returned from a previous invocation of this method.
+     *                   Set to the empty string to have this parameter
+     *                   ignored.
+     * @param  maxValues Maximum number of possible values to return.
+     * @param  moreValues  BooleanHolder out parameter that returns true if
+     *                   there are more possible values to be displayed.
+     * @param  hasFilters  BooleanHolder out parameter that returns true if
+     *                   the returned String array includes filter values.
+     * @param  numEntries  IntHolder out parameter, indicating the number of
+     *                   possible values returned.
+     * @param  whyNoValues  StringHolder out parameter that optionally returns
+     *                   an NLS string indicating why there are no possible
+     *                   values.  Only valid if numEntries is zero.  Note that
+     *                   this may not be filled in even if numEntries is zero.
+     *
+     * @return A DualString array of possible values for this field. If
+     *         hasFilters is false, the DualStrings contain possible
+     *         values for the field. If hasFilters is true, the
+     *         DualStrings contain filters (wildcards) representing a number of
+     *         possible values.  To expand these filters, invoke this method
+     *         again, supplying a filter as a parameter.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldNoRegisteredPVPException
+     *                   Thrown if no possible values provider has been
+     *                   registered for this field.
+     * @throws ElementDeletedException
+     *                   Thrown if the underlying element has been deleted.
+     * @throws ElementOperationFailedException
+     *                   Thrown if a non-specific failure occurs.
+     * @throws LockTimeoutException
+     *                   Thrown if this operation takes too long.
+     * @throws InvalidFilterException
+     *                   Thrown if the filter suppled is not valid. This is
+     *                   not expected if the filter was returned on a previous
+     *                   call to this method for the same field.
+     * @throws InvalidNameException
+     *                   See SEExceptions.idl.
+     * @throws ElementUnavailableException
+     *                   Thrown if the underlying element is not available;
+     *                   usually due to a communications failure.
+     * @throws ElementBrokenException
+     *                   Thrown if the element is in an inconsistent state.
+     */
+    SequenceOfDualStrings getNextPossibleValuesAsStringsByName(in string fieldName,
+        in string lastValue,
+        in string filter,
+        in long maxValues,
+        out boolean moreValues,
+        out boolean hasFilters,
+        out long numEntries,
+        out string whyNoValues)
+        raises (FieldNameOrIndexNotFoundException,
+                FieldNoRegisteredPVPException,
+                FieldBadValueException,
+                ElementDeletedException,
+                ElementOperationFailedException,
+                LockTimeoutException,
+                InvalidFilterException,
+                InvalidNameException,
+                ElementUnavailableException,
+                ElementBrokenException);
+
+    /**
+     * Called after a previous call to getPossibleValuesAsStrings, this
+     * returns the next "batch" of possible values for this field.
+     *
+     * @param  fieldIndex Integer index of the field.
+     * @param  lastValue The last value in the sequence returned from a
+     *                   previous invocation of getPossibleValuesAsStrings() or
+     *                   getNextPossibleValuesAsStrings() which
+     *                   indicated that there were more values to be returned.
+     * @param  filter    String representing the filter used to select values,
+     *                   returned from a previous invocation of this method.
+     *                   Set to the empty string to have this parameter
+     *                   ignored.
+     * @param  maxValues Maximum number of possible values to return.
+     * @param  moreValues  BooleanHolder out parameter that returns true if
+     *                   there are more possible values to be displayed.
+     * @param  hasFilters  BooleanHolder out parameter that returns true if
+     *                   the returned String array includes filter values.
+     * @param  numEntries  IntHolder out parameter, indicating the number of
+     *                   possible values returned.
+     * @param  whyNoValues  StringHolder out parameter that optionally returns
+     *                   an NLS string indicating why there are no possible
+     *                   values.  Only valid if numEntries is zero.  Note that
+     *                   this may not be filled in even if numEntries is zero.
+     *
+     * @return A DualString array of possible values for this field. If
+     *         hasFilters is false, the DualStrings contain possible
+     *         values for the field. If hasFilters is true, the
+     *         DualStrings contain filters (wildcards) representing a number of
+     *         possible values.  To expand these filters, invoke this method
+     *         again, supplying a filter as a parameter.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldNoRegisteredPVPException
+     *                   Thrown if no possible values provider has been
+     *                   registered for this field.
+     * @throws ElementDeletedException
+     *                   Thrown if the underlying element has been deleted.
+     * @throws ElementOperationFailedException
+     *                   Thrown if a non-specific failure occurs.
+     * @throws LockTimeoutException
+     *                   Thrown if this operation takes too long.
+     * @throws InvalidFilterException
+     *                   Thrown if the filter suppled is not valid. This is
+     *                   not expected if the filter was returned on a previous
+     *                   call to this method for the same field.
+     * @throws InvalidNameException
+     *                   See SEExceptions.idl.
+     * @throws ElementUnavailableException
+     *                   Thrown if the underlying element is not available;
+     *                   usually due to a communications failure.
+     * @throws ElementBrokenException
+     *                   Thrown if the element is in an inconsistent state.
+     */
+    SequenceOfDualStrings getNextPossibleValuesAsStringsByIndex(in long fieldIndex,
+        in string lastValue,
+        in string filter,
+        in long maxValues,
+        out boolean moreValues,
+        out boolean hasFilters,
+        out long numEntries,
+        out string whyNoValues)
+        raises (FieldNameOrIndexNotFoundException,
+                FieldNoRegisteredPVPException,
+                FieldBadValueException,
+                ElementDeletedException,
+                ElementOperationFailedException,
+                LockTimeoutException,
+                InvalidFilterException,
+                InvalidNameException,
+                ElementUnavailableException,
+                ElementBrokenException);
+
+    /**
+     * Prompt the Settings object to make adjustments to it's
+     * fields, as dictated by any AdjustmentProvider registered
+     * with the named field.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean getAdjustmentsByName(in string fieldName)
+       raises (FieldNameOrIndexNotFoundException,
+               FieldNoRegisteredAPException,
+               ElementDeletedException,
+               ElementOperationFailedException,
+               LockTimeoutException,
+               ElementUnavailableException,
+               ElementBrokenException);
+
+    /**
+     * Prompt the Settings object to make adjustments to it's
+     * fields, as dictated by any AdjustmentProvider registered
+     * with the named field.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    boolean getAdjustmentsByIndex(in long fieldIndex)
+       raises (FieldNameOrIndexNotFoundException,
+               FieldNoRegisteredAPException,
+               ElementDeletedException,
+               ElementOperationFailedException,
+               LockTimeoutException,
+               ElementUnavailableException,
+               ElementBrokenException);
+
+    /**
+     * Returns a string array of field names registered with this
+     * Settings object.
+     *
+     * @param  length IntHolder out parameter, indicating the number of
+     *                elements in the return array.
+     *
+     * @return A string array of registered field names.
+     */
+    SequenceOfNames fieldNames(out long length);
+
+    /**
+     * Returns the number of fields registered with this Settings object.
+     *
+     * @return 32-bit integer containing the number of fields registered.
+     */
+    long countFields();
+
+    /**
+     * Returns the display name of the field.
+     *
+     * @param  fieldName String name of the field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    string getDisplayNameByName(in string fieldName)
+       raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Returns the display name of the field.
+     *
+     * @param  fieldIndex Integer index of the field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    string getDisplayNameByIndex(in long fieldIndex)
+       raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Writes the Settings object to an octet array.
+     *
+     * @return  An octet array representation of the Settings object. The
+     *          read() method can then be used to recreate the object.
+     *
+     * @throws  ReadWriteSettingsException
+     *                   Thrown if an error occured writing the
+     *                   object to a octet array
+     */
+    SequenceOfOctets write() raises (ReadWriteSettingsException);
+
+    //------------------------------------------------------------------------
+    //
+    // Mutator methods
+    //
+    //------------------------------------------------------------------------
+
+    /**
+     * Sets the field value using an integer argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then this
+     * sets the default value.  Otherwise it sets the specific value.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   32-bit integer containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32, INT32_MAP or INT32_RANGE.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setFieldAsIntByName(in string fieldName, in long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field value using an integer argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then this
+     * sets the default value.  Otherwise it sets the specific value.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   32-bit integer containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32, INT32_MAP or INT32_RANGE.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setFieldAsIntByIndex(in long fieldIndex, in long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the named field value using a 64-bit integer argument. If
+     * the field is a Switchable Default field, and the use-default
+     * flag is set, then this sets the default value.  Otherwise it
+     * sets the specific value.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   64-bit integer containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT64.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setFieldAsLongByName(in string fieldName, in long long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the named field value using a 64-bit integer argument. If
+     * the field is a Switchable Default field, and the use-default
+     * flag is set, then this sets the default value.  Otherwise it
+     * sets the specific value.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   64-bit integer containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT64.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setFieldAsLongByIndex(in long fieldIndex, in long long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field value using a string argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then
+     * this sets the default value.  Otherwise it sets the specific value.
+     *
+     * @params fieldName String name of the field.
+     * @params newValue  String containing the new value for the field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadValueException
+     *                   Thrown if the string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setFieldAsStringByName(in string fieldName, in string newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field value using a string argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then
+     * this sets the default value.  Otherwise it sets the specific value.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue  String containing the new value for the field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadValueException
+     *                   Thrown if the string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setFieldAsStringByIndex(in long fieldIndex, in string newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException);
+
+    /**
+     * Set the field using a DualString argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then
+     * this sets the default value.  Otherwise it sets the specific value.
+     *
+     * @param fieldName  String name of the field.
+     * @params newValue  DualString containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the isReference method returns false.
+     * @throws FieldBadValueException
+     *                   Thrown if the _internal_ string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setFieldAsReferenceByName(in string fieldName,
+                                   in DualString newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Set the field using a DualString argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then
+     * this sets the default value.  Otherwise it sets the specific value.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @params newValue  DualString containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the isReference method returns false.
+     * @throws FieldBadValueException
+     *                   Thrown if the _internal_ string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setFieldAsReferenceByIndex(in long fieldIndex,
+                                    in DualString newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a boolean argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then
+     * this sets the default value.  Otherwise it sets the specific value.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   boolean used to set field value
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BOOLEAN.
+     */
+    void setFieldAsBooleanByName(in string fieldName, in boolean newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a boolean argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then
+     * this sets the default value.  Otherwise it sets the specific value.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   boolean used to set field value
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BOOLEAN.
+     */
+    void setFieldAsBooleanByIndex(in long fieldIndex, in boolean newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a byte array argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then
+     * this sets the default value.  Otherwise it sets the specific value.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   Byte array used to set the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the byte array does not contain
+     *                   a valid value for this field.
+     */
+    void setFieldAsByteArrayByName(in string fieldName, in SequenceOfOctets newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a byte array argument. If the field is a
+     * Switchable Default field, and the use-default flag is set, then
+     * this sets the default value.  Otherwise it sets the specific value.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   Byte array used to set the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the byte array does not contain
+     *                   a valid value for this field.
+     */
+    void setFieldAsByteArrayByIndex(in long fieldIndex, in SequenceOfOctets newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a SequenceOfIntegers argument. If the
+     * field is a Switchable Default field, and the use-default flag is
+     * set, then this sets the default value.  Otherwise it sets the
+     * specific value.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   A SequenceOfIntegers (array of 32-bit integers)
+     *                    used to set field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the integer array does not contain
+     *                   a valid value for this field.
+     */
+    void setFieldAsIntArrayByName(in string fieldName, in SequenceOfIntegers newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a SequenceOfIntegers argument. If the
+     * field is a Switchable Default field, and the use-default flag is
+     * set, then this sets the default value.  Otherwise it sets the
+     * specific value.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   A SequenceOfIntegers (array of 32-bit integers)
+     *                    used to set field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the integer array does not contain
+     *                   a valid value for this field.
+     */
+    void setFieldAsIntArrayByIndex(in long fieldIndex, in SequenceOfIntegers newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using an integer argument.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   32-bit integer containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32, INT32_MAP or INT32_RANGE.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsIntByName(in string fieldName, in long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field value using an integer argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   32-bit integer containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32, INT32_MAP or INT32_RANGE.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsIntByIndex(in long fieldIndex, in long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the named field value using a 64-bit integer argument.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   64-bit integer containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT64.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsLongByName(in string fieldName, in long long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the named field value using a 64-bit integer argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   64-bit integer containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT64.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsLongByIndex(in long fieldIndex, in long long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field value using a string argument.
+     *
+     * @params fieldName String name of the field.
+     * @params newValue  String containing the new value for the field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadValueException
+     *                   Thrown if the string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsStringByName(in string fieldName, in string newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field value using a string argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue  String containing the new value for the field.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadValueException
+     *                   Thrown if the string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsStringByIndex(in long fieldIndex, in string newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException);
+
+    /**
+     * Set the field using a DualString argument.
+     *
+     * @param fieldName  String name of the field.
+     * @params newValue  DualString containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the isReference method returns false.
+     * @throws FieldBadValueException
+     *                   Thrown if the _internal_ string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsReferenceByName(in string fieldName,
+                                   in DualString newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Set the field using a DualString argument.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @params newValue  DualString containing the new field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the isReference method returns false.
+     * @throws FieldBadValueException
+     *                   Thrown if the _internal_ string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsReferenceByIndex(in long fieldIndex,
+                                    in DualString newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a boolean argument.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   boolean used to set field value
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BOOLEAN.
+     */
+    void setSpecificValueAsBooleanByName(in string fieldName, in boolean newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a boolean argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   boolean used to set field value
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BOOLEAN.
+     */
+    void setSpecificValueAsBooleanByIndex(in long fieldIndex, in boolean newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a byte array argument.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   Byte array used to set the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the byte array does not contain
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsByteArrayByName(in string fieldName, in SequenceOfOctets newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a byte array argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   Byte array used to set the field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the byte array does not contain
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsByteArrayByIndex(in long fieldIndex, in SequenceOfOctets newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a SequenceOfIntegers argument.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   A SequenceOfIntegers (array of 32-bit integers)
+     *                    used to set field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the integer array does not contain
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsIntArrayByName(in string fieldName, in SequenceOfIntegers newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field value using a SequenceOfIntegers argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   A SequenceOfIntegers (array of 32-bit integers)
+     *                    used to set field value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the integer array does not contain
+     *                   a valid value for this field.
+     */
+    void setSpecificValueAsIntArrayByIndex(in long fieldIndex, in SequenceOfIntegers newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field's default value using an 32-bit integer argument.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   32-bit integer used to set the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32, INT32_MAP, INT32_RANGE.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setDefaultAsIntByName(in string fieldName, in long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field's default value using an 32-bit integer argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   32-bit integer used to set the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32, INT32_MAP, INT32_RANGE.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setDefaultAsIntByIndex(in long fieldIndex, in long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field's default value using a 64-bit integer argument.
+     *
+     * @params fieldName  String name of the field.
+     * @params newValue   64-bit integer used to set the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT64.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setDefaultAsLongByName(in string fieldName, in long long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field's default value using a 64-bit integer argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue   64-bit integer used to set the default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT64.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setDefaultAsLongByIndex(in long fieldIndex, in long long newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException,
+              FieldBadValueException);
+
+    /**
+     * Sets the field's default value using a string argument.
+     *
+     * @params fieldName String name of the field.
+     * @params newValue  String containing the new value for the default
+     *                   value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadValueException
+     *                   Thrown if the string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setDefaultAsStringByName(in string fieldName, in string newValue)
+      raises (FieldNameOrIndexNotFoundException, FieldBadValueException);
+
+    /**
+     * Sets the field's default value using a string argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue  String containing the new value for the default
+     *                   value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadValueException
+     *                   Thrown if the string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setDefaultAsStringByIndex(in long fieldIndex, in string newValue)
+      raises (FieldNameOrIndexNotFoundException, FieldBadValueException);
+
+
+    /**
+     * Set the field's default value using a DualString argument.
+     *
+     * @param fieldName  String name of the field.
+     * @params newValue  DualString containing the field's default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the isReference method returns false.
+     * @throws FieldBadValueException
+     *                   Thrown if the _internal_ string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setDefaultAsReferenceByName(in string fieldName,
+                                   in DualString newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Set the field's default value using a DualString argument.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @params newValue  DualString containing the field's default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if fieldIndex is not the index of a field in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the isReference method returns false.
+     * @throws FieldBadValueException
+     *                   Thrown if the _internal_ string cannot be parsed to
+     *                   a valid value for this field.
+     */
+    void setDefaultAsReferenceByIndex(in long fieldIndex,
+                                    in DualString newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field's default value using a boolean argument.
+     *
+     * @params fieldName String name of the field.
+     * @params newValue  Boolean used to set the field's default value
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BOOLEAN.
+     */
+    void setDefaultAsBooleanByName(in string fieldName, in boolean newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field's default value using a boolean argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue  Boolean used to set the field's default value
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BOOLEAN.
+     */
+    void setDefaultAsBooleanByIndex(in long fieldIndex, in boolean newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field's default value using a byte array argument.
+     *
+     * @params fieldName String name of the field.
+     * @params newValue  Byte array used to set the field's default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setDefaultAsByteArrayByName(in string fieldName, in SequenceOfOctets newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field's default value using a byte array argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue  Byte array used to set the field's default value.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: BYTE_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setDefaultAsByteArrayByIndex(in long fieldIndex, in SequenceOfOctets newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field's default value using a SequenceOfIntegers argument.
+     *
+     * @params fieldName String name of the field.
+     * @params newValue  Byte array used to set the field's default value
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setDefaultAsIntArrayByName(in string fieldName, in SequenceOfIntegers newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the field's default value using a SequenceOfIntegers argument.
+     *
+     * @params fieldIndex Integer index of the field.
+     * @params newValue  Byte array used to set the field's default value
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     * @throws FieldBadTypeException
+     *                   Thrown if the field is not of one of the
+     *                   following types: INT32_ARRAY.
+     * @throws FieldBadValueException
+     *                   Thrown if the new value is not
+     *                   a valid value for this field.
+     */
+    void setDefaultAsIntArrayByIndex(in long fieldIndex, in SequenceOfIntegers newValue)
+      raises (FieldNameOrIndexNotFoundException,
+              FieldBadValueException,
+              FieldBadTypeException);
+
+    /**
+     * Sets the modification flag for all registered fields to the state
+     * provided.  When any field mutator method is successfully invoked the
+     * isModified flag is set to true.
+     *
+     * @param state      Boolean state for all field's isModified flag.
+     *                   Settings this to false means all fields will return
+     *                   false from the isModified method.
+     */
+    void setModified(in boolean state);
+
+    /**
+     * Sets the modification flag for an individual field.  When this field's
+     * value is set the modification flag is set to true.
+     *
+     * @param fieldName  String name of the field.
+     * @param state      Boolean state for the field's isModified flag.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    void setFieldModifiedByName(in string fieldName, in boolean state)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Sets the modification flag for an individual field.  When this field's
+     * value is set the modification flag is set to true.
+     *
+     * @param fieldIndex Integer index of the field.
+     * @param state      Boolean state for the field's isModified flag.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered in
+     *                   the Settings.
+     */
+    void setFieldModifiedByIndex(in long fieldIndex, in boolean state)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Sets the use-default flag for this field.  If the use-default flag
+     * is set and this is a Switchable Default field, then the default value
+     * will be set and returned by the setFieldAs*() and getFieldAs*() methods.
+     * Otherwise, the specific value will be set and returned as normal.
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @param useDefault If true, then the use-default flag is set
+     *                   otherwise it is unset.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    void setUseDefaultFlagByName(in string fieldName, in boolean useDefault)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Sets the use-default flag for this field.  If the use-default flag
+     * is set and this is a Switchable Default field, then the default value
+     * will be set and returned by the setFieldAs*() and getFieldAs*() methods.
+     * Otherwise, the specific value will be set and returned as normal.
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @param useDefault If true, then the use-default FLAG is set
+     *                   otherwise it is unset.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    void setUseDefaultFlagByIndex(in long fieldIndex, in boolean useDefault)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Sets the clause selection for this field.  If this field is a start-of-
+     * clause field and the clauseIsSelected parameter is set to true, then
+     * this and all fields up to the end-of-clause field are valid (unless
+     * restrictions apply).
+     *
+     * See also isStartOfClauseByName(), isEndOfClauseByName and
+     * getClauseIsSelectedByName().
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @param clauseIsSelected Boolean state for the fields clause-selected flag.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    void setClauseIsSelectedByName(in string fieldName,
+                                   in boolean clauseIsSelected)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Sets the clause selection for this field.  If this field is a start-of-
+     * clause field and the clauseIsSelected parameter is set to true, then
+     * this and all fields up to the end-of-clause field are valid (unless
+     * restrictions apply).
+     *
+     * See also isStartOfClauseByIndex(), isEndOfClauseByIndex and
+     * getClauseIsSelectedByIndex().
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @param clauseIsSelected Boolean state for the fields clause-selected flag.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    void setClauseIsSelectedByIndex(in long fieldIndex,
+                                    in boolean clauseIsSelected)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Sets the group entry selection for this field.  If this field is an
+     * exclusive group entry and the entryIsSelected parameter is set to true,
+     * then this field becomes the selected entry in the group and all other
+     * entries in the group will be automatically deselected.  If this field is
+     * an exclusive group entry and the entryIsSelected parameter is set to
+     * false, then this field will be deselected.
+     *
+     * Only the selected member of an exclusive group is valid at any one time.
+     *
+     * See also isExclusiveGroupEntryByName() and
+     * getGroupEntryIsSelectedByName().
+     *
+     * @param fieldName  String name of the field.
+     *
+     * @param entryIsSelected Boolean state for the fields
+     *                        group-entry-selected flag.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    void setGroupEntryIsSelectedByName(in string fieldName,
+                                       in boolean entryIsSelected)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Sets the group entry selection for this field.  If this field is an
+     * exclusive group entry and the entryIsSelected parameter is set to true,
+     * then this field becomes the selected entry in the group and all other
+     * entries in the group will be automatically deselected.  If this field is
+     * an exclusive group entry and the entryIsSelected parameter is set to
+     * false, then this field will be deselected.
+     *
+     * Only the selected member of an exclusive group is valid at any one time.
+     *
+     * See also isExclusiveGroupEntryByIndex() and
+     * getGroupEntryIsSelectedByIndex().
+     *
+     * @param fieldIndex Integer index of the field.
+     *
+     * @param entryIsSelected Boolean state for the fields
+     *                        group-entry-selected flag.
+     *
+     * @throws FieldNameOrIndexNotFoundException
+     *                   Thrown if the specified field is not registered
+     *                   in the Settings.
+     */
+    void setGroupEntryIsSelectedByIndex(in long fieldIndex,
+                                        in boolean entryIsSelected)
+      raises (FieldNameOrIndexNotFoundException);
+
+    /**
+     * Reads field configuration information from a byte array.
+     *
+     * @param  buffer    An octet array representation of the Settings object,
+     *                   as produced by the write() method.
+     *
+     * @throws ReadWriteSettingsException
+     *                   Thrown if an error occured reading the
+     *                   object from an octet array.
+     */
+    void read(in SequenceOfOctets buffer)
+      raises (ReadWriteSettingsException);
+};
+
+#endif

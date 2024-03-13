@@ -1,0 +1,351 @@
+<html>
+<head>
+  <title>Faxes example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Faxes Example</h1>
+
+Enter the server address, then press the button to log in.
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<form id="faxHandling">
+  <h2>Fax Handling</h2>
+  <button disabled="disabled" id="faxButton" onclick="doFetchFaxCount(connection); return false;">Faxes</button>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("FaxTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    doEnableButtons();
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="enableButtonsScript">
+function doEnableButtons()
+{
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++)
+  {
+    button = buttons[i];
+
+    button.disabled = false;
+  }
+
+  display("Now use the other buttons to drive the example");
+}
+</script>
+
+<script id="faxesCountScript">
+function doFetchFaxCount(connection)
+{
+  display("Fetching fax count");
+
+  connection.fetchFaxCount(countSuccess, countError);
+
+  // The function to be called with the fax counts
+  function countSuccess(connection, total, unviewed)
+  {
+    display("There are " + total + " faxes, " + unviewed + " of them are unviewed");
+
+    doFetchFaxList(connection);
+  }
+
+  // The function to be called if fetching the count fails
+  function countError(connection, error)
+  {
+    display("Failed to fetch fax count, error: " + error);
+  }
+}
+</script>
+
+<script id="faxesListScript">
+function doFetchFaxList(connection)
+{
+  // Refetch the faxes, this time as a list
+  connection.fetchFaxes(faxesSuccess, faxesError);
+
+  // The function to be called with the fax list
+  function faxesSuccess(connection, faxes)
+  {
+    // This display format includes some action buttons
+    displayFaxActions(connection, faxes);
+  }
+
+  // The function to be called if fetching the list fails
+  function faxesError(connection, error)
+  {
+    display("Failed to fetch fax list, error: " + error);
+  }
+}
+</script>
+
+<script id="faxesActionsScript">
+function displayFaxActions(connection, faxes)
+{
+  // Unique among major browsers, true Safari has inbuilt support for showing
+  // tiff files, and does not use an external viewer.
+  var isSafari = navigator.userAgent.match("Safari") &&
+                 !navigator.userAgent.match("Chrome");
+
+  // Build the table contents - start with headers for the columns
+  var table = "<table id='faxes' border='2'><tr>" +
+                "<th>id</th>" +
+                "<th>From</th>" +
+                "<th>Date</th>" +
+                "<th>Pages</th>" +
+                "<th>Size</th>" +
+                "<th>Actions</th></tr>";
+
+  for (var i = 0; i < faxes.length; i++)
+  {
+    var fax = faxes[i];
+
+    // We will change the appearance of faxes that have not been viewed yet
+    if (fax.Read)
+    {
+      // The fax has already been viewed
+      var appearance = "";
+    }
+    else
+    {
+      // The fax has not been viewed - give it a distinct appearance
+      var appearance = " style='background-color:yellow'";
+    }
+
+    var id = fax.Id;
+
+    if (fax.From)
+    {
+      var from = fax.From;
+    }
+    else
+    {
+      var from = "Not given";
+    }
+
+    var buttons =
+      "<button onclick='deleteFax(\"" + id + "\")'>Delete</button>" +
+      "<button onclick='markFaxAsViewed(\"" + id + "\")'>Mark viewed</button>" +
+      "<button onclick='markFaxAsUnviewed(\"" + id + "\")'>Mark unviewed</button>";
+
+    if (isSafari)
+    {
+      var target = " target='_new'";
+    }
+    else
+    {
+      var target = "";
+    }
+
+    var imageLink =
+      "<a onclick='viewingFax(\"" + id + "\"); return true;'" + target +
+      " href='" + fax.ImageFile + "'>" + id + "</a>";
+
+    // Add this fax as a row in the table
+    table += "<tr" + appearance + ">" +
+             "<td>" + imageLink + "</td>" +
+             "<td>" + from + "</td>" +
+             "<td>" + connection.convertDate(fax.Received).toLocaleString() + "</td>" +
+             "<td>" + fax.Pages + "</td>" +
+             "<td>" + fax.Size + "</td>" +
+             "<td>" + buttons + "</td>";
+  }
+
+  table += "</table>";
+
+  // Create a DOM element with our table in it
+  var element = document.createElement("div");
+  element.innerHTML = table;
+
+  var oldTable = document.getElementById("faxes");
+  if (oldTable)
+  {
+    // We already have a table of faxes shown, so replace it
+    oldTable.parentNode.replaceChild(element.firstChild,
+                                     oldTable);
+  }
+  else
+  {
+    // Add the table to our output area
+    addToOutput(element);
+  }
+}
+</script>
+
+<!--These functions are called from click handlers, so we put them in the global scope -->
+<script id="viewingFax">
+// Called when someone is viewing a fax
+function viewingFax(id)
+{
+  // Make the synchronous call that confirms we have viewed this fax
+  connection.confirmFaxesViewed(id);
+
+  // Queue up a refresh of our display
+  setTimeout(function()
+  {
+    doFetchFaxList(connection);
+  }, 0);
+}
+</script>
+
+<script id="deleteFunction">
+function deleteFax(id)
+{
+  display("Deleting fax with id " + id);
+
+  connection.deleteFaxes(id, deleteSuccess, deleteError);
+
+  function deleteSuccess(connection)
+  {
+    display("Deleted fax with id " + id);
+
+    doFetchFaxList(connection);
+  }
+
+  function deleteError(connection, error)
+  {
+    display("Deleting fax with id " + id + " gave error " + error);
+
+    doFetchFaxList(connection);
+  }
+}
+</script>
+
+<script id="markAsViewedFunction">
+function markFaxAsViewed(id)
+{
+  display("Marking fax id " + id + " as viewed");
+
+  connection.markFaxesAsViewed(id, viewedSuccess, viewedError);
+
+  function viewedSuccess(connection)
+  {
+    display("Marked fax id " + id + " as viewed");
+
+    doFetchFaxList(connection);
+  }
+
+  function viewedError(connection, error)
+  {
+    display("Marking fax id " + id + " as viewed gave error " + error);
+
+    doFetchFaxList(connection);
+  }
+}
+</script>
+
+<script id="markAsUnviewedFunction">
+function markFaxAsUnviewed(id)
+{
+  display("Marking fax id " + id + " as unviewed");
+
+  connection.markFaxesAsUnviewed(id, unviewedSuccess, unviewedError);
+
+  function unviewedSuccess(connection)
+  {
+    display("Marked fax id " + id + " as unviewed");
+
+    doFetchFaxList(connection);
+  }
+
+  function unviewedError(connection, error)
+  {
+    display("Marking fax id " + id + " as unviewed gave error " + error);
+
+    doFetchFaxList(connection);
+  }
+}
+</script>
+
+</body>
+</html>

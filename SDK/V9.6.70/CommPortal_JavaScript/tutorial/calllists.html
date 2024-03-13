@@ -1,0 +1,387 @@
+<html>
+<head>
+<title>Call Lists - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Call Lists - CommPortal SDK Tutorial</h1>
+
+After our brief foray into <a href="contacts.html">Contacts</a>, this tutorial
+returns to CommPortal's core telephony functions, and takes a look at the
+various lists of calls that the system keeps for a subscriber.  You'll
+probably be familiar with Call Lists from your own CommPortal account: using
+the web-based UI, you can see a useful log of calls you've received, missed
+and made.  And of course, you can get at those call lists in your own
+applications too.
+
+<p>
+As usual, the tutorial includes extensive example code fragments, which build
+up to a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+We'll start the tutorial with a quick recap of how to log in.  If you've
+already worked through the <a href="login.html">Login</a> tutorial, feel free
+to skip straight to <a href="#fetchCallLists">Fetching the Lists of Calls</a>.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>fetchDialedCalls()</b>
+  <li><b>fetchAnsweredCalls()</b>
+  <li><b>fetchMissedCalls()</b>
+  <li><b>convertDate()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+There's one difference in this tutorial: we've coded our
+<i>doLogin()</i> function so that, when the user successfully logs in,
+we automatically proceed to the <i>doFetchCallLists()</i> function
+covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="fetchCallLists"></a>
+<h2>Fetching the Lists of Calls</h2>
+
+So, to summarize: we've opened a connection to CommPortal, we've allowed the
+subscriber to log in, and we've arranged to call our <i>doFetchCallLists()</i>
+function as soon as they have.  Here's the function... it's not very long.
+
+<code id="fetchCallListsScript"></code>
+
+<p>
+Before you skip straight over this though, there's one point to make.  We've
+already said that CommPortal keeps a record of calls you've dialed, answered
+and missed; these are held in separate Call Lists, which you need to retrieve
+one at a time using separate API calls.  So to start with, our
+<i>doFetchCallLists()</i> function simply chains on to a
+<i>doFetchDialedCalls()</i> function, which fetches the first of these lists.
+
+<p>
+Although the API presents different functions to retrieve each of the call lists,
+under the covers the server sends all three separate lists together -
+so once the first API call has successfully completed, subsequent API calls
+to fetch the other call list may return very quickly.
+If you want your application to present a single, combined, call list then
+you are in luck - read on (but please heed the warnings given!)
+
+<h3>Dialed Calls</h3>
+
+So we'll start with the subscriber's outgoing calls - the ones they dialed.
+We fetch these via the <b>fetchDialedCalls()</b> API call.  As should be
+very familiar by now, this is done asynchronously, taking a success and
+failure callback as parameters.
+
+<code id="fetchDialedCallsScript"></code>
+
+The success callback is passed the connection (as usual), and an array
+representing the dialed calls.  Each call object has the following fields:
+
+<dl>
+  <dt>DirectoryNumber</dt>
+  <dd>The phone number that was called</dd>
+
+  <dt>DateTime</dt>
+  <dd>The date and time the call was dialed - as an English language string</dd>
+
+  <dt>Duration</dt>
+  <dd>The duration of the call, in seconds</dd>
+</dl>
+
+We pass the array of calls on to our <i>doDisplayCallsTable()</i> function,
+which we'll look at now.  (When that returns, we step to fetching the next set
+of calls using our <i>doFetchAnsweredCalls()</i> function - we'll come back to
+that below.)
+
+<code id="displayCallTableScript"></code>
+
+The first thing this function does is to see whether the call objects we've
+been given - or, strictly, the <i>first</i> call object we've been given - has
+a Duration field.  That might seem odd, since we've already told you that's one
+of the fields returned.  All will become clear shortly; we're going to use this
+same function to display more call lists later, and they don't all contain
+the same set of data.
+
+<p>
+The rest of this function is fairly straightforward HTML production, of a kind
+you'll have become quite familiar with if you've looked at any of the preceding
+tutorials.  Very briefly, we use a string to set up the table header, then add
+each call record as a separate row.  Finally we display the whole table in our
+output area by calling <i>addToOutput()</i>, a utility function you'll find
+in the complete example source code.
+
+<p>
+To be honest, we're cutting a corner here.  Our table just contains the
+raw data passed back by CommPortal - so the date and time of the call will be
+shown in an unambiguous but fixed format, which doesn't take any account of
+local language preferences.  Don't worry, we'll sort that out later!
+
+<h3>Answered Calls</h3>
+
+Next, we'll look at the calls that the subscriber actually answered.  These are
+obtained by the <b>fetchAnsweredCalls()</b> API method, which closely mirrors the
+<b>fetchDialedCalls()</b> call we've already looked at.
+
+<code id="fetchAnsweredCallsScript"></code>
+
+The success callback is passed the connection, and an array of answered calls,
+with almost identical fields to the dialed calls we saw above.  (In fact
+there's one extra field, Name, but for simplicity we don't do anything with it
+in our example.)
+
+<dl>
+  <dt>DirectoryNumber</dt>
+  <dd>The phone number that the caller called from. May be an empty string if the number was withheld.</dd>
+
+  <dt>DateTime</dt>
+  <dd>The date and time the call was answered - as an English language string</dd>
+
+  <dt>Duration</dt>
+  <dd>The duration of the call, in seconds</dd>
+
+  <dt>Name</dt>
+  <dd>May be present if the network provided a name when identifying the caller</dd>
+</dl>
+
+Again we pass the array of calls on to our <i>doDisplayCallsTable()</i> function
+and, when that returns, we step to fetching the final set of calls using the
+last of our set of three example functions - <i>doFetchMissedCalls()</i>.
+
+<h3>Missed Calls</h3>
+
+The final set of calls we look at are the missed calls, which we get using the
+<b>fetchMissedCalls()</b> API function.  I'm sure you know how this is going
+to go.
+
+<code id="fetchMissedCallsScript"></code>
+
+Think you've seen this all before?  Hang on!  There's an important difference
+between the array of calls returned by this method and the ones we've already
+looked at - which could easily trip you up if you're not careful with your code.
+
+<p>
+Because a missed call, by definition, didn't result in a completed connection,
+the call has no duration.  Each call object just holds the following fields:
+
+<dl>
+  <dt>DirectoryNumber</dt>
+  <dd>The phone number that the caller called from. May be an empty string if the number was withheld.</dd>
+
+  <dt>DateTime</dt>
+  <dd>The date and time the call was made - as an English language string</dd>
+
+  <dt>Name</dt>
+  <dd>May be present if the network provided a name when identifying the caller</dd>
+</dl>
+
+<p>
+Now you know why we were so careful when handling the Duration field in our
+<i>doDisplayCallTable()</i> function.  If we hadn't put in that extra
+code, we'd have been trying to display non-existent values when we used it
+this time.
+
+<p>
+We've now introduced each of the three types of call list we can get using
+the API.  It's time to mix it up a bit - quite literally in fact, as we call
+our final example function <i>doMixedSortableTable()</i> and start working with
+all the calls together.
+
+<h2>Sortable Table of Calls</h2>
+
+OK, we'll be honest - lists of calls are useful, but they're not particularly
+sexy, and there are limits to what we can do to improve on the functions we've
+already described.  One possible idea is to present the three sets of calls
+in one list; to show you, for example, where you've been playing "telephone
+tag", with a series of missed and dialed calls to the same number.
+
+<p>
+We should warn you that, while this is nice for an example, in a real application
+it might not be such a good idea.  The system really does store the three
+types of calls separately, and there's a limit to how many of each type it
+can store.  So, showing the lists in a combined form could give a misleading
+impression.
+
+<p>
+Suppose you've have been on vacation, so there are no dialled or
+answered calls for the vacation period.  If the combined list, sorted by date,
+shows 10 missed calls after your last dialed call, then that might really
+mean that just 10 of maybe 100 missed calls were stored.  There'd be a gap
+of 90 "missing" rows between the last dialed call and the first missed call.
+
+<p>
+But hey, this is just an example; let's press on.
+(By the way, if you really did get 100 missed calls when you were on vacation,
+then you sound a very valuable employee - maybe it's time to ask for a raise?)
+
+<code id="mixedSortableTable"></code>
+
+<p>
+We won't go over this part of the example in much detail; there are no new
+CommPortal features here, it's all just JavaScript.  The aim of the function
+is to build a combined list, by calling the three fetch calls again and passing
+the returned list to an embedded <i>combineCalls()</i> function.
+
+That, in turn, aggregates them in an <i>allCalls</i> array.  As well as copying
+the regular fields from the call lists into the combined array objects, we
+augment them with a new property containing their type - information which,
+of course, would otherwise be lost.
+
+<p>
+When the three sets have all been combined, we then call into
+<i>displayCombinedTable()</i> to show them.
+
+<code id="displayCombinedTable"></code>
+
+<p>
+The table production will be familiar by now, though there's one important
+difference this time round - we give the table a CSS class of "sortable".
+As the name suggests, we're going to let the user sort the entries in this
+table - by clicking on the column names in the header row.  It takes
+surprisingly little effort to make this happen, but more on that in a moment!
+
+<p>
+Once again, we need some special code to deal with the pesky detail that missed calls have no
+duration.  In a real application you'd have to tackle this in your UI design,
+but to keep things simple our example drops in an artificial duration of -1.
+The main idea here is that sorting by duration will always place these calls
+together.  (In many ways it would be more natural to use a duration of zero -
+but you may well encounter dialed or answered calls which really do have a zero
+duration, so -1's the safer choice.)
+
+<p>
+We also have to consider how we handle the date and time column.
+Up to now, we have just been displaying the English-language string that was
+passed to us, but that's not an easy format to work with - and in particular,
+the library we're about to use doesn't understand it.
+
+<p>
+Fortunately, the CommPortal API offers a <b>convertDate()</b> function to
+deal with exactly this problem.  It returns a standard JavaScript Date object,
+which we can then use to get a localized date format using the JavaScript
+<i>toLocaleString()</i> call.  (Very eagle-eyed readers may notice that we
+previously used <b>convertDate()</b> in our <a href="voicemails.html">voicemail</a>
+tutorial.  The format of the string dates for voicemails and calls isn't the
+same - but don't worry, the CommPortal API can convert either.)
+
+<p>
+What about the very last couple of lines?  They're important, but we'll skip
+them for now, and come back to them after we've found out how the sorting
+itself works.
+
+<h3>The SortTable Library</h3>
+
+We've saved the really neat part of this example until last: turning our
+plain old table into a fully interactive, sortable list, all controlled
+by clicking on the column headings.  If you haven't tried it yet, it's well
+worth giving the <a href="#workingExample">working example</a> a go; you'll
+find the interface familiar from any number of websites.
+
+<p>
+Once again, we've achieved this bit of magic by using some existing
+third-party code - in this case, the
+<a href="http://www.kryogenix.org/code/browser/sorttable/">SortTable</a> library.
+
+<p>
+Unlike other API's we have used in these tutorials, this library is open-source
+software, and the authors expect it to be used by taking a copy of it and
+hosting it locally.  So the include line uses a local rather than an absolute
+URL in its src attribute.
+
+<code class="html" id="includeSortable"></code>
+
+For completeness, we also provide a bit of CSS styling.  This just makes the
+header row stand out more, so that people know to click in it.
+
+<code class="html" id="sortableStyle"></code>
+
+So how does SortTable actually work?  Well, as we've already seen, we mark the table
+that we want to be sortable with a CSS class "sortable".  (Be careful - the
+library is SortTable with two "t"s in the middle, but the CSS class is
+"sortable" with just one "t".  Sometimes programmers can be too clever for
+their own good.)  That's all we need to do!  Once the table has been marked in
+this way, the library lets us sort it by clicking at the top of the
+relevant column.
+
+<p>
+...well, OK, that's <i>almost</i> all we need to do.  Actually, SortTable
+requires a couple of extra lines of code for tables which are generated
+dynamically - to clear a flag which tells the library it's done its work,
+and then get it to reinitialize.  Those are the two final lines of code
+we skipped over at the end of the last section.
+
+<hr>
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="calllists-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial takes us through
+<a href="phonecalls.html">making phone calls</a> within the CommPortal SDK API.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

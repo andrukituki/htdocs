@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_BusinessGroup_ChildrenList_Department">
+    <xs:annotation>
+      <xs:documentation>
+        Service indication used to list all departments within a Business Group fragment.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Department" type="tBGCLDepartment">
+        <xs:annotation>
+          <xs:documentation>
+            An entry representing a single department within a business group fragment.
+            <d:DisplayName>Department</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tClCallNotificationTarget">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="Type" type="tCNTTypeType">
+        <xs:annotation>
+          <xs:documentation>
+            The type of call notification target e.g. email or outdial.
+            <d:DisplayName>Type</d:DisplayName>
+            <d:ValidFrom>1.14.10</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>email</d:Value>
+              <d:Value>outdial</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            A name which identifies this call notification target.  Does not need to be unique.
+            <d:DisplayName>Name</d:DisplayName>
+            <d:ValidFrom>1.14.10</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Target" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The actual target (email address or phone number) of this call notification target.
+            <d:DisplayName>Target</d:DisplayName>
+            <d:ValidFrom>1.14.10</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tClCallNotificationTargetList">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="CallNotificationTarget" type="tClCallNotificationTarget">
+        <xs:annotation>
+          <xs:documentation>
+            A Call Notification Target, including the department it is scoped to.
+            <d:DisplayName>Call Notification Target</d:DisplayName>
+            <d:ValidFrom>1.14.10</d:ValidFrom>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tBGCLDepartment">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="Name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of this particular department.
+            <d:DisplayName>Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FullName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of this particular department, including the parent department names, separated by ' / '. e.g. Development / System Test for the System Test department within the Development department.
+            <d:DisplayName>Full Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ParentDepartment" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of the parent of this department in the same format as FullName or 'None' if no parent department.
+            <d:DisplayName>Parent Department</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="OperatorNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Directory Number of the Operator associated with this department. Does not inherit parent department's value.
+            <d:DisplayName>Operator Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CallNotificationTargetList" type="tClCallNotificationTargetList">
+        <xs:annotation>
+          <xs:documentation>
+            A list of all call notification targets for the business group.
+            <d:DisplayName>Call Notification Target List</d:DisplayName>
+            <d:ValidFrom>1.14.10</d:ValidFrom>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PreferredPlaylist" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The default playlist to use for Music on Hold in this Department. Can be overruled by defaults at the child Department or subscriber level.
+            <d:DisplayName>Preferred Playlist</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

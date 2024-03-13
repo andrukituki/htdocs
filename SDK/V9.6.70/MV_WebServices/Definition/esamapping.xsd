@@ -1,0 +1,94 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:esa="http://www.metaswitch.com/ems/esamapping"
+            targetNamespace="http://www.metaswitch.com/ems/esamapping"
+            elementFormDefault="qualified"
+            attributeFormDefault="qualified">
+
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      MetaSphere CFS ESA Support schema.
+       Copyright (c) Microsoft Corporation. All rights reserved.
+       Highly Confidential Material
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <xsd:element name="subscriberGatewayMapping" type="esa:SubGMappingType"/>
+
+  <xsd:element name="accessDeviceMapping" type="esa:AccDevMappingType"/>
+
+  <xsd:complexType name="SubGMappingType">
+    <xsd:sequence>
+      <xsd:element name="subscriberGateway" type="esa:SubscriberGatewayType"
+                   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="result" type="esa:ResultType"
+                   minOccurs="1" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AccDevMappingType">
+    <xsd:sequence>
+      <xsd:element name="accessDevice" type="esa:AccessDeviceType"
+                   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="result" type="esa:ResultType"
+                   minOccurs="1" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SubscriberGatewayType">
+    <xsd:sequence>
+      <xsd:element name="callAgentName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="callAgentIP" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="gatewayAddress" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="gatewayName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="udpPort" type="xsd:integer" minOccurs="0"/>
+      <xsd:element name="endpoint" type="esa:EndpointType"
+                   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="result" type="esa:ResultType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="AccessDeviceType">
+    <xsd:sequence>
+      <xsd:element name="callAgentName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="callAgentIP" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="deviceName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="endpoint" type="esa:EndpointType"
+                   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="result" type="esa:ResultType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="ResultType">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="Success|Failure"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <xsd:complexType name="EndpointType">
+    <xsd:sequence>
+      <xsd:element name="endpointID" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="line" type="esa:LineType"
+                   minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="result" type="esa:ResultType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="LineType">
+    <xsd:sequence>
+      <xsd:element name="directoryNumber" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="subscriberClass" type="esa:SubscriberClassType"
+                   minOccurs="0"/>
+      <xsd:element name="callingPartyNumber" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="callingName" type="xsd:string" minOccurs="0"/>
+      <xsd:element name="lineNumber" type="xsd:integer" minOccurs="0"/>
+      <xsd:element name="result" type="esa:ResultType" minOccurs="0"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:simpleType name="SubscriberClassType">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="Individual|Business|PBX|Voicemail|OPX|Teen"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+</xsd:schema>

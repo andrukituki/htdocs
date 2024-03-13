@@ -1,0 +1,514 @@
+<html>
+<head>
+<title>Voicemails - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Voicemails - CommPortal SDK Tutorial</h1>
+
+In this tutorial, we'll really start putting the CommPortal API through its
+paces.  By the end of it, you'll have built up your first fully-functioning
+voicemail tool - which finds the number of available messages, displays a list
+of them, and even plays them back by accessing the actual audio data.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+By the way, if you've worked through the <a href="login.html">Login</a>
+tutorial, the early stages of this will be second nature to you know.  In that
+case, feel free to skip straight to <a href="#findingNumber">Finding the
+number of voicemails</a>.
+
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>fetchVoicemailCount()</b>
+  <li><b>fetchCodecs()</b>  
+  <li><b>fetchVoicemails()</b>
+  <li><b>convertDate()</b>
+  <li><b>deleteVoicemails()</b>
+  <li><b>deleteVoicemails()</b>
+  <li><b>markVoicemailsAsHeard()</b>
+  <li><b>markVoicemailsAsUnheard()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+There's one difference from the previous tutorial: we've coded our
+<i>doLogin()</i> function so that, when the user successfully logs in,
+we automatically proceed to the <i>doFetchVoicemailCount()</i> function
+covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="findingNumber"></a>
+<h2>Finding the number of voicemails</h2>
+
+So, just to recap: we've opened a connection to CommPortal, we've allowed the
+subscriber to log in, and we've arranged to call our <i>doFetchVoicemailCount()</i>
+function as soon as they have.  Here's the function - we'll discuss exactly
+what it does below.
+
+<code id="voicemailsCountScript"></code>
+
+So what are we doing here?  Well, there are two main ways to look at
+voicemails - we can just get a count of the number available, or we can
+get the full details of each.  These two levels of detail are available
+through separate API calls.  In this section, we're looking at
+<b>fetchVoicemailCount()</b>; as the name suggests, it's going to tell us how
+many voicemails are waiting.
+
+<p>
+By now, you're probably tired of hearing about the CommPortal API's
+asynchronous model - and the way you pass in success and failure
+functions for CommPortal to call back.  If you'd like a refresher, though,
+check out the <a href="hello.html">Hello World</a> tutorial, which covers
+these concepts in detail.
+
+<p>
+Otherwise, we'll just take a look at the success callback.  As you'll see, it returns
+the total number of voicemails, and the number the subscriber hasn't listened
+to yet.  It also passes back the connection handle, which we can use to make
+further calls to the CommPortal API.
+
+<p>
+For now, our application just displays the number of messages - using the
+<i>display()</i> function, which is part of our example code - then goes on to
+the next step by calling <i>getCodecList()</i>, which we'll talk about
+now.
+
+<h2>Fetching a list of voicemails</h2>
+
+So, we've seen how to peek at the number of voicemails in the subscriber's
+mailbox; now let's take a more detailed look at the messages themselves. Before
+we fetch the message details we need to pick which codec we want to download
+the messages in.
+
+<p>
+Here is the code for the <i>getCodecList()</i> function.
+
+<code id="getCodecListScript"></code>
+
+This fetches the list of codecs from CommPortal and uses the result to generate
+a drop down list with the available codecs. Once a codec has been chosen from the 
+dropdown the chosen codec is passed to <i>doFetchVoicemailList</i>.
+
+<p>
+Fetching the detailed list of voicemails uses the <b>fetchVoicemails()</b>
+API method.  As usual, the API calls back to a success function - in this
+case passing the standard connection parameter, and an array of voicemail
+objects.
+
+<p>
+This example shows us simply passing the list on to a number of further example
+functions, which display the list in different ways; we cover all these
+functions in detail below.
+
+<code id="voicemailsListScript"></code>
+
+<p>
+The array of voicemails received from <b>fetchVoicemails()</b> is ordered
+with the most recent voicemails first, and represents each voicemail as an
+object.  Each of the objects contain the following fields in the object:
+
+<dl>
+  <dt>From</dt>
+  <dd>The phone number of the caller that left the voicemail,
+    (missing if the number was withheld, or otherwise unavailable)</dd>
+
+  <dt>Received</dt>
+  <dd>The date and time when the voicemail was left (as a string)</dd>
+
+  <dt>Id</dt>
+  <dd>A unique identifier for the voicemail - only valid within this login session</dd>
+
+  <dt>Name</dt>
+  <dd>Not normally present, but may occur when the phone call came from a
+      system that is able to provide names as well as numbers</dd>
+
+  <dt>Read</dt>
+  <dd>A boolean which is set if the voicemail has been marked as listened to</dd>
+
+  <dt>Urgent</dt>
+  <dd>A boolean which is set if the voicemail was marked as urgent</dd>
+
+  <dt>Private</dt>
+  <dd>A boolean which is set if the voicemail was marked as private</dd>
+
+  <dt>Size</dt>
+  <dd>The size in bytes of the voicemail that was left</dd>
+
+  <dt>AudioFile</dt>
+  <dd>The URL of the file holding the voicemail audio - only valid within this login session</dd>
+</dl>
+
+We'll work with some of these fields in the following sections.
+
+<h2>Displaying the voicemail list in a table</h2>
+
+For the first example, we'll display the list of voicemails in a table.  To
+keep this simple, we'll show just three fields from the full set available:
+<ul>
+  <li>the phone number of the caller who left the voicemail
+      (or an indication that it was not available)</li>
+  <li>the time the voicemail was left</li>
+  <li>the URL of the file which holds the voicemail audio.</li>
+</ul>
+
+We'll also check whether the voicemail has been marked as "read" yet.  If it
+hasn't, we'll highlight that line of the table with a yellow background.
+
+<p>
+This is all fairly straightforward HTML wrangling, so we won't go over each
+step in detail.  Here are a few of the key points.
+
+<ul>
+  <li>See how we can use a simple for loop to step through the array returned
+      by the CommPortal API.
+  <li>Similarly, we can get to the individual fields - such as "From" and
+      "Read" - using the dot operator.</li>
+  <li>The <i>addToOutput()</i> function, you see being called at the end
+      is part of our example code (not the API).  It just adds the HTML
+      we've built up to the page we're generating; if you're interested in
+      how it works, you can find it in the full example code.
+</li>
+</ul>
+
+<code id="voicemailsDisplayScript"></code>
+
+<h2>Displaying the voicemails on a timeline</h2>
+
+For a much cooler way of showing the subscriber's messages, let's see how
+easy it is to integrate with a third-party component - in this case, the
+<a href="http://code.google.com/apis/visualization/">Google Visualization API</a>.
+Here, we'll use the Google API to show the voicemails on a timeline.
+
+<p>
+This isn't the place to go into the details of the Google interface; try the
+link above if you'd like to know more.  For now, you'll just need to know
+that the timeline itself is implemented in Flash, but provides a simple
+JavaScript interface to set up the data.  It's easy to pick the rest up from
+our sample code.
+
+<p>
+(By the way, this particular example doesn't introduce any significant new
+CommPortal SDK API calls; feel free to skip it if the Google Visualization API
+doesn't interest you.)
+
+<h3>Including the Google Visualization API</h3>
+
+<p>
+To use the
+<a href="http://code.google.com/apis/visualization/">Google Visualization API</a>,
+we must first pull it in using the header of our webpage.
+
+<p>
+Google have many APIs, so this is a two-part process.  The first fragment below
+includes the generic loader API.  The second fragment then specifies that we
+want the visualization API, and within that we will be using the annotated
+timeline package.
+
+<code id="includeJSAPI" class="html"></code>
+<code id="includeVisualizationAPI" class="html"></code>
+
+<h3>Passing the data to the Google Visualization API</h3>
+
+<p>
+Now we can take a look at <i>displayVoicemailTimeline()</i> - the second of
+the functions we called from <i>doFetchVoicemailList()</i> above.  Like
+<i>displayVoicemailList()</i>, which we've already discussed in detail, our
+function takes two parameters: the connection, and the array of voicemail
+objects returned from the <b>fetchVoicemails()</b> API call.
+
+<p>
+As usual, we'll talk through the details of this function below the code.
+
+<code id="voicemailsTimelineScript"></code>
+
+<p>
+Before we do anything else, we need to create a div element to contain the
+timeline.  We do this using our <i>addToOutput()</i> utility function, part
+of our example code which we introduced above.
+
+<p>
+Now we're ready to start working with the Google Visualization API.
+We need to build what it calls a DataTable - a kind of simple representation
+of a database - and the first step's to define the columns we want to use,
+as laid down by the timeline visualization.  These are:
+<ul>
+  <li>the date and time of the event - which we'll set to be the date the voicemail was received</li>
+  <li>the value being graphed at that event -
+      we'll always set this to 1, to get all our events shown on a straight line</li>
+  <li>a label for the event - which we'll use to show the caller's number</li>
+  <li>more details to appear with the event -
+      which we'll use to package up a number of fields, and to provide access to the actual audio.</li>
+</ul>
+
+Having created the data table, we add each of the voicemails as a separate row
+of data, using the Google API's <b>setValue()</b> call.
+
+<p>
+There's one slight wrinkle: the array of voicemails passed back from
+the CommPortal API holds the date the voicemail was received in string form.
+That's often convenient, but in this case, the Google API expects to receive
+it as a JavaScript Date object.  Fortunately the CommPortal API features a
+<b>convertDate()</b> function to do the translation for us.
+
+<p>
+The details column is also worth a look: we check a number of voicemail fields
+to build this value up, including the size in bytes, and whether the
+voicemail was private or urgent.  If the voicemail was not marked as Read, then
+we use a bold highlight, so that these unheard voicemails are more easily spotted.
+
+<p>
+The final piece of the details is a link which allows the voicemail audio file to be played.
+Rather than just making this a standard hyperlink, we include a click handler
+to invoke a piece of JavaScript.  We'll explain why we do it this way in the
+next section.
+
+<h2>Playing the voicemail audio</h2>
+
+On the one hand, playing a voicemail is simple: as we've seen above, the
+CommPortal API provides us with the URL where it can be downloaded.  On the
+other hand, what happens if you just link to that URL tends to vary depending
+on the user's browser and the options they've set.  It may:
+
+<ul>
+  <li>play the audio directly without showing any additional UI in the browser</li>
+  <li>ask if they want to download the file</li>
+  <li>automatically download the file, then spawn an external application such
+      as Windows Media Player to play the audio.</li>
+</ul>
+
+Sadly, often only the first of these is really satisfactory.
+
+<p>
+The following code implements a <i>play()</i> function that can be used to give
+more predictable results.  Instead of relying on the browser default action, it
+creates an embedded object whose source is the audio file.  Browsers typically
+handle this by simply playing the file - which is exactly what we want.
+
+<p>
+To help indicate that this is the behaviour we want, we specifically mark the
+embedded object with the autostart attribute; and we also make it hidden, since
+the file itself has no visual appearance.
+
+<p>
+The downside to using this method is that we don't have any control over the
+audio once it's started to play.  For example, we can't implement a pause
+button.  Still, for playing a short piece of audio such as a voicemail, you
+might think that's a good trade-off.
+
+<code id="audioScript"></code>
+
+<h2>Deleting voicemails</h2>
+
+After listening to a voicemail, many users will want to delete it.  It's no
+surprise that you can do this using the CommPortal API - specifically, its
+<b>deleteVoicemails()</b> call.
+
+<p>
+First, though, let's step back to our <i>displayVoicemailList()</i> function,
+which we introduced earlier in this tutorial.  The following variation on
+that function replaces the columns of detail with a few action buttons,
+which we'll use in this and the next section.
+
+<p>
+Unsurprisingly, the key to identifying which voicemail to act upon is the
+<i>id</i> field in the voicemail object.  Each of the buttons acts in the same
+way, passing the <i>id</i> field as a parameter to a subsequent function.
+
+<code id="voicemailsActionsScript"></code>
+
+First, we'll look at the <i>deleteVM()</i> function, which our code calls when
+the user clicks the Delete button.
+
+<p>
+To delete a voicemail we use CommPortal's <b>deleteVoicemails()</b> API call.
+In our example, we'll pass the single voicemail id we've been handed.
+(If you have a number of voicemails to delete at once, you can pass an array of
+ids.)  This delete action takes place asynchronously, so the API call takes the
+by now familiar success and error callbacks.
+
+<code id="deleteFunction"></code>
+
+Examples of errors that could occur here include trying to delete a voicemail
+using an id that was never valid, or whose voicemail has already been deleted.
+
+<p>
+By the way, if you take a look at a voicemail ID, you might notice it's a
+numeric value... and you might even start to guess as to how it's allocated.
+Resist temptation, though!  Voicemails ids should be considered as magic values
+- never try to "tweak" them within your application.  In particular, if you
+want to delete <i>all</i> voicemails, you really do need to pass in an array
+of all the voicemail ids you've been told about; filling an array with a lot
+of consecutive numbers may well have unintended consequences.
+
+<h2>Marking voicemails as heard or unheard</h2>
+
+Voicemails retain an indication of whether they have been heard or not.
+(Because this is very similar to the related concept of an email being "read"
+or "unread", some people use the word "read" in this context too.)
+
+<p>
+In general, you don't need to worry about this, because a voicemail is
+automatically marked as heard when the audio file is downloaded
+from the server.  When the user's browser accesses the voicemail audio,
+the server assumes they've listened to it, and marks the voicemail as "heard"
+accordingly.
+
+<p>
+If you want, though, you can explicitly manage the indicator using the API calls
+<b>markVoicemailsAsHeard()</b> and
+<b>markVoicemailsAsUnheard()</b>.  Like the corresponding
+<b>deleteVoicemails()</b> API call, these can be passed either a single id
+or an array of ids, and take success and error callbacks as parameters.
+
+<p>
+Don't worry, it's perfectly OK to call either of these functions on any voicemail
+without knowing what its current state is.
+(As an aside, do remember that the state of a voicemail may be affected
+other than through your program - for example the subscriber may listen to the
+voicemail over their phone, or interact with it via the main CommPortal UI).
+
+<code id="markAsHeardFunction"></code>
+
+<code id="markAsUnheardFunction"></code>
+
+<h2>Checking voicemail transcriptions are enabled</h2>
+<p>
+Before we move off this topic, let's touch on one advanced feature available to
+users in some deployments: speech-to-text transcription. This handy option lets
+a subscriber see at a glance what the caller said - without having to listen to
+the message.
+
+<p>
+Speech-to-text is a premium offering, which might be available only to certain 
+subscribers - or in some deployments, might not be available at all. So the 
+first thing we need to do is to see whether it's suitable for the logged-in 
+subscriber. Let's add a function to check.
+
+<code id="transcriptionSettingsScript"></code>
+
+<p>
+The above code snippet uses the <b>fetchTranscriptionSettings()</b> API call, 
+which  gives us a 'true' result if transcription is enabled and 'false' 
+otherwise. As usual, this call works with the CommPortal API's asynchronous 
+model - so we pass in success and failure functions for CommPortal to call 
+back. Bear in mind, though, that finding out that transcriptions are <i>not</i> 
+enabled still counts as a "success" - we only get the failure callback if, for 
+some reason, CommPortal couldn't establish whether transcriptions were enabled 
+or not.
+
+<h2>Displaying voicmeail transcriptions</h2>
+
+Now that we've checked whether the subscriber has transcriptions, let's enhance 
+our processing to include them if they're available. When we talked about the 
+fields in the array of voicemails received from fetchVoicemails(), we omitted 
+those which make sense only for subscribers with access to transcriptions. 
+Here they are now:
+<dl>
+  <dt>TranscriptionStatus</dt>
+  <dd>The status of the transcription for this message. The value can be 
+      'available', 'notrequested', 'failed', 'tooshort', 'pending'. </dd>
+
+  <dt>SimpleTranscriptionText</dt>
+  <dd>If the TranscriptionStatus is set to 'available' this will contain the 
+      text of the message in plain text format.</dd>
+
+  <dt>RichTranscriptionText</dt>
+  <dd>If the TranscriptionStatus is set to 'available' this will contain the 
+      text of the message in rich text format.</dd>
+</dl>
+
+<p>
+We'll work with the 'TranscriptionStatus' and 'SimpleTranscriptionText' fields 
+in this tutorial. The RichTranscriptionText field can be used to display a 
+formatted transcription if your application supports the rich text format.
+
+<code id="voicemailsTranscriptionScript"></code>
+
+<p>
+As you can see, adding the transcription text is as simple as including the 
+SimpleTranscriptionText variable. We'll also colour the rows of the table 
+depending on the transcription status. We'll use green for an available 
+transcript, orange if it's pending and red if it isn't available at all.
+
+<hr>
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="voicemails-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial tackles the subject of
+<a href="voicemails-send.html">sending a voicemail</a> using the CommPortal SDK.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

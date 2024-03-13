@@ -1,0 +1,291 @@
+<html>
+<head>
+<title>Making Phone Calls : Advanced Topic - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Making Phone Calls - CommPortal SDK Tutorial</h1>
+
+In this, the first of our advanced tutorials, we'll look at how to make phone
+calls using the CommPortal SDK.
+
+<p>
+As usual, the tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+<strong>
+Please note, if you're running the example code against the
+MetaSwitch CommPortal Sandbox accounts at
+http://eas.sandbox.innovators.metaswitch.com/unbranded,
+you will be unable to actually make calls.
+We hope to be able to allow this in the near future.
+</strong>
+
+<p>
+By the way, if you've worked through our previous examples, then the initial
+section will be very familiar - it's just a refresher from the
+<a href="login.html">Login</a> tutorial.  In that case, feel free to skip
+straight to <a href="#enableButtons">Enable Buttons</a>.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>makeCall()</b>
+  <li><b>cancelCall()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+As usual, we've coded our <i>doLogin()</i> function so that, when
+the user successfully logs in, we automatically proceed to the
+next part of the example.  In this case, that's <i>doEnableButtons()</i>
+function covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="enableButtons"></a>
+<h2>Enable Buttons</h2>
+
+So, to summarize as usual what we've done so far: we've opened a connection
+to CommPortal, and we've allowed the subscriber to log in.
+
+<p>
+There's one final bit of admin to complete.  Unlike some of our previous tutorials,
+the functions in this example are fired up as and when the user clicks buttons on the
+web page.  Those buttons were originally disabled, to prevent them being used before
+the subscriber logged in - so, right now, we need to enable them all.
+The simple <i>doEnableButtons()</i> function below carries out that task.
+
+<code id="enableButtonsScript"></code>
+
+<p>
+In contrast to some previous examples, you'll notice we don't go on to call any other
+functions. We're now just going to wait until a button gets clicked.
+
+<h2>Making Phone Calls</h2>
+
+So, let's see how we can make a phone call from the CommPortal API.  Before we do,
+we'd best point out that we're making an important step up here: unlike all the
+previous examples, what we're doing now has a real-world effect.  If you work
+through this tutorial in full, you'll be making actual phones ring - and of course,
+that may result in billable charges, depending on your service plan!
+
+<p>
+The UI for this example is a bit more complex, too.  Naturally, we need to be able
+to enter the number we want to call.  Less obviously, we'll also offer the chance
+to specify the number the call should be <i>from</i> - a lot of the time that's just
+the subscriber's number, but we can present a different number if we choose.
+
+<p>Keeping our UI simple, we'll provide straightforward entry boxes for each of
+these numbers, and a couple of buttons to make and cancel the call.
+
+<code class="html" id="enterNumbers"></code>
+
+(This HTML fragment shows the buttons as "disabled", but remember that the
+code in <i>doEnableButtons()</i> enabled them as soon as the user logged in.)
+
+<p>
+Now let's see what happens when the user presses either "Make Call" or "Cancel
+Call".
+
+<h3>Making the call</h3>
+
+When the user presses the "Make Call" button, our form calls the <i>doMakeCall()</i>
+function.
+
+<code id="makeCallScript"></code>
+
+This function first retrieves the numbers entered in the UI.  Only the number we
+are calling to is required - the calling from number is optional.  (If the
+calling from number is not given, then the effect is to make the call from
+the subscriber's phone.)
+
+<p>
+If we don't have a "calling from" number, then we call the <b>makeCall()</b>
+API function with just one number before our familiar success and failure
+callback parameters.  Alternatively, if there is a "calling from" number
+provided, then we use the variant of the <b>makeCall()</b> function that
+takes two phone numbers plus the callbacks.
+
+<h3>Call progress</h3>
+
+Up to now, there's been nothing unusual about this sequence of calls to
+the API.  But if you have a keen eye for details, you may have noticed
+that we've called the first callback <i>callProgress()</i>, rather than
+the usual <i>somethingSuccess()</i> naming.  This cosmetic change is just to
+remind us that that, unlike the asynchronous methods we've seen in previous
+tutorials, the <b>makeCall()</b> method may call its "success" callback
+more than once.
+
+<p>
+Why's that?  Well, making a phone call consists of multiple stages - and it's
+more than likely that your users would like to keep track of those stages as
+you place the call.  Think of what happens on a real phone: you get a dial
+tone, then maybe hear the number being dialed, then hear it ring.  Those are
+audible progress indications - and the CommPortal API callback uses the same
+kind of idea in programmatic form.
+
+<p>
+The progress callback is passed the connection object (like all asynchronous
+callbacks), a call id, and a state value.  The call id identifies
+the call, but this is largely for your own interest - like the session id
+which you have already met, you may like to note it for diagnostic purposes,
+but it's not actually needed for any other purpose in the SDK API.
+
+<p>
+The state value is more interesting; it's an object containing two fields:
+
+<dl>
+  <dt>state</dt>
+  <dd>A numeric value that identifies which state the call is in</dd>
+
+  <dt>message</dt>
+  <dd>An English language explanation of the state</dd>
+</dl>
+
+You'll see that our <i>callProgress()</i> function just appends the
+state value to a string to display.  That works because the object also
+has a <i>toString()</i> method, which automatically returns the message field
+contents.
+
+<p>
+If you wanted to do something more sophisticated, you'd start digging into the
+object's fields.  The possible values of the numeric <b>state</b> field are:
+
+<ul>
+  <li>CommPortal.CALLSTATE_CALLING</li>
+  <li>CommPortal.CALLSTATE_FIRST_RINGING</li>
+  <li>CommPortal.CALLSTATE_FIRST_ANSWERED</li>
+  <li>CommPortal.CALLSTATE_SECOND_RINGING</li>
+  <li>CommPortal.CALLSTATE_SECOND_ANSWERED</li>
+  <li>CommPortal.CALLSTATE_CLEARING</li>
+  <li>CommPortal.CALLSTATE_CLEARED</li>
+  <li>CommPortal.CALLSTATE_FAILED</li>
+  <li>CommPortal.CALLSTATE_FINAL</li>
+</ul>
+
+Normally you'll see a progression of states from CALLSTATE_FIRST_RINGING
+through to CALLSTATE_SECOND_ANSWERED, but of course if someone's not answering their
+phone (don't they know this call is important to us?) the result may be different.
+Typically a call will be signaled as entering the CALLSTATE_FINAL
+state about 15 seconds after the second phone is answered.  This doesn't mean
+that the call has ended - merely that its setup is complete, and no further
+interaction is possible with the call using the API.  The parties in the call
+can happily carry on chatting for as long as they want to!
+
+<h3>Cancel making the call</h3>
+
+From time to time, we all start to place a phone call and then change our minds.
+(Have you ever absent-mindedly dialed for a pizza, then remembered you agreed to go
+out for a meal instead?)  Fortunately, the CommPortal API offers a <b>cancelCall()</b>
+function for just that scenario.
+
+<p>
+It's important to realize that we're canceling <i>making</i> the call, during the
+setup phase or shortly after it's connected.  You can't use this technique to hang
+up a call that's been going for a while.  In terms of the call states we looked at
+above, the <b>cancelCall()</b> method only applies when the call is in
+CommPortal.CALLSTATE_CALLING through to CommPortal.CALLSTATE_SECOND_ANSWERED.
+If it has reached the CommPortal.CALLSTATE_FINAL state then the call is no longer
+cancelable (except, of course, by the old-fashioned means of hanging up the phone!)
+
+<p>
+Returning to our example, we've already included a simple UI for this feature above.
+When the user presses the "Cancel Call" button, we call the <i>doCancelCall()</i>
+function which, as we've just discussed, calls through to the <b>cancelCall()</b> API.
+
+<code id="cancelCallScript"></code>
+
+You might expect <b>cancelCall()</b> to take a call id as a parameter - after all, we
+were passed just such an id on the progress callback (though we did warn you at the time
+that it wasn't going to be used again!)  But the fact is that you can only have
+one call in progress, so the id's unnecessary.  <b>cancelCall()</b> just takes a success
+and failure callback, like so many of the other functions we've seen in the API.
+
+<p>
+There's a further twist to what's going on here.  Although the <b>cancelCall()</b>
+method takes success and failure callbacks, these only relate to the method
+itself - for example, you'll get a failure callback if you try cancelling a
+call when there's none in progress.  This means that the success callback merely
+tells you that the request to cancel the call has been accepted, not that the call
+has actually been stopped.
+
+<p>
+To tell when the cancellation's actually taken effect, you'll need to wait for
+one final call to the progress callback of the corresponding <b>makeCall()</b>.
+Once the state goes to <b>CommPortal.CALLSTATE_CLEARED</b>, you're done.
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="phonecalls-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial takes us through
+<a href="faxes.html">handling faxes</a> within the CommPortal SDK API.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<html>
+<head>
+  <title>Fetch Greetings example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Fetch Greetings Example</h1>
+
+Enter the server address, then press the button to log in.
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("GreetingsTutorial", loginSuccess, loginFailure);
+
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    // Trigger the next stage of the code
+    getCodecList();
+  }
+
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="getCodecListScript">
+function getCodecList()
+{
+  // Fetch the codecs
+  connection.fetchCodecs(codecSuccess, codecError);
+  
+  function codecSuccess(connection, codecs)
+  {
+    // Create a drop down box of codecs
+    var codecDropDown = "<option disabled selected>Select a Codec</option>";
+    for (var i = 0; i < codecs.length; i++)
+    {
+      var codec = codecs[i];
+      
+      // Build another option entry
+      codecDropDown += "<option value='" +
+                          codec.CodecName + "'" +
+                          ">" +
+                          codec.CodecName + "(" + codec.CodecExtension + ")" +
+                          "</option>";
+    }
+
+    // Create and fill in a Select element
+    var element = document.createElement("select");
+    element.onchange = function() { element.disabled=true; doFetchGreetings(element.value); };
+    element.innerHTML = codecDropDown;
+    addToOutput(element);
+  }
+
+  function codecError(connection, error)
+  {
+    display("Failed to fetch codec list, error: " + error);
+  }
+}
+</script>
+
+<script id="greetingsFetchScript">
+function doFetchGreetings(codec)
+{
+  display("Fetching greetings list");
+  
+  connection.fetchGreetings(greetingsSuccess, greetingsError, codec);
+  
+  function greetingsSuccess(connection, greetings)
+  {
+    // Display a very simple table to display the greetings
+    displayGreetingsList(connection, greetings);
+  }
+
+  function greetingsError(connection, error)
+  {
+    display("Failed to fetch greetings list, error: " + error);
+  }
+}
+</script>
+
+<script id="greetingsDisplayScript">
+function displayGreetingsList(connection, greetingsdata)
+{
+  display("Displaying greetings list");
+
+  // Display the default greeting type
+  var element = document.createElement("div");
+  element.innerHTML = "<br/> Default greeting: " + greetingsdata.defaultGreetingType;
+  addToOutput(element);
+
+  // Build the table contents - start with headers for the columns
+  var table = "<table border='2'>" +
+              "<tr>" +
+              "<th>Type</th>" +
+              "<th>Recordable</th>" +
+              "<th>IsRecorded</th>" +
+              "<th>AvailableForDefault</th>" +
+              "<th>File</th>" +
+              "</tr>";
+
+  var greetings = greetingsdata.greetingsList;
+  for (var i = 0; i < greetings.length; i++)
+  {
+    var greeting = greetings[i];
+
+    // Add this greeting as a row in the table
+    var greetingFile = "Not recorded";
+    if (greeting.audioFile)
+    {
+      greetingFile = "<a href='#' onclick='return play(\"" +
+                     greeting.audioFile +
+                     "\");'>Play</a>";
+    }
+    table += "<tr>" +
+             "<td>" + greeting.greetingType + "</td>" +
+             "<td>" + greeting.recordable + "</td>" +
+             "<td>" + greeting.isRecorded + "</td>" +
+             "<td>" + greeting.availableForDefault + "</td>" +
+             "<td>" + greetingFile + "</td>" +
+             "</tr>";
+  }
+
+  table += "</table>";
+
+  // Create a DOM element with our table in it
+  element = document.createElement("div");
+  element.innerHTML = table;
+
+  // Add the table to our output area
+  addToOutput(element);
+}
+</script>
+
+<script id="audioScript">
+/**
+ * Play an audio file, by using the browser's inbuilt ability to play embedded
+ * sounds.  No control offered, but generally works.
+ */
+function play(audioFile)
+{
+  var soundObject = document.getElementById("soundObject");
+  soundObject = document.createElement("embed");
+  soundObject.setAttribute("src", audioFile);
+  soundObject.setAttribute("hidden", true);
+  soundObject.setAttribute("autostart", true);
+
+  document.body.appendChild(soundObject);
+
+  return false;
+}
+</script>
+
+</body>
+</html>

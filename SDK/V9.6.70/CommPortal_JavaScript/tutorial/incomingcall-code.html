@@ -1,0 +1,276 @@
+<html>
+<head>
+  <title>Incoming Call example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Incoming Call Example</h1>
+
+Enter the server address and press the button to log in, then press the
+buttons to exercise the code, and observe the outcome messages given below.
+
+<ul>
+  <li>Start Monitoring Incoming Calls</li>
+  <li>Call to the subscriber that you are logged in as from another subscriber</li>
+  <li>While the phone is ringing, try to reject the call or redirect it</li>
+</ul>
+
+<form onsubmit="doLogin(); return false;">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<div>
+  <button type="button" disabled="disabled" id="subscribeButton" onclick="subscribeToIncomingCallEvents(); return false;">Monitor Incoming Calls</button>
+  <button type="button" disabled="disabled" id="unsubscribeButton" onclick="unsubscribeFromIncomingCallEvents(); return false;">Stop monitoring calls</button>
+
+  <button type="button" disabled="disabled" id="rejectButton" onclick="doRejectCall(); return false;">Reject call</button>
+
+  <button type="button" disabled="disabled" id="redirectButton" onclick="doRedirectCall(); return false;">Redirect call</button>
+  <label for="redirectNumber">New number:</label>
+  <input type="text" id="redirectNumber" value="915012031006" style="width:100px" />
+</div>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("IncomingCallTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when successfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    doEnableButtons();
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="enableButtonsScript">
+function doEnableButtons()
+{
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++)
+  {
+    button = buttons[i];
+
+    button.disabled = false;
+  }
+
+  display("Now use the other buttons to drive the example");
+}
+</script>
+
+<script id="subscribeToIncomingCallEvents">
+var callId;
+var deviceId;
+
+function subscribeToIncomingCallEvents()
+{
+  display("Starting to monitor Incoming Call events");
+
+  var error = connection.setIncomingCallHandler(incomingCallHandler);
+
+  if (error)
+  {
+    // Got error when setting the event
+    var errorMsg = "Error: " + error;
+    if ("events" in error)
+    {
+      errorMsg += " for " + error.events.join(".");
+    }
+    display(errorMsg);
+  }
+
+  // This function is called every time we receive an Incoming call event
+  function incomingCallHandler(connection, number, incomingcalldata)
+  {
+    display("Incoming Call Handler");
+    display("- Call state: " + incomingcalldata.callState);
+    display("- Call is for number: " + number);
+
+    if (incomingcalldata.callState == CommPortal.INCOMINGCALLSTATE_RINGING)
+    {
+      // The caller number is only available when the phone starts to ring
+      display("- Caller number: " + incomingcalldata.callerNumber);
+
+      // The phone is ringing, so set the callId and deviceId that will be
+      // used to reject or redirect the call
+      callId = incomingcalldata.callID;
+      deviceId = number;
+    }
+    else
+    {
+      // The phone stops ringing, so the call id is not valid anymore
+      callId = undefined;
+    }
+
+    display("- Call ID: " + incomingcalldata.callID);
+    display("- Call type: " + incomingcalldata.callType);
+  }
+}
+</script>
+
+<script id="unsubscribeFromIncomingCallEvents">
+function unsubscribeFromIncomingCallEvents()
+{
+  display("Stop monitoring Incoming Call events");
+
+  var error = connection.clearIncomingCallHandler();
+
+  if (error)
+  {
+    // Got error when removing the event
+    display("Error: " + error + " for " + error.events.join(","));
+  }
+}
+</script>
+
+<script id="rejectCall">
+function doRejectCall()
+{
+  if (("callId" in window) && callId)
+  {
+    display("Rejecting the call");
+    // Reject the call
+    connection.rejectCall(callId,
+                          deviceId,
+                          rejectSuccess,
+                          rejectFailure);
+  }
+  else
+  {
+    display("No call to Reject.  You must be subscribed to the " +
+            "Incoming Call events and be receiving a call.");
+  }
+
+  // The function to be called when we have successfully rejected the call
+  function rejectSuccess(connection)
+  {
+    display("Call rejected");
+  }
+
+  // The function to be called if rejecting fails
+  function rejectFailure(connection, error)
+  {
+    display("Failed to reject the call, error: " + error);
+  }
+}
+</script>
+
+<script id="redirectCall">
+function doRedirectCall()
+{
+  if (("callId" in window) && callId)
+  {
+    // Get the number from the input text
+    var newNumber = document.getElementById("redirectNumber").value;
+
+    display("Redirecting the call to " + newNumber);
+
+    // Redirect the call
+    connection.redirectCall(callId,
+                            deviceId,
+                            newNumber,
+                            redirectSuccess,
+                            redirectFailure);
+  }
+  else
+  {
+    display("No call to redirect.  You must be subscribed to the " +
+            "Incoming Call events and be receiving a call.");
+  }
+
+  // The function to be called when successfully redirect the call
+  function redirectSuccess(connection)
+  {
+    display("Call redirected");
+  }
+
+  // The function to be called if redirect fails
+  function redirectFailure(connection, error)
+  {
+    display("Failed to redirect the call, error: " + error);
+  }
+}
+</script>
+</body>
+</html>

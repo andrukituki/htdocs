@@ -1,0 +1,181 @@
+<html>
+<head>
+<title>Hello World - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Hello World - CommPortal SDK Tutorial</h1>
+
+For more than 30 years, the classic introduction to any coding environment has
+been a program to say "Hello World!"
+
+<p>
+And this first CommPortal SDK Tutorial follows in that great tradition.
+We're a little more ambitious, though - rather than greeting the whole world,
+we'll give the subscriber a chance to log in, and we'll even tell them how many
+new voicemails messages are waiting in their mailbox.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>Try this out on a working server</h2>
+
+The form below is running the code behind this example.  To try it out, fill
+in the URL of your CommPortal server (including the customization), then
+press the button.
+
+<p>
+If everything works properly, you'll get a CommPortal popup asking for a
+subscriber's phone number and password.  Then once you've logged in, you'll see
+a simple JavaScript alert telling you how many voicemail messages the
+subscriber has waiting for them.
+
+<p>
+If the CommPortal popup loads something other than a plain login page you'll
+need to include, in the URL of your CommPortal server, the path to the login
+page.  Normally the login page is located under your customization as
+"domain/cust/login.html".
+
+<p>
+Feel free to try to break it, as well - if you hit an error, you'll see
+another popup explaining what's wrong.  Depending on the exact problem, you
+may also be left with an empty login window; if that happens, just close it.
+
+<blockquote>
+  <iframe id="includedCode" width="620" height="160" src="helloworld.html"></iframe>
+</blockquote>
+
+<h2>API calls</h2>
+
+Here are the CommPortal API calls we've used in this example:
+
+<ul>
+  <li><b>login()</b></li>
+  <li><b>fetchSubscriberNumber()</b></li>
+  <li><b>fetchVoicemailCount()</b></li>
+  <li><b>logout()</b></li>
+</ul>
+
+As this is the first tutorial, we'll also cover two key concepts:
+
+<ul>
+  <li>how to include the CommPortal API file</li>
+  <li>how to work with the API's asynchronous model - where, rather than having a
+      return code to provide the requested data, many API calls take the name
+      of a function to call back.</li>
+</ul>
+
+<h2>The complete code</h2>
+
+Here's the complete code of this example.  It's not very long, but we'll
+explain each section in detail below.
+
+<code id="#all" class="html"></code>
+
+<h2>A little bit of explanation</h2>
+
+The first thing the code does is to include the CommPortal API file.  You'll
+always need to do this to get access to the CommPortal API calls.
+
+<code id="includeAPI" class="html"></code>
+
+The next part of the HTML file covers the simple form you've seen near the top
+of this page.  There's nothing fancy here - we're just providing somewhere
+to specify which CommPortal server to connect to.  In fact, in a real
+program, you might well hard-code the CommPortal URL and not need this part of
+the UI at all.
+
+<p>
+The real business of this example starts with the function <i>pressed()</i>,
+which the form calls when the user presses the button.
+
+<code id="#all" class="function pressed"></code>
+
+<p>
+The first thing this function does is to find out what you've entered in the
+form, then use that to issue a <b>new CommPortal()</b> call. We need to call
+<b>new CommPortal()</b> to get in touch with the CommPortal
+server... but note, we're anonymous at this point; we haven't logged in yet.
+
+<p>
+So, next, the code calls the <b>login()</b> API to bring up the standard
+CommPortal login prompt.  This is our first example of an asynchronous API call
+- after all, the subscriber may take their time to type in their login details.
+So the API call takes the names of two functions: one to be called if the
+subscriber successfully logs in, and one to be called if there is an error.
+
+<p>
+Let's look at the error case first.  We've provided a function called
+<i>handleError()</i>:
+
+<code id="#all" class="function handleError"></code>
+
+To keep this example simple, we just pop up the error.  In real code, of course,
+you'll do something much more user-friendly; perhaps even checking
+for specific errors and dealing with them individually.
+
+<p>
+So, what if the subscriber does manage to log in?  We've provided the
+<i>loginSuccess()</i> function to handle that:
+
+<code id="#all" class="function loginSuccess"></code>
+
+<p>
+Like most API callbacks, this function receives the <i>connection</i> object
+back as a parameter, allowing us to use it to make further API calls.  We also
+receive a parameter called <i>sessionId</i>, but we won't make any use of that
+in this example (in case you're wondering, you can use it to correlate with
+web server logs).
+
+<p>
+In the function, we ask CommPortal to tell us exactly <i>who</i> has logged in,
+by calling the <b>fetchSubscriberNumber()</b> API.
+Because this is also an asynchronous action, we again provide the names
+of two functions: one to be called on success, the other if an error occurs.
+
+<p>
+We've already looked at <i>handleError()</i>; here's the success case,
+<i>gotNumber()</i>.
+
+<code id="#all" class="function gotNumber"></code>
+
+You've probably got the feel for this now: we call another API function,
+<b>fetchVoicemailCount()</b>, to get the count of voicemails.  It's
+no surprise that this is also an asynchronous action taking two functions
+as parameters.
+
+<p>
+By the way, if you're wondering why we saved off the number in <i>subscriberNumber</i>,
+it's just because we want to use it in the <i>gotCount()</i> success function.
+Here it comes:
+
+<code id="#all" class="function gotCount"></code>
+
+<p>
+CommPortal passes <i>gotCount()</i> two numbers: the total number of messages
+in the subscriber's mailbox, and the number they haven't heard.  And with this
+information, we can finally say hello - telling the subscriber both their
+phone number, and the count of new messages waiting for them!
+
+<p>
+There's one final task: to tidy things up and release resources on the
+CommPortal server, we call the <b>logout()</b> function.  If we'd forgotten
+to do that, CommPortal would have reserved some resources for the connection
+until the timeout interval expired.
+
+
+<h2>What next?</h2>
+
+This initial tutorial has quickly taken you through a complete example -
+but we've skipped over some of the alternative choices you could have made
+along the way.  We'll explore these in the follow-up
+<a href="login.html">Login tutorial</a>, which digs into login options in
+a little more detail.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

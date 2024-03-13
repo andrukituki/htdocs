@@ -1,0 +1,230 @@
+<html>
+<head>
+  <title>Send Voicemail example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+
+</head>
+
+<body>
+<h1>CommPortal SDK Send Voicemail Example</h1>
+
+Enter the server address, then press the button to log in.
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<div id="chooseFileStep" style="display: none;">
+Press the button to select an audio file to use for the new voicemail.<br/>
+This must be in one of the supported codecs defined in the EAS Integration Guide. The codecs enabled on your system are listed in the output below.
+
+<form name="chooseFileForm" id="chooseFileForm" enctype="multipart/form-data" onsubmit="doUpload(); return false" method="post">
+  <div>
+    Voicemail audio:
+    <input name="uploadFile" type="file" style="width:300px"></input>
+    <br/>
+  </div>
+
+  <input type="submit" id="uploadFileButton" value="Upload File"/>
+</form>
+</div>
+
+<div id="sendVMStep" style="display: none;">
+Fill in the details for the new voicemail.
+
+<form onsubmit="doSend(); return false">
+  <div>
+    Voicemail options:<br/>
+    <label for="Destination">Destination: </label><input type="text" id="Destination" name="Destination" style="width:300px" /><br/>
+    <label for="Urgent">Urgent? </label><input type="checkbox" id="Urgent" name="Urgent" /><br/>
+    <label for="Private">Private? </label><input type="checkbox" id="Private" name="Private" /><br/>
+    <br/>
+  </div>
+
+  <input type="submit" id="sendVMButton" value="Send Voicemail"/>
+</form>
+</div>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+
+document.getElementById("chooseFileStep").style.display = "none";
+document.getElementById("sendVMStep").style.display = "none";
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("VoiceMailSendTutorial", loginSuccess, loginFailure);
+
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    listCodecs();
+    
+    // Show the next part of the UI
+    showUploadFile();
+  }
+
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="listCodecsScript">
+function listCodecs()  
+{
+  connection.fetchCodecs(codecSuccess, codecError);
+  function codecSuccess(connection, codecs)
+  {
+    var codecStr = "";
+    for (var i = 0; i < codecs.length; i++)
+    {
+      codecStr += codecs[i].CodecName + "(" + codecs[i].CodecExtension + ")";
+      if (i < (codecs.length - 1)) codecStr += ", ";
+    }
+    display("Enabled Codecs: " + codecStr);
+  }
+
+  function codecError(connection, error)
+  {
+    display("Failed to fetch codec list, error: " + error);
+  }
+}
+</script>
+
+<script id="showUIScript">
+function showUploadFile()
+{
+  document.getElementById("chooseFileStep").style.display = "block";
+  document.getElementById("sendVMStep").style.display = "none";
+}
+</script>
+
+<script id="uploadScript">
+function doUpload()
+{
+  display("Uploading file");
+
+  connection.uploadVoicemailAudio("chooseFileForm",
+                                  uploadSuccess,
+                                  uploadFailure);
+}
+
+function uploadSuccess(connection)
+{
+  display("Upload successful!");
+
+  // Show the next part of the UI
+  showSendVM();
+}
+
+function uploadFailure(connection, error)
+{
+  display("Upload failed: " + error);
+}
+
+function showSendVM()
+{
+  document.getElementById("sendVMStep").style.display = "block";
+}
+</script>
+
+<script id="sendScript">
+function doSend()
+{
+  display("Sending voicemail");
+
+  var destNum = document.getElementById("Destination").value;
+  var isUrgent = document.getElementById("Destination").checked;
+  var isPrivate = document.getElementById("Destination").checked;
+
+  connection.sendVoicemail(destNum,
+                           isUrgent,
+                           isPrivate,
+                           sendSuccess,
+                           sendFailure);
+
+  function sendSuccess()
+  {
+    display("Sent!");
+  }
+
+  function sendFailure()
+  {
+    display("Failed!");
+  }
+}
+</script>
+
+</body>
+</html>

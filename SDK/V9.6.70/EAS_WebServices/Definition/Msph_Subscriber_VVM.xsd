@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_VVM">
+    <xs:annotation>
+      <xs:documentation>
+        Visual Voicemail service indication. Used to configure VVM settings for the specified subscriber.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="iPhoneVVMAvailable" type="tSwitchableDefaultTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether iPhone VVM is available for this subscriber. This can be used to disable iPhone VVM for a subscriber in a Class of Service with iPhone VVM enabled. It will not enable iPhone VVM for a subscriber in a Class of Service with iPhone VVM disabled.
+            <d:DisplayName>iPhone VVM Available</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="OMTPVVMAvailable" type="tSwitchableDefaultTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether OMTP VVM is available for this subscriber. This can be used to disable OMTP VVM for a subscriber in a Class of Service with OMTP VVM enabled. It will not enable OMTP VVM for a subscriber in a Class of Service with OMTP VVM disabled.
+            <d:DisplayName>OMTP VVM Available</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CustomVVMAvailable" type="tSwitchableDefaultTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether Custom VVM is available for this subscriber. This can be used to disable Custom VVM for a subscriber in a Class of Service with Custom VVM enabled. It will not enable Custom VVM for a subscriber in a Class of Service with Custom VVM disabled.
+            <d:DisplayName>Custom VVM Available</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Device" type="tMsph_Subscriber_VVM_Device">
+        <xs:annotation>
+          <xs:documentation>
+            Settings related to a specific device.
+            <d:DisplayName>Device</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_Subscriber_VVM_Device">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="PhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The phone number of this device.
+            <d:DisplayName>Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="TriggerVVMStateReset" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Sending in an update with this field set to true will cause the system to re-send the current 'VVM Enabled' state to the device (for all VVM flavors). Sending in an update with this field set to false has no effect.
+            <d:DisplayName>Trigger VVM State Reset</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>-W-W-W</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="iPhoneVVMEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether native iPhone VVM is enabled on this device. iPhone VVM notifications for voicemails events will only be sent to this device if both this field and Msph_Subscriber_BaseInformation.Device.iPhoneDevice are set to true, and iPhone VVM Available is true at a subscriber level.
+            <d:DisplayName>iPhone VVM Enabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="OMTPVVMNotificationsSupported" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether OMTP VVM Notifications are supported by this device. OMTP notifications will only be sent if this is set to true, and OMTP VVM Available is true at a subscriber level.
+            <d:DisplayName>OMTP VVM Notifications Supported</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="OMTPVVMEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether OMTP VVM is enabled on this device. OMTP VVM Notifications for voicemail events will only be sent to this device if both this field and OMTP VVM Notifications Supported are set to true, and OMTP VVM Available is true at a subscriber level.
+            <d:DisplayName>OMTP VVM Enabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="OMTPClientPort" type="TMsph_Subscriber_VVM_Device_OMTPClientPort">
+        <xs:annotation>
+          <xs:documentation>
+            The destination application port for the OMTP VVM app registered by the OMTP client.
+            <d:DisplayName>OMTP Client Port</d:DisplayName>
+            <d:Type>Integer range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Range>0 - 16999</d:Range>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="OMTPClientPrefix" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The prefix registered by the OMTP client. The OMTP specification defines a prefix which may be prepended to the front of OMTP notifications. If this field is set to null, the OMTP default of '//VVM' will be used. If this field is set to a non-null value, the set value will be used as the prefix on OMTP notifications.  Permitted regex: .*
+            <d:DisplayName>OMTP Client Prefix</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CustomVVMNotificationsSupported" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether Custom VVM Notifications are supported by this device. Custom notifications will only be sent if this is set to true, and Custom VVM Available is true at a subscriber level.
+            <d:DisplayName>Custom VVM Notifications Supported</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CustomVVMEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether Custom VVM is enabled on this device.  Custom VVM Notifications for voicemail events will only be sent to this device if both this field and Custom VVM Notifications Supported are set to true, and Custom VVM Available is true at a subscriber level.
+            <d:DisplayName>Custom VVM Enabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="TMsph_Subscriber_VVM_Device_OMTPClientPort">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="16999" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

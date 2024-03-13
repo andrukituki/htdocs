@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/nsrs/soap/sh/servicedata" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.metaswitch.com/nsrs/soap/sh/servicedata">
+  <xs:include schemaLocation="../../NSeries_WebServices/Definition/serviceData.xsd" />
+  <xs:element name="NseriesData" type="tNseriesData"/>
+</xs:schema>
+

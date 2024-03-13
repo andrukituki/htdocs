@@ -1,0 +1,189 @@
+body, input, select, button
+{
+  font : 16px Tahoma, Arial, Helvetica, sans-serif;
+}
+
+button
+{
+  float: left;
+}
+
+form
+{
+  white-space: nowrap;
+}
+
+pre
+{
+  display: block;
+  width: 99%;
+  height: 95%;
+  font: 12px Courier New, monospace;
+  border: solid 1px;
+  margin: 5px 0 0 0;
+  overflow-y: scroll;
+  white-space:inherit;
+  white-space:pre-wrap;
+  word-wrap:break-word;
+}
+
+.url
+{
+  white-space: nowrap;
+}
+
+select
+{
+  width: 100%;
+}
+
+.row1
+{
+  display: block;
+  position: absolute;
+  width: 98%;
+  height: 373px;
+  left: 1%;
+}
+
+.row2
+{
+  display: block;
+  position: absolute;
+  width: 98%;
+  left: 1%;
+  top: 378px;
+  height: 100px;
+}
+
+.row3
+{
+  display: block;
+  position: absolute;
+  width: 98%;
+  height: 46%;
+  left: 1%;
+  top: 420px;
+}
+
+.col1, .col2, .col3
+{
+  display: block;
+  position: absolute;
+  height: 95%;
+}
+
+.row1 .col1
+{
+  left: 0;
+  width: 388px;
+}
+
+.row1 .col2
+{
+  left: 400px;
+  right: 0px;
+}
+
+* html .row1 .col2
+{
+  width: expression(document.body.clientWidth - 425);
+}
+
+.row2 .col1
+{
+  width: 388px;
+}
+
+.row2 .col2
+{
+  left: 400px;
+  white-space: nowrap;
+}
+.exampleSelector
+{
+  height: 353px;
+  width: 100%;
+}
+
+.row3 .col1
+{
+  left: 0;
+  width: 60%;
+}
+
+.row3 .col2
+{
+  left: 61%;
+  width: 39%;
+  height: 353px;
+}
+
+.ifGet
+{
+  display: none;
+}
+
+.usingGet .ifGet
+{
+  height: 99%;
+  display: block;
+}
+
+.ifPost
+{
+  height: 99%;
+  display: none;
+}
+
+.usingPost .ifPost
+{
+  display: block;
+}
+
+.bigOutput
+{
+  height: 270px;
+}
+
+.usingAction .bigOutput
+{
+  height: 190px;
+}
+
+.actionData
+{
+  display: none;
+}
+
+.usingAction .actionData
+{
+  display: block;
+}
+
+.ifEvent
+{
+  display: none;
+}
+
+.usingEvent .ifEvent
+{
+  height: 99%;
+  display: block;
+}
+
+html>/**/body .bigOutput, x:-moz-any-link
+{
+  white-space: nowrap;
+}
+
+.smallOutput
+{
+  height: 35px;
+}
+
+* html .smallOutput
+{
+  width: 100%;
+  overflow-x: auto;
+}

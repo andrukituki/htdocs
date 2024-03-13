@@ -1,0 +1,874 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_BaseInformation">
+    <xs:annotation>
+      <xs:documentation>
+        Subscriber settings service indication.  Used to manage the common settings associated with a subscriber.  You can also use this indication to create devices associated with the subscriber and manage a subset of the device's settings.  To delete or renumber devices you use the Msph_Device_BaseInformation service indication.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="DisplayName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The name associated with this subscriber for display purposes, also referred to as the common name. Note that although this element is mandatory on mailbox creation, business logic may generate a display name automatically if the DisplayName element is not specified but a GivenName or Surname is present.  Permitted regex: ^[^\p{C}\p{Zl}\p{Zp}&lt;&gt;;"\\]{1,64}$
+            <d:DisplayName>Display Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CompanyName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The company name associated with this subscriber.  Permitted regex: .*
+            <d:DisplayName>Company Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CoSID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The ID of the Class of Service used for this subscriber.  The format of this field matches that of the ID field used to administer Classes of Service using the craft interface. Please refer to the section 'Changing a subscriber's Class of Service' in the MetaSphere EAS Subscriber Administration Guide for details of restrictions which apply to changing a subscriber's Class of Service.  Permitted regex: .*
+            <d:DisplayName>CoS ID</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="EmailAliases" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Email addresses associated with this subscriber.  Permitted regex: ^([a-zA-Z0-9!#$%&amp;'*+\-/=?^_`{|}~]+([.\\][a-zA-Z0-9!#$%&amp;'*+\-/=?^_`{|}~]+)*)@([a-zA-Z0-9!#$%&amp;'*+\-/=?^_`{|}~]+(\.[a-zA-Z0-9!#$%&amp;'*+\-/=?^_`{|}~]+)*)$
+            <d:DisplayName>Email Aliases</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FaxNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Fax number associated with this subscriber.  Permitted regex: .*
+            <d:DisplayName>Fax Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Gender" type="tMsph_Subscriber_BaseInformation_Gender">
+        <xs:annotation>
+          <xs:documentation>
+            Gender of this subscriber.
+            <d:DisplayName>Gender</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>M</d:Value>
+              <d:Value>F</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="GivenName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Given name of this subscriber.  Permitted regex: ^[^\p{C}\p{Zl}\p{Zp}&lt;&gt;;"\\]{1,64}$
+            <d:DisplayName>Given Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="LATA" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Local Access and Transport Area number for this subscriber.  Permitted regex: [0-9][0-9][0-9]
+            <d:DisplayName>LATA</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EmailAddress" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Primary email address of this subscriber. If this field is not specified when adding a subscriber, it will default to an email address of the form phone@domain, where phone is the PrimaryPhoneNumber specified for this subscriber, and domain is the email domain configured for the group to which this subscriber belongs.  Permitted regex: .*
+            <d:DisplayName>Email Address</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Disabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this mailbox is disabled.
+            <d:DisplayName>Disabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="DisabledforMigration" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this mailbox is disabled for migration.
+            <d:DisplayName>Disabled for Migration</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PrimaryPhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Primary phone number of this subscriber.  Permitted regex: ^\d+(:?-\d{1,3})?$
+            <d:DisplayName>Primary Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PIN" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            PIN of this subscriber.  Permitted regex: ^\d+$
+            <d:DisplayName>PIN</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>-W-W-W</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PreferredLanguage" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The preferred language for this subscriber.  If specified, this must match one of the language values configured for this subscriber's class of service.  If it is not specified, then the default language configured for the class of service is used.  Allowed languages are: eng,en-GB,spa,fr-CA and any custom TUI language codes.  Permitted regex: .*
+            <d:DisplayName>Preferred Language</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="BillingNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Billing number of this subscriber.  Permitted regex: ^\d+(:?-\d{1,3})?$
+            <d:DisplayName>Billing Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Surname" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Surname of this subscriber. If the subscriber has no name entry, `[absent]` will be returned.  Permitted regex: ^[^\p{C}\p{Zl}\p{Zp}&lt;&gt;;"\\]{1,64}$
+            <d:DisplayName>Surname</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="TimeZone" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The identifier for the time zone this subscriber is in, for example Europe/London. The timezone identifiers supported are documented in the Valid Timezones appendix in the EAS Subscriber Administration Guide.  Permitted regex: .*
+            <d:DisplayName>Time Zone</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Groupname" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The name of the Group to which this subscriber belongs.
+            <d:DisplayName>Group name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Device" type="tMsph_Subscriber_BaseInformation_Device">
+        <xs:annotation>
+          <xs:documentation>
+            Settings related to a specific device.
+            <d:DisplayName>Device</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="5" minOccurs="0" name="BroadcastGroups" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The broadcast groups of which this subscriber is a member.  Each group is identified by a number between 1 and 99.  Permitted regex: [1-9]{1}[0-9]{0,1}
+            <d:DisplayName>Broadcast Groups</d:DisplayName>
+            <d:ValidFrom>1.1</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Password" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Password of this subscriber.  Permitted regex: .*
+            <d:DisplayName>Password</d:DisplayName>
+            <d:ValidFrom>1.1</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>-W-W-W</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PINChangedDate" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>
+            Last date the PIN was changed in the format YYYY-MM-DDThh:mm:ss.xxx+zz:zz. For example, 12:52:08 pm on the 30th July 2010 BST would be represented 2010-07-30T12:52:08.000+01:00.  NOTE: If using a pre-1.4.1 Axis2 client, there are issues in converting from a Java Calendar object to an XML date string where daylight savings time is in effect.  To avoid this issue, please upgrade to the most recent version of Axis2.
+            <d:DisplayName>PIN Changed Date</d:DisplayName>
+            <d:ValidFrom>1.2.1</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FaxPrintPhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The phone number of a fax machine that should be used to print faxes from a subscriber's mailbox.  Permitted regex: ^\d+(:?-\d{1,3})?$
+            <d:DisplayName>Fax Print Phone Number</d:DisplayName>
+            <d:ValidFrom>1.3</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ExceededLoginCount" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether subscriber's account has been locked, due to the number of failed login attempts exceeding the allowed number for any of IMAP, Voice or Webmail Login attempts. If already locked out, the status may be reset by setting this field to false on an update.
+            <d:DisplayName>Exceeded Login Count</d:DisplayName>
+            <d:ValidFrom>1.3</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="APNSDeviceTokens" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            APNS device tokens, registered by iPhone OS applications requesting notifications.  Permitted regex: ^[^:]+:[^:]+:[^:]+:[^:]+:[^:]+:[^:]+.*
+            <d:DisplayName>APNS Device Tokens</d:DisplayName>
+            <d:ValidFrom>1.4</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="VvmSmsDeviceTokens" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Voicemail over SMS device tokens, registered by voicemail applications requesting notifications via SMS.  Permitted regex: .*
+            <d:DisplayName>Vvm Sms Device Tokens</d:DisplayName>
+            <d:ValidFrom>1.4</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ODRG" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Outdial Resource Group of this subscriber.  Permitted regex: .*
+            <d:DisplayName>ODRG</d:DisplayName>
+            <d:ValidFrom>1.4</d:ValidFrom>
+            <d:Type>String, Switchable Default</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EASSystemName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of EAS System hosting this subscriber.
+            <d:DisplayName>EAS System Name</d:DisplayName>
+            <d:ValidFrom>1.4</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="VoicemailTranscriptionsEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether transcription is enabled for voicemail messages.
+            <d:DisplayName>Voicemail Transcriptions Enabled</d:DisplayName>
+            <d:ValidFrom>1.5</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="IctTargetAlternate" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Alternative number for Call Jump function.
+            <d:DisplayName>Ict Target Alternate</d:DisplayName>
+            <d:ValidFrom>1.6</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="IctTargetWireless" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Wireless number for Call Jump function.
+            <d:DisplayName>Ict Target Wireless</d:DisplayName>
+            <d:ValidFrom>1.6</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="50" minOccurs="0" name="IctSimTargetNumbers" type="tIctSimTargetNumber">
+        <xs:annotation>
+          <xs:documentation>
+            Target Number list for Call Jump function.
+            <d:DisplayName>Ict Sim Target Numbers</d:DisplayName>
+            <d:ValidFrom>1.6</d:ValidFrom>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PasswordChangedDate" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>
+            Last date the Password was changed in the format YYYY-MM-DDThh:mm:ss.xxx+zz:zz. For example, 12:52:08 pm on the 30th July 2010 BST would be represented 2010-07-30T12:52:08.000+01:00.  NOTE: If using a pre-1.4.1 Axis2 client, there are issues in converting from a Java Calendar object to an XML date string where daylight savings time is in effect.  To avoid this issue, please upgrade to the most recent version of Axis2.
+            <d:DisplayName>Password Changed Date</d:DisplayName>
+            <d:ValidFrom>1.6</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="IsPINAged" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether PIN has expired.
+            <d:DisplayName>Is PIN Aged</d:DisplayName>
+            <d:ValidFrom>1.6</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="IsPasswordAged" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether password has expired.
+            <d:DisplayName>Is Password Aged</d:DisplayName>
+            <d:ValidFrom>1.6</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ExtVmCFN" type="tSwitchableDefaultString">
+        <xs:annotation>
+          <xs:documentation>
+            The Call Forwarding Number (CFN) to use when forwarding calls to external voicemail.  Permitted regex: ^\d+(:?-\d{1,3})?$
+            <d:DisplayName>Ext Vm CFN</d:DisplayName>
+            <d:ValidFrom>1.8</d:ValidFrom>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EventServerWSEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the event server should send web-services notifications. This setting is only relevant if your deployment contains an event server that can send web-services notifications.
+            <d:DisplayName>Event Server WS Enabled</d:DisplayName>
+            <d:ValidFrom>1.33</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InvariantID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            An invariant identifier for this subscriber which can be used as the UserIdentity when querying or updating subscriber configuration.
+            <d:DisplayName>Invariant ID</d:DisplayName>
+            <d:ValidFrom>1.33</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="VideoMessagingEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the susbcriber has enabled video messaging. The Class of Service controls whether Video Messaging is allowed.
+            <d:DisplayName>Video Messaging Enabled</d:DisplayName>
+            <d:ValidFrom>1.10</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SelfProvStatus" type="tMsph_Subscriber_BaseInformation_SelfProvStatus">
+        <xs:annotation>
+          <xs:documentation>
+            This element is only valid if the system is configured to use self provisioning.  The value indicates the subscriber's progress through self provisioning e.g. 'External provisioning in progress'.  This field is normally updated automatically during provisioning.  Changing this value may affect whether the subscriber can access services including CommPortal and Metaswitch's softphone clients.  The value before provisioning has started is 'Not applicable'.  The value once provisioning has finished is 'Mobile provisioning complete' for a wireless subscriber or 'Complete' for a wireline subscriber.
+            <d:DisplayName>Self Prov Status</d:DisplayName>
+            <d:ValidFrom>1.11</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>Not applicable</d:Value>
+              <d:Value>Mobile number verification in progress</d:Value>
+              <d:Value>Mobile number verification failed</d:Value>
+              <d:Value>Mobile subscriber rejected verification</d:Value>
+              <d:Value>External provisioning in progress</d:Value>
+              <d:Value>Not authorized by external system</d:Value>
+              <d:Value>Mobile number not known</d:Value>
+              <d:Value>Mobile provisioning failed</d:Value>
+              <d:Value>Mobile provisioning complete</d:Value>
+              <d:Value>Complete</d:Value>
+              <d:Value>Phone number verification failed</d:Value>
+              <d:Value>Subscriber rejected verification</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="IsPasswordStale" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether password is stale.
+            <d:DisplayName>Is Password Stale</d:DisplayName>
+            <d:ValidFrom>1.19.24</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PreferredSite" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The site in a geo-redundant system where a subscriber would normally prefer to be under normal operation. This field is mandatory when using the Network-Wide Web Services API in a geographically redundant Clustered EAS deployment.  This field is deprecated as of version 1.20.
+            <d:DisplayName>Preferred Site</d:DisplayName>
+            <d:ValidFrom>1.16</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SiteName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of the site this object is currently hosted in. This is only relevant for geographically-redundant deployments.  This field is deprecated as of version 1.20.
+            <d:DisplayName>Site Name</d:DisplayName>
+            <d:ValidFrom>1.16</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ClusterName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of the EAS Cluster this object is hosted in. This is only relevant for geographically-redundant deployments.  This field is deprecated as of version 1.20.
+            <d:DisplayName>Cluster Name</d:DisplayName>
+            <d:ValidFrom>1.16</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SecurityAddress" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Account Email Address of this subscriber, for PIN/Password change notifications and password reset links.
+            <d:DisplayName>Security Address</d:DisplayName>
+            <d:ValidFrom>1.16</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InvariantUID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            A Unique Identifier for this subscriber that is invariant over time and over migration to other SDCs.
+            <d:DisplayName>Invariant UID</d:DisplayName>
+            <d:ValidFrom>1.15.12</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="DeleteDate" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>
+            Scheduled date for deletion of the subscriber in the format EEE, d MMM yyyy HH:mm:ss z.  If this is not defined then there is no scheduled deletion date for the subscriber.  The delete-by-future-date feature must be enabled in the deployment for this field to be of use.  NOTE: If using a pre-1.4.1 Axis2 client, there are issues in converting from a Java Calendar object to an XML date string where daylight savings time is in effect.  To avoid this issue, please upgrade to the most recent version of Axis2.
+            <d:DisplayName>Delete Date</d:DisplayName>
+            <d:ValidFrom>1.19.5</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AllowEmailLogin" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the subscriber can log into CP JSON with their Security Address.
+            <d:DisplayName>Allow Email Login</d:DisplayName>
+            <d:ValidFrom>1.25</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="LoginEmail" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The email the subscriber can use to log into CP JSON. This field is inherited from the Security Address.  Permitted regex: .*
+            <d:DisplayName>Login Email</d:DisplayName>
+            <d:ValidFrom>1.25</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AADID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The unique ID of the Azure Active Directory (AAD) user account associated with this subscriber.  Permitted regex: ^[A-Fa-f0-9]{8}-([A-Fa-f0-9]{4}-){3}[A-Fa-f0-9]{12}$
+            <d:DisplayName>AAD ID</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AADEmailAddress" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The email address of the Azure Active Directory (AAD) user account associated with this subscriber.  Permitted regex: ^([a-zA-Z0-9!#$%&amp;'*+\-/=?^_`{|}~]+([.\\][a-zA-Z0-9!#$%&amp;'*+\-/=?^_`{|}~]+)*)@([a-zA-Z0-9!#$%&amp;'*+\-/=?^_`{|}~]+(\.[a-zA-Z0-9!#$%&amp;'*+\-/=?^_`{|}~]+)*)$
+            <d:DisplayName>AAD Email Address</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PreferredPlaylist" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The preferred playlist to use for the subscriber's Music on Hold. If not present then the default at a higher level will be used.
+            <d:DisplayName>Preferred Playlist</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_Subscriber_BaseInformation_Device">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="PhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The phone number of this device.
+            <d:DisplayName>Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AnsweringService" type="tMsph_Subscriber_BaseInformation_Device_AnsweringService">
+        <xs:annotation>
+          <xs:documentation>
+            Answering Service for this Device.  "lm" specifies leave message behavior.  "aa" specifies the use of an auto-attendant.
+            <d:DisplayName>Answering Service</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>lm</d:DefaultValue>
+            <d:Values>
+              <d:Value>lm</d:Value>
+              <d:Value>aa</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="DeviceType" type="tMsph_Subscriber_BaseInformation_Device_DeviceType">
+        <xs:annotation>
+          <xs:documentation>
+            The type of device.
+            <d:DisplayName>Device Type</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:DefaultValue>landline</d:DefaultValue>
+            <d:Values>
+              <d:Value>landline</d:Value>
+              <d:Value>cellular</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="HostSwitch" type="tSwitchableDefaultString">
+        <xs:annotation>
+          <xs:documentation>
+            The switch to use for outdials associated with this device.  If this is not defined then this value is inherited from this subscriber's group.  Details on setting up host switches on a system are included in the MetaSphere Integration Guide.  Permitted regex: .*
+            <d:DisplayName>Host Switch</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AlternateNumberForOutdial" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            This setting is only used if the 'alternate number' method is used to deliver enhanced call services (e.g. ICM). If the 'alternate number' method is used for this device, then this value will be used for all outdials to this device.  This can only be set if the Host Switch associated with this device is configured with the 'Use alternate number for outdials' option.  Permitted regex: ^\d+$
+            <d:DisplayName>Alternate Number For Outdial</d:DisplayName>
+            <d:ValidFrom>1.1</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AddedThroughSelfCare" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this device was added through subscriber self-care or not.
+            <d:DisplayName>Added Through Self Care</d:DisplayName>
+            <d:ValidFrom>1.3</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="iPhoneDevice" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Indicates whether this device is an iPhone.
+            <d:DisplayName>iPhone Device</d:DisplayName>
+            <d:ValidFrom>1.12.1</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="IMSI" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The International Mobile Subscriber Identity for this device. The IMSI is a unique identifier for a mobile device, in the form of a 64-bit decimal integer. The IMSI May only be set if the device type is set to 'cellular'.  Permitted regex: ^\d+$
+            <d:DisplayName>IMSI</d:DisplayName>
+            <d:ValidFrom>1.16</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tIctSimTargetNumber">
+    <xs:annotation>
+      <xs:documentation />
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="IctSimTargetNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Target number.
+            <d:DisplayName>Ict Sim Target Number</d:DisplayName>
+            <d:ValidFrom>1.6</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CallPresentation" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether to use Call Presentation on target number.
+            <d:DisplayName>Call Presentation</d:DisplayName>
+            <d:ValidFrom>1.6</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tMsph_Subscriber_BaseInformation_Gender">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="M" />
+      <xs:enumeration value="F" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tMsph_Subscriber_BaseInformation_Device_AnsweringService">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="lm" />
+      <xs:enumeration value="aa" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tMsph_Subscriber_BaseInformation_Device_DeviceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="landline" />
+      <xs:enumeration value="cellular" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tMsph_Subscriber_BaseInformation_SelfProvStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Not applicable" />
+      <xs:enumeration value="Mobile number verification in progress" />
+      <xs:enumeration value="Mobile number verification failed" />
+      <xs:enumeration value="Mobile subscriber rejected verification" />
+      <xs:enumeration value="External provisioning in progress" />
+      <xs:enumeration value="Not authorized by external system" />
+      <xs:enumeration value="Mobile number not known" />
+      <xs:enumeration value="Mobile provisioning failed" />
+      <xs:enumeration value="Mobile provisioning complete" />
+      <xs:enumeration value="Complete" />
+      <xs:enumeration value="Phone number verification failed" />
+      <xs:enumeration value="Subscriber rejected verification" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

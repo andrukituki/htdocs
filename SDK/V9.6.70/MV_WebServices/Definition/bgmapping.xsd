@@ -1,0 +1,60 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:bg="http://www.metaswitch.com/ems/bgmapping" targetNamespace="http://www.metaswitch.com/ems/bgmapping" elementFormDefault="qualified" attributeFormDefault="qualified" version="1.1">
+	<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+      MetaSphere CFS Business Group information schema.
+       Copyright (c) Microsoft Corporation. All rights reserved.
+       Highly Confidential Material
+    </xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="businessGroupMapping" type="bg:BusinessGroupMappingType"/>
+	<xsd:complexType name="BusinessGroupMappingType">
+		<xsd:sequence>
+			<xsd:element name="businessGroup" type="bg:BusinessGroupType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="result" type="bg:ResultType"/>
+		</xsd:sequence>
+		<xsd:attribute name="timeStamp" type="xsd:dateTime"/>
+	</xsd:complexType>
+	<xsd:complexType name="BusinessGroupType">
+		<xsd:sequence>		
+			<xsd:element name="systemID" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="businessGroupIndex" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="creationTime" type="xsd:dateTime" minOccurs="0"/>
+			<xsd:element name="groupName" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="locale" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="musicOnHoldClassOfService" type="xsd:int" minOccurs="0"/>
+			<xsd:element name="musicOnHoldMaxCalls" type="xsd:int" minOccurs="0"/>
+			<xsd:element name="line" type="bg:LineType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="departments" type="bg:DepartmentsType" minOccurs="0"/>
+			<xsd:element name="result" type="bg:ResultType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:simpleType name="ResultType">
+		<xsd:restriction base="xsd:string">
+			<xsd:pattern value="Success|Failure"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+	<xsd:complexType name="LineType">
+		<xsd:sequence>
+			<xsd:element name="directoryNumber" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="lineName" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="intercomCode" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="department" type="xsd:int" minOccurs="0"/>
+			<xsd:element name="administrator" type="xsd:boolean" minOccurs="0"/>
+			<xsd:element name="adminDepartment" type="xsd:int" minOccurs="0"/>
+			<xsd:element name="terminatingAS" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="result" type="bg:ResultType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DepartmentsType">
+		<xsd:sequence>
+			<xsd:element name="department" type="bg:DepartmentType" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DepartmentType">
+		<xsd:sequence>
+			<xsd:element name="index" type="xsd:int"/>
+			<xsd:element name="name" type="xsd:string"/>
+			<xsd:element name="parent" type="xsd:string" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

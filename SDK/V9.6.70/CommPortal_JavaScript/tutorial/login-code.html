@@ -1,0 +1,296 @@
+<html>
+<head>
+  <title>Login example - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Login Example</h1>
+
+Enter the server name, then press the buttons to exercise the code, and observe the outcome messages given below.
+<ul>
+  <li>Login - try closing the window</li>
+  <li>Login - please enter a valid subscriber, and really log in</li>
+  <li>Logout</li>
+  <li>Prompt - an alternative way to get subscriber details</li>
+  <li>Logout again</li>
+  <li>Fetch token - fails because you are logged out</li>
+  <li>Login again</li>
+  <li>Fetch token, then logout again</li>
+  <li>Login with token, then logout again</li>
+  <li>Corrupt token</li>
+  <li>Login with token - fails since token is bad</li>
+  <li>Login again</li>
+  <li>Save session state</li>
+  <li>Reconnect (using saved session state)</li>
+</ul>
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+
+  <button id="logoutButton" onclick="doLogout(connection); return false;">Logout</button>
+  <button id="loginPromptButton" onclick="doLoginPrompt(connection); return false;">Login via prompt</button>
+  <button id="tokenButton" onclick="doFetchToken(connection); return false;">Fetch Token</button>
+  <button id="loginTokenButton" onclick="doLoginToken(connection); return false;">Login with token</button>
+  <button id="corruptTokenButton" onclick="doCorruptToken(connection); return false;">Corrupt token</button>
+  <button id="getSessionStateButton" onclick="doGetSessionState(connection); return false;">Save session state</button>
+  <button id="reconnectButton" onclick="doReconnect(connection); return false;">Reconnect</button>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+
+  return connection;
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("LoginTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId +
+            " which is the same as : " + connection.getSessionId());
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="logoutScript">
+function doLogout(connection)
+{
+  connection.logout();
+
+  display("Logged out");
+}
+</script>
+
+<script id="loginPromptScript">
+function doLoginPrompt()
+{
+  display("Prompting for login details");
+
+  var cancelled = true;
+  var number = prompt("What is the subscriber number?", "");
+  if (number)
+  {
+    var password = prompt("What is the subscriber password?", "");
+    if (password)
+    {
+      cancelled = false;
+
+      createConnection();
+      connection.login("LoginTutorial", loginSuccess, loginFailure, number, password);
+    }
+  }
+
+  if (cancelled)
+  {
+    display("Cancel was used rather than entering both pieces on information");
+  }
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="fetchTokenScript">
+function doFetchToken(connection)
+{
+  display("Requesting persistent authentication token...");
+
+  connection.fetchToken(tokenFetched, errorFetched);
+
+  // The function called when the token has been fetched
+  function tokenFetched(connection, token)
+  {
+    display("Token is " + token);
+
+    // Save the token in a cookie - in this example we use a session cookie,
+    // but in practice you might want to make this longer lasting
+    document.cookie = "CommPortalToken=" + encodeURIComponent(token);
+  }
+
+  // The function if an error occurs fetching token
+  function errorFetched(connection, error)
+  {
+    display("Failed to fetch token, error: " + error);
+  }
+}
+</script>
+
+<script id="loginTokenScript">
+function doLoginToken(connection)
+{
+  // Find if we have a persistent token available in the cookie
+  var cookie = document.cookie.match(/CommPortalToken=(.+?)(;|$)/);
+  if (cookie)
+  {
+    var persistentToken = decodeURIComponent(cookie[1]);
+
+    // Log in again with the stored credentials
+    display("Logging into CommPortal using persistent token");
+    if (!connection)
+    {
+      connection = createConnection();
+    }
+    connection.login("LoginTutorial", loginTokenSuccess, loginTokenFailure, persistentToken);
+  }
+  else
+  {
+    display("No persistent token found");
+  }
+
+  // The function to be called when succesfully logged in
+  function loginTokenSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+  }
+
+  // The function to be called if logging in fails
+  function loginTokenFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="corruptTokenScript">
+function doCorruptToken(connection)
+{
+  // The connection parameter is ignored
+
+  // We deliberately write a bad token into the cookie
+  document.cookie = "CommPortalToken=" + encodeURIComponent("This is invalid");
+
+  display("Token corrupted");
+}
+</script>
+
+<script id="getSessionStateScript">
+function doGetSessionState(connection)
+{
+  window.savedState = connection.getSessionState();
+
+  display("Saved session state for id " + connection.getSessionId());
+}
+</script>
+
+<script id="reconnectScript">
+function doReconnect(connection)
+{
+  // The connection parameter we are passed is ignored and we instead
+  // create a totally new connection
+  var newConnection = createConnection();
+
+  // Retrieve and then cleanup the global variable
+  var savedState = window.savedState;
+  if (savedState)
+  {
+    window.savedState = null;
+  }
+
+  // Call the API to reconnect
+  newConnection.reconnect(savedState,
+                          reconnectionSuccess,
+                          reconnectionFailure);
+
+  // The function to be called when succesfully reconnected
+  function reconnectionSuccess(connection)
+  {
+    display("Reconnected to CommPortal session ID: " + connection.getSessionId());
+  }
+
+  // The function to be called if reconnecting fails
+  function reconnectionFailure(connection, error)
+  {
+    display("Failed to reconnect to CommPortal, error: " + error);
+  }
+}
+</script>
+
+</body>
+</html>

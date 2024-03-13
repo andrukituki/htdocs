@@ -1,0 +1,448 @@
+<html>
+<head>
+<title>Incoming Call : Advanced Topics - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Incoming Call - CommPortal SDK Tutorial</h1>
+
+<p>
+This tutorial takes you through another advanced topic: how to detect,
+and handle, incoming calls to a subscriber's phone.  Although the concepts
+and indeed the techniques involved here aren't particularly difficult,
+this is "advanced" because it's at the cutting edge - at the moment, neither
+CommPortal nor the CommPortal widgets are utilizing this feature.
+</p>
+
+<p>
+On the plus side, it's exciting to work with something so new.  On the
+downside, though, it does mean you won't find any example code within your
+CommPortal customizations.  You can only get it here!
+</p>
+
+In this tutorial we'll see how to do the following.
+<ul>
+  <li>Start monitoring Incoming Call events.</li>
+  <li>Receive Incoming Call events as they occur.</li>
+  <li>Stop monitoring Incoming Call events.</li>
+  <li>Reject an Incoming Call.</li>
+  <li>Redirect an Incoming Call to an alternative phone number.</li>
+</ul>
+
+To fully follow along with the working example in this tutorial, you'll need
+access to <em>three</em> configured phone lines - one to make a call, one
+to receive it, and a third phone for when we start doing redirections.
+You'll also need to ensure the phone number that is used to log in has
+Incoming Call Popup (ICP) enabled in its Class of Service, because that's
+what controls access to Incoming Call features.  If you are running this
+example on the <a href="http://innovators.metaswitch.com">Innovators</a>
+sandbox system, then the phone numbers you are provided with have this
+already set up for you.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+the <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+By the way, if you've worked through our previous examples, then the initial
+section will be very familiar.  It's just a refresher from the
+<a href="login.html">Login</a> tutorial.  In that case, feel free to skip
+straight to <a href="#enableButtons">Enable Buttons</a>, or even to
+<a href="#IncomingCallEvents">Incoming Call events</a> if
+you're already familiar with Enable Buttons from the previous tutorial.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b></li>
+  <li><b>setIncomingCallHandler()</b></li>
+  <li><b>clearIncomingCallHandler()</b></li>
+  <li><b>rejectCall()</b></li>
+  <li><b>redirectCall()</b></li>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+<p>
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+<p>
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the
+right value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+As usual, we've coded our <i>doLogin()</i> function so that, when
+the user successfully logs in, we automatically proceed to the
+next part of the example.  In this case, that's <i>doEnableButtons()</i>
+function covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="enableButtons"></a>
+<h2>Enable Buttons</h2>
+
+So, to summarize as usual what we've done so far: we've opened a connection
+to CommPortal, and we've allowed the subscriber to log in.
+
+<p>
+There's one final bit of admin to complete.  Unlike some of our previous
+tutorials, the functions in this example are fired up as and when the user
+clicks buttons on the web page.  Those buttons were originally disabled, to
+prevent them being used before the subscriber logged in - so, right now, we
+need to enable them all.  The simple <i>doEnableButtons()</i> function below
+carries out that task.
+
+<code id="enableButtonsScript"></code>
+
+<p>
+In contrast to some previous examples, you'll notice we don't go on to call any
+other functions. We're now just going to wait until a button gets clicked.
+
+<a name="IncomingCallEvents"></a>
+<h2>Incoming Call events</h2>
+
+<p>
+We will see soon how we subscribe to receive notification of any incoming calls to
+the subscriber's phone number.  But before we do that, here's a bit of background.
+</p>
+
+<h3>Types of events</h3>
+
+<p>
+Incoming calls notifications are just one of a number of events that the
+system can produce, but they are the only ones we're going to cover in this
+tutorial.  Yes, it <em>is</em> an advanced tutorial... but we'll still
+limit ourselves to these notifications since they're the most useful,
+and the only ones for which the SDK provides us with a high level interface.
+(You may recall that the SDK has two levels of API calls - low level core
+methods that are powerful, but require more work to use, and higher level
+methods that build powerful abstractions above the core methods).
+<p/>
+
+<h3>Waiting for events</h3>
+
+<p>
+Just in case you're wondering, when you ask the CommPortal server to send you
+events, under the covers it uses a technique which has become known as COMET.
+A web server can't spontaneously send you data - it can only do so in response
+to a request.  In the COMET method, the client makes a request to the server,
+and the server delays its response until it has something to communicate.
+Fortunately, as an SDK user, these details are for interest only - the SDK takes
+care of everything for you.
+
+<p>
+In this tutorial we are only interested in events that provide details for
+incoming calls.  Now that we have an idea in how the notification process
+works, let's listen for Incoming Call events.
+
+<h2>Start monitoring Incoming Calls</h2>
+
+<p>
+When the user presses the "Monitor Incoming Calls" button, it calls our
+function subscribeToIncomingCallEvents().  This is a long function, but
+we'll break it down bit by bit once we've seen the code.
+
+<code id="subscribeToIncomingCallEvents"></code>
+
+<p>
+The API method which starts us listening for Incoming Call events is
+<b>setIncomingCallHandler()</b>.  This API function takes two parameters.
+If you're worried we can't count, well spotted!  The second parameter
+is optional and omitted in our example code.
+
+<p>The first parameter is the callback, which you'll be expecting from
+our earlier tutorials; it works a bit differently though, and we'll talk
+about that below.  The second parameter, if it's present, specifies the
+phone line we want to know about calls to.  (Of course only
+certain types of subscriber are able to access other lines, and which
+lines they can control is strictly limited - so don't go thinking you can
+use this feature to take over all the phones in your neighborhood!)
+In our example, we left the second parameter out, so we'll be listening
+to Incoming Call events on the logged-in subscriber's line.
+
+<p>
+So, let's look at the callback.  From our earlier tutorials, you might be
+expecting to pass a pair of functions - for success and failure - and
+receive an asynchronous result.  In fact, unlike many other API methods,
+<b>setIncomingCallHandler()</b> returns <em>synchronously</em>.  This
+synchronous reply tells us if we successfully subscribed - you'll see our
+example checks for an error, and displays it if one occurs.
+
+<p>
+(To be honest, an error is most unlikely here.  The most common problem is
+if the subscriber's account does not have Incoming Call Popup enabled in
+its Class of Service.  It is also possible to cause an error if you mix
+calls to <b>setIncomingCallHandler</b> with calls that use other incompatible
+events, but you won't see that unless you're straying beyond the scope of
+what we cover in these tutorials.)
+
+<p>
+So what's the callback for - and why is there just one of them?  Well, the API
+needs to do something whenever there actually is an Incoming Call event.
+What it does is to call this function, passing in the connection object (like
+the callbacks we've seen before), the number of the line receiving the incoming
+call, and a "call data object".
+
+<p>
+The call data object itself contains the detail of the event, wrapped up in
+the following fields.
+
+<dl>
+  <dt>callID</dt>
+  <dd>A unique identifier for this call (we'll see how to use this later)</dd>
+
+  <dt>callState</dt>
+  <dd>Indicates whether or not the subscriber's phone is ringing</dd>
+
+  <dt>number</dt>
+  <dd>The phone number that is receiving the call</dd>
+
+  <dt>callerNumber</dt>
+  <dd>The caller phone number (available only when the call state is ringing
+      and if the number is known)
+  </dd>
+
+  <dt>callType</dt>
+  <dd>The call type: normal call or a live message screening call</dd>
+</dl>
+
+<p>
+Most of these fields are pretty self-explanatory, but a couple deserve
+attention.  First, the call type - this can take two values, indicating
+whether this is a normal call or an outdial from the Live Message Screening
+service:
+
+<ul>
+  <li>CommPortal.INCOMINGCALLTYPE_NORMAL</li>
+  <li>CommPortal.INCOMINGCALLTYPE_LIVE_MESSAGE_SCREENING</li>
+</ul>
+
+<p>
+Then, there's the call state.  This can also take two values:
+
+<ul>
+  <li>CommPortal.INCOMINGCALLSTATE_RINGING</li>
+  <li>CommPortal.INCOMINGCALLSTATE_NOT_RINGING</li>
+</ul>
+
+<p>
+Normally the Incoming Call event will pass through two simple states, so
+you'll get two calls to your callback.  The first time, you'll find the state
+is "ringing", which means (surprise, surprise) that the phone's begun to ring.
+When the phone stops ringing - for example because the call's been answered,
+the other end's hung up or you've bounced the call using one of the API
+methods described below - you'll get a second call into your callback, this
+time indicating the "not ringing" state.
+
+<p>
+Something to note about this data object is that the Call ID will only be
+valid while the subscriber's phone is still ringing.  This Call ID can be
+used then to terminate or redirect the call, as you'll see later in this tutorial.
+The caller number, similarly, will only be provided when the call state is
+currently ringing (and of course, only if the caller's number is available).
+
+<p>
+In the example code you can see that, besides displaying the call information,
+we also save the Call ID and Device ID.  Later, we'll see how to use these to
+terminate or redirect the incoming call.
+
+<h2>Stop receiving Incoming Call events</h2>
+
+Not surprisingly, the opposite to subscribing to Incoming Call events is
+unsubscribing from them.  You might want to do this when the user indicates
+they no longer want to know about the incoming calls.  You should also do
+it before your application exits, because outstanding subscriptions do take
+up some resources on the CommPortal server (until they eventually time out).
+
+<p>
+In our example, when the user presses the "Stop monitoring calls"
+button, it calls our function unsubscribeFromIncomingCallEvents().
+
+<code id="unsubscribeFromIncomingCallEvents"></code>
+
+<p>
+The API method this uses is <b>clearIncomingCallHandler()</b>, which takes one
+optional parameter.  If - as in our example - the parameter is not given,
+then the effect is to stop handling Incoming Call events on the logged-in
+subscriber's line.
+
+<p>
+If the parameter <em>is</em> provided, it's the number of an alterative line.
+If you used the optional parameter to <b>setIncomingCallHandler()</b> to set
+the Incoming Call event for a specific target line, the call to clear this
+must use the same target.
+
+<p>
+You might have noticed from our example code that this method can return an
+error.  There's actually only one problem which can come up - if you try to
+clear the Incoming Call handler when there isn't one set.  For a refresher
+on error handling in the CommPortal API, check out the previous tutorial on
+<a href="coredata.html">core data and error handling</a>.
+
+<p>
+There's a slight wrinkle in this specific case, as the more complex lower-level
+interface pokes through a little here.  The error object returned if there's
+a problem contains an extra attribute called "events", containing an
+array of events that the API was unable to clear.
+
+<p>
+If you're using just the calls we're describing in this tutorial, you'll
+always receive an array with just one element referring to the Incoming
+Call event.  Still, in case we ever use this function in combination with
+more advanced code, our example uses the JavaScript <b>join</b> method to
+build and display a list of the events which failed to clear.
+
+<h2>Reject a Call</h2>
+
+OK, so far we've seen how to listen for (and stop listening for) incoming
+calls, and we've also seen how to view basic details such as the calling
+line's number.  While it's useful to know that it's your dreaded Aunt Jane
+calling, it would be even more helpful if you could follow up by quietly
+rejecting the call.  Let's see how to do that now.
+
+<p>
+In our example, when the user presses the "Reject Call" button, it calls
+our function doRejectCall().  By the way, we've taken a little bit of a
+short-cut here; in a real application, you'd probably want to hide or disable
+the button except when there was an incoming call in progress.  We've skipped
+that step so you can see what happens if you try to reject a call when there
+isn't one.
+
+<code id="rejectCall"></code>
+
+<p>
+The first thing the code does is to check whether we have a call ID saved off.
+You may remember that we stored this away in our incomingHandler function, when
+we got the callback to tell us the phone was ringing.
+We also saved the device ID (that is, number) of the line receiving the call;
+we did that if and only if we saved a call ID, so we can assume it's valid
+if the call ID is.
+
+<p>
+If there's no call ID, then we've been called out of turn - there's no incoming
+call in progress.  We just say that, and drop out.  Otherwise, we go on to make
+the API call to do the rejection.
+
+<p>
+Unsurprisingly, the API method to reject an incoming call is <b>rejectCall()</b>.
+It's pretty simple to use, and takes four parameters.  The first two are the
+call and device IDs, which we've just described; the rest are the familiar success
+and failure callbacks. (If you've forgotten how these callbacks work, we first
+saw them in the <a href="hello.html">Hello World</a> tutorial.)
+
+<p>
+One thing to note is that right after you successfully terminate the call,
+you'll actually get <em>two</em> callbacks.  One goes to the success callback
+you've just provided.  The other goes to the handler for incoming call events
+we set up back in subscribeToIncomingCallEvents(); that will receive an incoming
+call event with the call state changed to "not-ringing".
+
+<h2>Redirect a Call</h2>
+
+A more complex way of handling an incoming call is to send it to another
+phone number.  In API terms, this is actually quite similar to rejecting
+the call - the main difference being that you need to specify the number
+you're sending the call to.
+
+<p>
+In our example UI, we trigger redirection using a button - again, one which
+is always available for this simple example - and we pick up the desired
+forwarding number from a simple input field.  In a real application, perhaps
+you'd ask for a number up front, then automatically forward any calls to
+that number as long as the app is running (after all, you wouldn't want anyone
+to interrupt the final level in your latest mega-game!)
+
+<p>
+Back with our example UI, it won't surprise you that when the user presses
+the "Redirect Call" button, it calls our function doRedirectCall().
+
+<code class="html" id="redirectNumber"></code>
+
+<code id="redirectCall"></code>
+
+<p>
+This should all look very familiar from our earlier rejection example.
+As in that case, the first thing the code will do is to check if we have a
+call ID.  But then comes the difference: we also need to know the new phone
+number which the call should be redirected to, so the code retrieves the
+new phone number entered in the text field.
+
+<p>
+The API method we use is <b>redirectCall()</b>, which takes five parameters.
+The first two, and the last two, are just the same as in our previous example.
+The new parameter's the third one, which contains the new phone number that
+the incoming call should be redirected to.
+
+<p>
+Like in the reject call action, when you successfully redirect the call
+you'll receive an Incoming Call event with the call state changed to
+"not-ringing".  That's in addition to the call to the success callback.
+
+<hr>
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="incomingcall-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial takes us through
+<a href="saslogging.html">Service Assurance Server Logging</a> within the CommPortal SDK API.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

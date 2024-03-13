@@ -1,0 +1,345 @@
+//-----------------------------------------------------------------------------
+// File: ClientSessionInterface.idl
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Highly Confidential Material
+//
+//-----------------------------------------------------------------------------
+
+#ifndef ClientSessionInterface_idl
+#define ClientSessionInterface_idl
+
+#include "SEAccessFactoryInterface.idl"
+
+/**
+ * Structure for holding the values of a given log's fields.
+ *
+ * time           - The time that the log was raised.
+ * severity       - The severity of the log.
+ * acknowledged   - Whether this log has been acknowledged.
+ * suppressed     - Whether this log has been suppressed.
+ * ruleApplied    - Whether this log has had a rule applied to it.
+ * node           - The display name of the node for the log.
+ * logSource      - The source of the log.
+ * objectName     - The display name of the object associated with the log.
+ * relatedObjects - The display names of other objects associated with the log.
+ * description    - A short text description of the event being logged.
+ * cause          - Information on possible causes of the event for which the
+ *                  message was logged.
+ * effect         - Information on other events that may occur as a result of
+ *                  the event for which the message was logged.
+ * action         - For error events, suggested actions that you can take to
+ *                  resolve the problem.
+ * userComments   - The user's comments that have been added to this log.
+ * associatedLogCorrelator
+ *                - The log correlator of the log associated with this log if
+ *                  such a log exists, 0 otherwise.
+ * associatedLogNode
+ *                - The node name of the log associated with this log if
+ *                  such a log exists, blank otherwise.
+ * associatedLogNodeUID
+ *                - The node UID of the log associated with this log if
+ *                  such a log exists, blank otherwise.
+ */
+struct LogInformation
+{
+   long long time;
+   long      severity;
+   boolean   acknowledged;
+   boolean   suppressed;
+   boolean   ruleApplied;
+   string    node;
+   string    logSource;
+   string    objectName;
+   string    relatedObjects;
+   string    description;
+   string    cause;
+   string    effect;
+   string    action;
+   string    userComments;
+   long long associatedLogCorrelator;
+   string    associatedNodeName;
+   string    associatedNodeUID;
+};
+
+/**
+ * The ClientSessionInterface provides methods for managing the client's
+ * session.  The session is terminated when one of the following occurs:
+ * - the client application invokes the logout method;
+ * - a fixed timeout period expires;
+ * - another EMS user changes the details of the EMS user account associated
+ * with this client session.
+ */
+interface ClientSessionInterface
+{
+   //-------------------------------------------------------------------------
+   // Flags about the password for this client session.
+   //-------------------------------------------------------------------------
+   /**
+    * The password for this client session never expires.
+    */
+   const long PASSWORD_FLAG_NEVER_EXPIRES            = 1;
+
+   /**
+    * The password was authenticated via RADIUS.
+    */
+   const long PASSWORD_FLAG_AUTHENTICATED_VIA_RADIUS = 2;
+
+  /**
+   * Queries the client's privileges on the EMS Server.  See the "MetaSwitch
+   * Class 5 Softswitch: Operations Manual" for more details on User security
+   * and privileges.
+   *
+   * @return The client's privileges.
+   **/
+  long long getPrivileges();
+
+  /**
+   * Provides a string that identifies this client session.  The string is
+   * unique on this EMS Server and will not be repeated until the server is
+   * restarted.
+   *
+   * @return  String identifier of this client session.
+   **/
+  string getSessionID();
+
+  /**
+   * Terminates this client session.  This interface, and all interfaces
+   * returned by it, are no longer valid and will throw exceptions if
+   * methods are invoked on them.
+   **/
+  void logout();
+
+  /**
+   * Client sessions expire after a fixed timeout period (returned by
+   * getTimeoutPeriod).  This method resets the timer associated with this
+   * session.
+   *
+   * @throws ElementOperationFailedException  If this method is called after
+   * the client session has expired.
+   **/
+  void keepAlive()
+      raises (ElementOperationFailedException);
+
+  /**
+   * Client sessions expire a fixed timeout period after the last call to the
+   * keepAlive method.  This method returns the length of that timeout period.
+   *
+   * @return The timeout period in milliseconds.
+   **/
+  long long getTimeoutPeriod();
+
+  /**
+   * Signals to the server that activity has been detected by the user of the
+   * client.  This prevents the user being logged out due to inactivity (if
+   * configured on the user type for that user).
+   * This method must be called more frequently than the configured timeout
+   * period to prevent the user being logged out.
+   *
+   * @throws ElementOperationFailedException  If this method is called after
+   * the client session has expired.
+   **/
+  void userActivityDetected()
+      raises (ElementOperationFailedException);
+
+  /**
+   * Obtains a reference to an SEAccessFactoryInterface that can be used to
+   * obtain SEAccessInterface objects.
+   *
+   * @return  SEAccessFactoryInterface object reference.
+   **/
+  SEAccessFactoryInterface getSEAccessFactory();
+
+  /**
+   * Attempts to set the password of the EMS User account associated with
+   * this client session.  This method can only be called if this client
+   * session was returned from a userLogin; it cannot be called after an
+   * applicationLogin.
+   *
+   * @param  String containing the new password. The password must be 6, 7,
+   *         or 8 characters in length.
+   *
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws FieldBadValueException  Thrown if the new password is not a
+   *         valid string of 6, 7 or 8 characters in length.
+   **/
+  void setPassword(in string newPassword)
+      raises (ElementUnavailableException,
+              ElementOperationFailedException,
+              FieldBadValueException);
+  /**
+   * Associates this client session with a specific National Language Specific
+   * locale.  If successful, all display strings are returned as human-readable
+   * NLS-interpreted strings rather than non-readable NLS-enabled string.
+   *
+   * This method must be called before getSEAccessFactory.  This method should
+   * not be called more than once.
+   *
+   * @param  The language parameter is a valid ISO Language Code. These codes
+   *         are the lower-case two-letter codes as defined by ISO-639.
+   * @param  The country parameter is a valid ISO Country Code. These codes are
+   *         the upper-case two-letter codes as defined by ISO-3166.
+   *
+   * @throws FieldBadValueException  If the language or country parameters is
+   *         not a recognized code.
+   **/
+  void setNLSLocale(in string language, in string country)
+      raises (FieldBadValueException);
+
+  /**
+   * Indicates which specific National Language Specific locale is
+   * associated with this client session.
+   *
+   * @param language  String holder that is returned with the ISO Language Code
+   *                  of the set locale.  If setNLSLocale has not previously
+   *                  been called, a zero-length string will be returned.
+   * @param country  String holder that is returned with the ISO Country Code
+   *                  of the set locale.  If setNLSLocale has not previously
+   *                  been called, a zero-length string will be returned.
+   **/
+  void getNLSLocale(out string language, out string country);
+
+  /**
+   * Each invocation of createsSEAccess returns an identical, generic
+   * SEAccessInterface instance; this instance only becomes associated with a
+   * specific SE as a result of subsequent method invocations on the
+   * SEAccessInterface.  The client application is obliged to call the destroy
+   * method on the SEAccessInterface when it has finished using it.
+   *
+   * @return SEAccessInterface instance.
+   *
+   * @throws ElementOperationFailedException  If the request failed for any
+   *   reason, for example if the EMS Server does not have enough memory to
+   *   complete the request.  See SEExceptions.idl.
+   */
+  SEAccessInterface createSEAccess()
+      raises (ElementOperationFailedException);
+
+  /**
+   * Returns the time of the last successful login in UTC.
+   *
+   * This method is only valid on ClientSessions returned by userLogin or
+   * userLoginWithNewPassword.  For ClientSessions returned by
+   * applicationLogin, this method returns 0.
+   *
+   * @returns the time of last login in UTC
+   */
+  long getLastLogin();
+
+  /**
+   * Returns information about the password, e.g. whether it expires or not.
+   *
+   * This method is only valid on ClientSessions returned by userLogin or
+   * userLoginWithNewPassword.  For ClientSessions returned by
+   * applicationLogin, this method returns PASSWORD_FLAG_NEVER_EXPRIES.
+   *
+   * @returns flags about the password.
+   */
+  long getPasswordFlags();
+
+  /**
+   * If the password expires (see getPasswordFlags), returns the number of days
+   * until the password expires.
+   *
+   * This method is only valid on ClientSessions returned by userLogin or
+   * userLoginWithNewPassword.  For ClientSessions returned by
+   * applicationLogin, this method returns 0.
+   *
+   * @returns days until the password expires
+   */
+  long getDaysToPasswordExpiry();
+
+  /**
+   * The number of failed logins since the last successful login.
+   *
+   * This method is only valid on ClientSessions returned by userLogin or
+   * userLoginWithNewPassword.  For ClientSessions returned by
+   * applicationLogin, this method returns 0.
+   *
+   * @returns the number of failed logins since the last successful login.
+   */
+  long getFailedLogins();
+
+  /**
+   * Any message associated with the login.  For instance, this may be a
+   * message passed back from a RADIUS server, if that is configured.
+   *
+   * This method is only valid on ClientSessions returned by userLogin or
+   * userLoginWithNewPassword.  For ClientSessions returned by
+   * applicationLogin, this method returns 0.
+   *
+   * @returns a message to display to the user.
+   */
+  string getLoginMessage();
+
+  /**
+   * Gets log information for a specific log from the EMS.  If the log
+   * is not found, then a LogNotFoundException is thrown.  If the log is
+   * found, text is returned as human-readable NLS-interpreted strings
+   * rather than non-readable NLS-enabled string.
+   *
+   * @return   A LogInformation structure containing the log information
+   *           requested.
+   *
+   * @param  metaSwitchUID  The unique identifier for the MetaSwitch on which
+   *                        the log was raised.  The value to use is the
+   *                        - "MetaSwitch unique identifier" in the MetaSwitch
+   *                          element, for elements on the MetaSwitch
+   *                        - "EMS unique identifier" in the EMS element, for
+   *                          elements on the EMS.
+   * @param  logCorrelator  The log correlator, which identifies the log on the
+   *                        specified MetaSwitch.
+   * @param  timeToWaitForLog
+   *                        How long (in seconds) to wait for the log to be
+   *                        found, if it is not instantly available.  May be
+   *                        zero.
+   *
+   * @throws LogNotFoundException
+   *                        If the log could not be found.
+   */
+  LogInformation getLogInformation(in string    metaSwitchUID,
+                                   in long long logCorrelator,
+                                   in long      timeToWaitForLog)
+    raises (LogNotFoundException);
+
+  /**
+   * Tells the log collector to get all logs from all log sources that have
+   * been raised.  This method is used to obtain logs that the user knows have
+   * been raised (e.g.  because there is a correlator value in an alarm log
+   * correlator field) but have not yet been 'collected' as the timer that
+   * governs this collection has not yet popped to indicate that log collection
+   * should happen.  This method invokes the collection asynchronously so the
+   * logs may still not be available immediately it returns but should be
+   * shortly afterwards.
+   *
+   * @throws ElementOperationFailedException
+   */
+  void getLogs()
+    raises (ElementOperationFailedException);
+
+  /**
+   * Get the details of the Cluster Site which has the Leader in it.
+   *
+   * @param ipAddress String holder that is returned with the IP address of
+   *                  the leader site.
+   *
+   * @param siteName String holder that is returned with the name of the leader
+   *                 site.
+   *
+   * @param siteID The ID of the leader site.
+   */
+  void getLeaderSiteMVS(out string ipAddress,
+                        out string siteName,
+                        out long siteID)
+    raises (ElementOperationFailedException);
+
+ /**
+  * Checks to see Session Controller (Perimeta) Management is enabled.
+  *
+  * @return Whether Session Controller (Perimeta) Management is enabled.
+  */
+  boolean isSessionControllerManagementEnabled();
+};
+
+#endif

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_Messaging">
+    <xs:annotation>
+      <xs:documentation>
+        Subscriber Messaging Settings service indication.  Used to modify a subscriber's messaging configuration for both the subscriber and their associated devices.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="ForwardingStatus" type="tMsph_Subscriber_Messaging_ForwardingStatus">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether or not message should be automatically forwarded to the email address specified in Forwarding Address. 0 indicates no forwarding will take place. 1 indicates messages will be forwarded without a local copy being retained. 2 indicates messages will be forwarded and original message will be retained. Note - in the axis2 environment, these parameters are referred to by the symbolic names value1, value2 and value3.
+            <d:DisplayName>Forwarding Status</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>0</d:DefaultValue>
+            <d:Values>
+              <d:Value>0</d:Value>
+              <d:Value>1</d:Value>
+              <d:Value>2</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="20" minOccurs="0" name="ForwardingAddress" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Email address(es) to which received email will be forwarded if Forwarding Status is set.  Pre-7.1 this element is single valued.  In 7.1 onwards it can be multi-valued.  If there are multiple values defined a pre-7.1 pull will just return the first.  From 9.1.10 (interface version 1.15.10) onwards the 'ForwardingAddressesByType' element should be used instead, this field only remains for backwards compatibility.
+            <d:DisplayName>Forwarding Address</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CallForwardingNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The number that the subscriber must call to access their voicemail, and that other people call to deposit voicemail. This defaults to the Subscriber's primary phone number.  Permitted regex: ^\d+(:?-\d{1,3})?$
+            <d:DisplayName>Call Forwarding Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SaveOnSend" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether to automatically store a copy of any sent messages in the Sent Items folder.
+            <d:DisplayName>Save On Send</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="MailboxBlocked" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether this Subscriber's mailbox is blocked.
+            <d:DisplayName>Mailbox Blocked</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="MailboxBlockedDate" type="xs:dateTime">
+        <xs:annotation>
+          <xs:documentation>
+            The date when this Subscriber's mailbox was blocked.
+            <d:DisplayName>Mailbox Blocked Date</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="MailboxBlockedDescription" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Description of why this Subscriber's mailbox was blocked.  Permitted regex: .*
+            <d:DisplayName>Mailbox Blocked Description</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Device" type="tMsph_Subscriber_Messaging_Device">
+        <xs:annotation>
+          <xs:documentation>
+            Settings related to a specific device.
+            <d:DisplayName>Device</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ForwardingIncludeLinks" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether this subscriber has action links included in their forwarded messages.
+            <d:DisplayName>Forwarding Include Links</d:DisplayName>
+            <d:ValidFrom>1.3</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FaxReceiptEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether fax receipt is enabled for this subscriber. This flag is only relevant if this subscriber's Class of Service supports faxes.
+            <d:DisplayName>Fax Receipt Enabled</d:DisplayName>
+            <d:ValidFrom>1.11.4.1</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="20" minOccurs="0" name="ForwardingAddressesByType" type="tForwardingAddressesByType">
+        <xs:annotation>
+          <xs:documentation>
+            Email address(es) to which received messages will be forwarded if Forwarding Status is set.  A message is only forwarded if messages of that type are enabled for the address.
+            <d:DisplayName>Forwarding Addresses By Type</d:DisplayName>
+            <d:ValidFrom>1.15.10</d:ValidFrom>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_Subscriber_Messaging_Device">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="PhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The phone number of this device.
+            <d:DisplayName>Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="RequestReceipts" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether receipts should be requested when sending messages.
+            <d:DisplayName>Request Receipts</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ReturnReceipts" type="tMsph_Subscriber_Messaging_Device_ReturnReceipts">
+        <xs:annotation>
+          <xs:documentation>
+            What action to take when processing a request for a return  receipt. auto: automatically send requested return receipts manual: ask the user whether to send each requested  return receipt. no: never send return receipts.
+            <d:DisplayName>Return Receipts</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>manual</d:DefaultValue>
+            <d:Values>
+              <d:Value>manual</d:Value>
+              <d:Value>auto</d:Value>
+              <d:Value>no</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tForwardingAddressesByType">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="Email" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The e-mail address to forward messages to.
+            <d:DisplayName>Email</d:DisplayName>
+            <d:ValidFrom>1.15.10</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FwdFax" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Determines whether or not faxes will be forwarded to this address. Faxes will only be forwarded if they are allowed by the subscriber's Class of Service.
+            <d:DisplayName>FwdFax</d:DisplayName>
+            <d:ValidFrom>1.15.10</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FwdVM" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Determines whether or not voicemails will be forwarded to this address. Voicemails will only be forwarded if they are allowed by the subscriber's Class of Service.
+            <d:DisplayName>FwdVM</d:DisplayName>
+            <d:ValidFrom>1.15.10</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tMsph_Subscriber_Messaging_ForwardingStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="0" />
+      <xs:enumeration value="1" />
+      <xs:enumeration value="2" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tMsph_Subscriber_Messaging_Device_ReturnReceipts">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="manual" />
+      <xs:enumeration value="auto" />
+      <xs:enumeration value="no" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

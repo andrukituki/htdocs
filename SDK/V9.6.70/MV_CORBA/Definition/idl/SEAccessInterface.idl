@@ -1,0 +1,1472 @@
+
+//-MOD+------------------------------------------------------------------------
+// Module:    SEAccessInterface.idl
+//
+// Purpose:
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Highly Confidential Material
+//
+// $Id::                                                                    $ #
+// $URL::                                                                   $ #
+//
+//--MOD------------------------------------------------------------------------
+
+#ifndef SEAccessInterface_idl
+#define SEAccessInterface_idl
+
+interface SnapshotChangeListenerInterface;
+
+#include "SEExceptions.idl"
+#include "SnapshotChangeListenerInterface.idl"
+#include "SettingsUserInterface.idl"
+
+//-----------------------------------------------------------------------------
+//
+// Structures and typedefs.
+//
+//-----------------------------------------------------------------------------
+
+/**
+ * One of the values of this enumeration should be used to fill in the
+ * elementOrderHint field of each SEChildProperties object.  The value is a
+ * hint for how a client should order elements of a particular type.  The
+ * default is stringNumber.
+ *
+ * -  stringNumber indicates that elements should be ordered by display name,
+ *    but take numbers into account (e.g.  that "9" should come before "10",
+ *    which is not the case for a straight lexicographic comparison).
+ * -  lexicographic indicates that elements should be ordered lexicographically
+ *    by display name.
+ * -  alphabetic indicates that elements should be ordered alphabetically by
+ *    display name.  This is the same as lexicographic ordering, but ignores
+ *    case of alphabetic characters (i.e.  all names should be converted to
+ *    upper case before the comparison).  If two names are identical when case
+ *    is ignored, the client should revert to lexicographic ordering.
+ * -  elementName indicates that elements should be ordered by element name,
+ *    taking numbers into account (in a similar way to stringNumber ordering).
+ * -  reverseStringNumber indicates a 'stringNumber' ordering, but on the name
+ *    of the object with the words in reverse order. We use this when we want
+ *    to order objects based on the last word in their name (for example the
+ *    child position of a TDM Carrier).
+ * -  orderOnSpecificField indicates that these elements should be ordered
+ *    based on the value of a specific String field.  This field will be
+ *    flagged in the Settings object with the SFI flag, ORDER_ON_FIELD.
+ */
+enum ElementOrderHintValue
+{
+  stringNumber,
+  lexicographic,
+  alphabetic,
+  elementName, 
+  reverseStringNumber, 
+  orderOnSpecificField
+};
+
+/**
+ * An SEAction object contains information relating to individual actions an SE
+ * can perform.  This is "static" information returned on attachment to an SE.
+ * Whether the User can select an action depends on whether it is defined as
+ * enabled in the enabledActions field returned from getSnapshot.  The action
+ * is invoked by calling doAction, passing in the actionID value.
+ *
+ * The SEAccessInterface User should consider all SEAction objects as
+ * read-only.
+ *
+ * @field actionID    Long contains an NLS identifier that the User can use
+ *                    both as a unique identifier of the action and to
+ *                    translate to displayable text. Currently the EMS CORBA
+ *                    API does not support translation of NLS identifiers but
+ *                    this will be available in future releases. Possible
+ *                    values of the actionID field are defined with each SE
+ *                    type in the 'omlapi.idl' file.
+ *
+ * @field actionRequiresSettings
+ *                    Boolean indicates whether this action will result in the
+ *                    user's SettingsUserInterface values being set in the
+ *                    product. If this field value is false, and the action is
+ *                    performed, it will not be possible to set any outstanding
+ *                    changes made to the SettingsUserInterface with a
+ *                    doAction(APPLY).
+ *
+ * @field accessFlagsByGroup
+ *                    64-bit integer defines the privileges required by each
+ *                    user type to perform this action. See "MetaSwitch Class 5
+ *                    Softswitch: Integration and Customization manual" for
+ *                    more information on security fields and user types.
+ *
+ * @field currentAccessPermissions
+ *                    Long indicates whether the the current user can perform
+ *                    this action. If the IS_WRITEABLE bit is set then the
+ *                    current user has sufficient privileges to perform this
+ *                    action. See the definition of IS_WRITEABLE and the
+ *                    "MetaSwitch Class 5 Softswitch: Integration and
+ *                    Customization manual" for more information on security
+ *                    fields and user types.
+ *
+ * @field confirmationNLSIID
+ *                    Long is non-zero if confirmation is advisable before
+ *                    proceeding with this action. The field value is an NLS
+ *                    identifier that can be translated to provide appropriate
+ *                    text in a confirmation dialog. Currently the EMS CORBA
+ *                    API does not support translation of NLS identifiers but
+ *                    this will be available in future releases.
+ *
+ * @field actionImpactFlags
+ *                    Long indicates the possible impact of performing this
+ *                    action. See "MetaSwitch Class 5 Softswitch: Integration
+ *                    and Customization manual" for more information on the
+ *                    action impact flags.
+ */
+struct SEAction
+{
+  long actionID;
+  boolean actionRequiresSettings;
+  long long accessFlagsByGroup;
+  long currentAccessPermissions;
+  long confirmationNLSIID;
+  long actionImpactFlags;
+};
+
+/**
+ * Define SequenceOfSEActions to be a sequence of SEAction objects.
+ * We use this because we want an unbounded number of SEActions - an IDL
+ * sequence is unbounded, but an array is not.
+ */
+typedef sequence<SEAction> SequenceOfSEActions;
+
+/**
+ * An SEChildProperties object contains non-mutable information that
+ * describes a child SE type of an SE.  For more information on the
+ * fields composing an SEChildProperties, refer to the equivalent field
+ * information for the SEProperties structure.
+ */
+struct SEChildProperties
+{
+  string elementType;
+  string displayType;
+  long long accessFlagsByGroup;
+  long currentAccessPermissions;
+  ElementOrderHintValue elementOrderHint;
+};
+
+/**
+ * Define SequenceOfSEChildProperties to be a sequence of SEChildProperties
+ * objects. We use this because we want an unbounded number of SEActions - an
+ * IDL sequence is unbounded, but an array is not.
+ */
+typedef sequence<SEChildProperties> SequenceOfSEChildProperties;
+
+/**
+ * The SEProperties object contains information that describes the
+ * non-mutable characteristics of an SE.
+ *
+ * @field version  An EMS object version identifier as discussed in the
+ * Integration and customization manual: CORBA chapter and as detailed on the
+ * userLogin method on the ClientSessionManagerInterface.
+ *
+ * @field elementType  The programmatic type identifier of the SE.
+ *
+ * @field displayType  The NLS-enabled display string for this type of SE.
+ *
+ * @field parentType  The elementType of this SE's parent. This string is
+ * zero-length if the parent of this SE is the top level SE representing
+ * the root of the SE tree.
+ *
+ * @field allActions  A sequence of SEAction objects.  These
+ * describe all non-dynamic aspects of the actions supported
+ * by this SE.  The dynamic information is provided by the enabledActions
+ * field of the getSnapshot request.
+ *
+ * @field childProperties  A sequence of SEChildProperties
+ * objects that describe the possible child types of this SE.
+ *
+ * @field accessFlagsByGroup  Defines the read and writeability of this SE
+ * for all user types.  See the "Security properties" section in the
+ * Integration and Customization manual: CORBA chapter.
+ *
+ * @field currentAccessPermissions  Indicates the SE's read and writeability
+ * by the current user.  See the "Security properties" section in the
+ * Integration and Customization manual: CORBA chapter.
+ *
+ * @field elementOrderHint  Gives a hint as to what sorting method is best for
+ * ordering elements of this type by display name.
+ * ElementOrderHintValue.stringNumber means that if the display name contains
+ * a string followed by a number, the elements should ideally be ordered first
+ * by the string value then by the number value (meaning that the order
+ * "Element 1", "Element 2", "Element 10" would be correct).  The value
+ * ElementOrderHintValue.lexicographic means that the display names should be
+ * ordered strictly lexicographically (meaning that the order "Element 1",
+ * "Element 10", "Element 2" would be correct).  The default value is
+ * ElementOrderHintValue.stringNumber.
+ *
+ * @field typeFlags  Indicates flags that apply to all SEs of this type.
+ */
+struct SEProperties
+{
+  long version;
+  string elementType;
+  string displayType;
+  string parentType;
+  SequenceOfSEActions allActions;
+  SequenceOfSEChildProperties childProperties;
+  long long accessFlagsByGroup;
+  long currentAccessPermissions;
+  ElementOrderHintValue elementOrderHint;
+  long typeFlags;
+};
+
+/**
+ * An Element object contains information for specifying an SE instance.  This
+ * includes the programmatic elementName and the NLS-enabled displayName as
+ * documented on the getSnapshot method.
+ */
+struct Element
+{
+  string elementName;
+  string displayName;
+};
+
+/**
+ * Define SequenceOfElements to be a sequence of Element objects.
+ * We use a sequence because we want an unbounded number of SEActions - arrays
+ * are bounded.
+ */
+typedef sequence<Element> SequenceOfElements;
+
+/**
+ * A reference is where a field in the SettingsUserInterface specifies
+ * the name of another SE.  For example, the
+ * Signaling Gateway SE has a Signaling Point Timer Profile field that
+ * references the name of a particular Signaling Point Time Profile SE
+ * instance.
+ *
+ * A Reference object contains information for identifying and
+ * displaying an SE reference.  The elementName and displayName fields
+ * are as documented on the getSnapshot method.  The accessFlagsByGroup and
+ * currentAccessPermissions are as documented on the SEProperties object.
+ */
+struct Reference
+{
+  string elementName;
+  string displayName;
+  long long accessFlagsByGroup;
+  long currentAccessPermissions;
+};
+
+/**
+ * A sequence of Reference objects.
+ */
+typedef sequence<Reference> SequenceOfReferences;
+
+/**
+ * The SEAccessInterface is the primary interface for navigating the tree of
+ * SE objects and managing individual SEs.
+ */
+interface SEAccessInterface
+{
+
+  /**
+   * Defines the value to supply as the filter parameter to getNextElements and
+   * getElements methods to mandate that elements are returned rather than
+   * filters.
+   */
+  const string UNIVERSAL_FILTER = "*";
+
+  /**
+   * Defines the value to supply as the filter parameter to getNextElements and
+   * getElements methods to mandate that elements are returned rather than
+   * filters, AND that the elements do not have to be direct children of the
+   * base element (i.e. will return grand-children etc).
+   **/
+  const string UNIVERSAL_RELATIVE_FILTER = "**";
+
+  //---------------------------------------------------------------------------
+  //
+  // Constants defining the use of bits in all currentAccessPermissions fields
+  // in this interface and the SettingsUserInterface.  See the "MetaSwitch
+  // Class 5 Softswitch: Integration and Customization manual" for more details
+  // on User Security.
+  //
+  //---------------------------------------------------------------------------
+
+  /**
+   * If the IS_READABLE bit is set then the User has permission to read the
+   * object or field.
+   */
+  const long IS_READABLE       = 0x01;
+
+  /**
+   * If the IS_WRITEABLE bit is set then the User has permission to write to
+   * the object or field, or perform the action.
+   */
+  const long IS_WRITEABLE      = 0x02;
+
+  /**
+   * If the IS_VISIBLE bit is set then the User has permission to view the
+   * object or field.  Visibility is a recommendation in addition to
+   * readability. A user can have permission to read a field but the visibility
+   * can indicate that the field is not relevent to the particular variant
+   * configured.
+   */
+  const long IS_VISIBLE        = 0x04;
+
+  //---------------------------------------------------------------------------
+  //
+  // Constants defining the use of bits in the accessFlagsByGroup and
+  // accessFlagsByState fields of SE types, fields and actions.  For more
+  // details see the "MetaSwitch Class 5 Softswitch: Integration and
+  // Customization manual" chapter on "User Security", particularly for details
+  // on the areas of configuration mentioned in the security group constant
+  // declarations. These security groups are distinct from the User types
+  // declared in the ClientSessionManagerInterface: a particular User type has
+  // access to a range of security groups.
+  //
+  //---------------------------------------------------------------------------
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup and
+   * accessFlagsByState fields that pertain to readability.
+   */
+  const unsigned long long ACCESS_READ_BITS       = 0x5555555555555555;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup and accessFlagsByState
+   * fields that pertain to writeability.
+   */
+  const unsigned long long ACCESS_WRITE_BITS      = 0xAAAAAAAAAAAAAAAA;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the workflow administration.
+   */
+  const long long GROUP_WKFLOW_ADMIN              = 0x0000000000000003;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the workflows group A.
+   */
+  const long long GROUP_WKFLOW_GROUP_A            = 0x000000000000000C;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the workflows group B.
+   */
+  const long long GROUP_WKFLOW_GROUP_B            = 0x0000000000000030;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the workflows group C.
+   */
+  const long long GROUP_WKFLOW_GROUP_C            = 0x00000000000000C0;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the Logs.
+   */
+  const long long GROUP_LOGS                      = 0x000000000000C000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the Hardware configuration.
+   */
+  const long long GROUP_HARDWARE_CONFIG           = 0x0000000000030000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability by the Routing configuration.
+   */
+  const long long GROUP_ROUTING_CONFIG            = 0x00000000000C0000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the System configuration.
+   */
+  const long long GROUP_SYSTEM_CONFIG             = 0x0000000000300000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability by the Network configuration.
+   */
+  const long long GROUP_NETWORK_CONFIG            = 0x0000000000C00000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability by the Subscriber configuration.
+   */
+  const long long GROUP_SUBSCRIBER_CONFIG         = 0x0000000003000000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability by the Sensitive configuration.
+   */
+  const long long GROUP_SENSITIVE_CONFIG          = 0x000000000C000000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability by the Diagnostics.
+   */
+  const long long GROUP_DIAGNOSTICS               = 0x0000000030000000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability by the EMS User administration.
+   */
+  const long long GROUP_EMS_USER_ADMIN            = 0x00000000C0000000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability by the Billing/Craft User administration.
+   */
+  const long long GROUP_BILL_CRAFT_USER_ADMIN     = 0x0000000300000000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the Subscriber-related Route Verification Tests.
+   */
+  const long long GROUP_SUBSCRIBER_ROUTE_TESTING  = 0x0000000C00000000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the Lawful Interception configuration.
+   */
+  const long long GROUP_LAWFUL_INTERCEPTION_CONFIG= 0x0000003000000000;
+  
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the User Defined 1 configuration.
+   */
+  const long long GROUP_USER_DEFINED_1            = 0x000000C000000000;
+  
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the User Defined 2 configuration.
+   */
+  const long long GROUP_USER_DEFINED_2            = 0x0000030000000000;
+  
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the User Defined 3 configuration.
+   */
+  const long long GROUP_USER_DEFINED_3            = 0x00000C0000000000;
+  
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the User Defined 4 configuration.
+   */
+  const long long GROUP_USER_DEFINED_4            = 0x0000300000000000;
+  
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the User Defined 5 configuration.
+   */
+  const long long GROUP_USER_DEFINED_5            = 0x0000C00000000000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the Perimeta configuration.
+   */
+  const long long GROUP_PERIMETA_CONFIG           = 0x0003000000000000;
+
+  /**
+   * Constant defining the bits in the accessFlagsByGroup fields that pertain to
+   * read/writeability in the Beta configuration.
+   */
+  const long long GROUP_BETA_CONFIG               = 0x000C000000000000;
+
+  //---------------------------------------------------------------------------
+  //
+  // Constants defining the use of bits in the actionImpactFlags field of SE
+  // actions.  See "MetaSwitch Class 5 Softswitch: Integration and
+  // Customization manual" for more information on the action impact flags.
+  //
+  //---------------------------------------------------------------------------
+
+  /**
+   * Constant defining the bits in the actionImpactFlags field to indicate
+   * that performing a specific action might result in the children of the SE
+   * changing.  If this bit is not set,  the children will not change as a
+   * direct result of performing the action (although for some SE types, it is
+   * always possible that they may change at any time regardless of the actions
+   * being performed on the SE).  If this bit is set, it is likely that the
+   * children will change when the action is performed, so the client
+   * application is advised to re-query the children when the action completes
+   * if it is currently interested in the child objects.
+   */
+  const long CHILDREN_MAY_CHANGE        = 0x01;
+
+  /**
+   * Constant defining the bits in the actionImpactFlags field to indicate
+   * that performing a specific action might result in all descendants of
+   * the SE changing.  If this bit is not set, the descendants will not change
+   * as a direct result of performing the action (although for some SE types,
+   * it is always possible that they may change at any time regardless of the
+   * actions being performed on the SE).  If this bit is set, it is likely that
+   * the descendants will change when the action is performed, so the client
+   * application is advised to re-query all of the descendants when the action
+   * completes if it is currently interested in the child objects.
+   */
+  const long ALL_DESCENDANTS_MAY_CHANGE = 0x02;
+
+  /**
+   * Constant defining the bits in the actionImpactFlags field to indicate
+   * that performing a specific action does not result in any changes being
+   * made to the SE.  If this bit is set, the SE will not change
+   * as a direct result of performing the action (although for some SE types,
+   * it is always possible that they may change at any time regardless of the
+   * actions being performed on the SE).
+   */
+  const long DOES_NOT_CHANGE_SE = 0x04;
+
+  //---------------------------------------------------------------------------
+  //
+  // Constants defining the use of bits in the typeFlags field of SE
+  // properties.  See "MetaSwitch Class 5 Softswitch: Integration and
+  // Customization manual" for more information on the SE type flags.
+  //
+  //---------------------------------------------------------------------------
+
+  /**
+   * Constant defining the bits in the typeFlags field to indicate that SEs of
+   * this type are temporary, and only exist whilst the user is working with
+   * them.
+   */
+  const long SE_IS_TEMPORARY = 0x01;
+  
+  /**
+   * Constant defining the bits in the typeFlags field to indicate that
+   * on objects of this type, a warning will be displayed, telling users to
+   * make changes on MetaView Web, rather than MetaView Explorer.
+   */
+  const long MV_WEB_WARNING = 0x02;
+
+
+  /**
+   * Associates this SEAccessInterface with the SE specified by name.
+   *
+   * @param name  The string identifier of an SE.  This string must be a valid
+   *              elementName as returned by getElements or getNextElements.
+   *
+   * @throws InvalidNameException  Thrown if the structure of the name string
+   *              is not valid.
+   * @throws AlreadyAttachedException  Thrown if attachTo or attachToNew has
+   *              already successfully been called on this SEAccessInterface.
+   * @throws ElementDeletedException  Thrown if the SE specified by name does
+   *              not exist or is deleted during this method invocation.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   */
+  void attachTo(in string name)
+      raises (InvalidNameException,
+              AlreadyAttachedException,
+              ElementDeletedException,
+              ElementOperationFailedException);
+
+  /**
+   * As per attachTo, but supply indices and type rather than an elementName.
+   *
+   * @param indices  The indices uniquely identifying an SE of the specified
+   *              type.
+   * @param elementType  The type of SE which is to be attached to.
+   *
+   * @throws BadIndicesException  Thrown if the indices supplied do not
+   *              represent a valid element of the specified type.
+   * @throws AlreadyAttachedException  Thrown if attachTo or attachToNew has
+   *              already successfully been called on this SEAccessInterface.
+   * @throws ElementDeletedException  Thrown if the SE specified by name does
+   *              not exist or is deleted during this method invocation.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   */
+  void attachToWithIndices(in SequenceOfIndices indices,
+                           in string elementType)
+      raises (BadIndicesException,
+              InvalidElementTypeException,
+              AlreadyAttachedException,
+              ElementDeletedException,
+              ElementOperationFailedException);
+
+  /**
+   * Creates a new SE and associate this SEAccessInterface with that SE.
+   *
+   * @params parentOrOurName  Either the name of the parent SE of which the
+   *                          new SE should be a child or the fully
+   *                          qualified name of the object to be created.
+   * @params elementType      The type of SE which is to be created.
+   *
+   * @throws ElementDeletedException  Thrown if the parent of the
+   *                   to-be-created SE does not exist or is deleted during
+   *                   this method invocation.
+   * @throws CreationFailedException  See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws InvalidElementTypeException  Thrown if the elementType is not
+   *                   a known child type of the parent SE.
+   * @throws ElementUnavailableException
+   *                   Thrown if the EMS Server is unable to communicate
+   *                   with the MetaSwitch.
+   * @throws AlreadyAttachedException  Thrown if attachTo or attachToNew has
+   *              already successfully been called on this SEAccessInterface.
+   */
+  void attachToNew(in string parentOrOurName,
+                   in string elementType)
+      raises (ElementDeletedException,
+              CreationFailedException,
+              ElementOperationFailedException,
+              InvalidElementTypeException,
+              ElementUnavailableException,
+              AlreadyAttachedException);
+
+  /**
+   * As per attachToNew, but supply indices and type rather than an
+   * elementName.
+   *
+   * @param parentIndices  The indices uniquely identifying the parent SE of
+   *              which the new SE should be a child.
+   * @param elementType    The type of SE which is to be created.
+   *
+   * @throws BadIndicesException  Thrown if the indices supplied do not
+   *              represent a valid element of the specified type.
+   * @throws ElementDeletedException  Thrown if the parent of the
+   *                   to-be-created SE does not exist or is deleted during
+   *                   this method invocation.
+   * @throws CreationFailedException  See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws InvalidElementTypeException  Thrown if the elementType is not
+   *                   a known child type of the parent SE.
+   * @throws ElementUnavailableException
+   *                   Thrown if the EMS Server is unable to communicate
+   *                   with the MetaSwitch.
+   * @throws AlreadyAttachedException  Thrown if attachTo or attachToNew has
+   *              already successfully been called on this SEAccessInterface.
+   */
+  void attachToNewWithIndices(in SequenceOfIndices parentIndices,
+                              in string elementType)
+      raises (BadIndicesException,
+              ElementDeletedException,
+              CreationFailedException,
+              ElementOperationFailedException,
+              InvalidElementTypeException,
+              ElementUnavailableException,
+              AlreadyAttachedException);
+
+  /**
+   * Performs the action specified by the actionID on the SE.
+   *
+   * @param actionID  Identifier of the action to invoke.  One of the actionIDs
+   *                  listed in the allActions field of the SEProperties of
+   *                  this SE.
+   * @return  String that will either be zero-length or contain a fully
+   *          qualified SE elementName or contains a URL.  When an
+   *          elementName is returned, it is intended that the element
+   *          specified becomes the "focus" of subsequent processing by the
+   *          User.  For example, if an action is performed on a Task object
+   *          the SE name returned is the next SE that needs to be processed
+   *          in this work flow.  If a URL is returned, this can be passed
+   *          to a Web Browser.
+   *
+   * @throws  ElementDeletedException  See SEExceptions.idl.
+   * @throws  NotAttachedException     See SEExceptions.idl.
+   * @throws  ElementAlreadyLockedException
+   *                                   See SEExceptions.idl.
+   * @throws  ElementChangedException  Thrown if another SEAccessInterface
+   *                 has altered the SE's state since this SEAccessInterface
+   *                 last called getSnapshot.
+   * @throws  ElementOperationFailedException  See SEExceptions.idl.
+   * @throws  LockTimeoutException  Thrown if this SEAccessInterface has
+   *                 locked the SE but then it takes more than the lock
+   *                 timeout time to complete this action.  If a LockTimeout
+   *                 is received the client should not attempt to unlock this
+   *                 SEAccessInterface but should perform a getSnapshot and,
+   *                 if chosen, retry the processing.
+   * @throws  ElementUnavailableException  See SEExceptions.idl.
+   * @throws  ElementBrokenException  See SEExceptions.idl.
+   * @throws  SettingsFieldException  Thrown if this is an APPLY action and
+   *                 one or more of the fields contains a value that is not
+   *                 valid.
+   * @throws  UnknownActionException  Thrown if the specified action is
+   *                 not supported by this SE under any circumstance.  All
+   *                 supported actions are listed in the SEProperties object
+   *                 returned on attachment.
+   * @throws  ActionNotEnabledException  Thrown if the action is supported by
+   *                 this SE under some circumstances but not currently.  For
+   *                 example, if an SE is active invoking the activate action
+   *                 would throw an ActionNotEnabledException.
+   */
+  string doAction(in long actionID)
+      raises (ElementDeletedException,
+              NotAttachedException,
+              ElementAlreadyLockedException,
+              ElementChangedException,
+              ElementOperationFailedException,
+              LockTimeoutException,
+              ElementUnavailableException,
+              ElementBrokenException,
+              SettingsFieldException,
+              ActionNotEnabledException,
+              UnknownActionException);
+
+  /**
+   * Gets the name of this SE objects parent SE.
+   *
+   * This will only return a valid name when we have successfully attached to
+   * the element and a snapshot obtained.
+   *
+   * @return  String containing the name of the parent SE.
+   *
+   * @throws  ElementDeletedException  See SEExceptions.idl.
+   * @throws  NotAttachedException     See SEExceptions.idl.
+   */
+  string getParent()
+      raises (ElementDeletedException,
+              NotAttachedException);
+
+  /**
+   * Gets the indices of the currently attached SE.
+   *
+   * @return  A sequence of indices that together with the element type
+   *          uniquely identifies the currently attached SE.
+   */
+  SequenceOfIndices getIndices();
+
+  /**
+   * Obtains the SE type from its name.  This method does not require this
+   * SEAccessInterface to be associated with any SE.  The type returned is
+   * entirely a function of the elementName provided.
+   *
+   * @param elementName  String containing an SE's elementName.
+   *
+   * @return  String containing the SE's type.
+   *
+   * @throws  InvalidNameException  Thrown if the elementName provided is not
+   *                                a valid SE name.
+   */
+  string getTypeFromName(in string elementName)
+      raises (InvalidNameException);
+
+  /**
+   * This method provides the main entry point for discovering the structure
+   * of the tree of SE types supported by the EMS.
+   *
+   * This method has two distinct behaviours.  If the SEA is attached, it
+   * returns an SEProperties object defining non-mutable characteristics of
+   * this SE including the type of any children it can have.  Else if the
+   * SEAccess is not attached, it returns an SEProperties object
+   * defining the same characteristics of the top-level object that
+   * represents the root of the SE tree.
+   *
+   * @return  SEProperties object defining non-mutable characteristics
+   * of an SE.
+   *
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   */
+  SEProperties getSEProperties()
+      raises (ElementUnavailableException,
+              ElementOperationFailedException,
+              ElementDeletedException);
+
+  /**
+   * Indicates which entry in the sequence of filters encapsulates the
+   * the attached SE.  A filter encapsulates a range of SEs.  For example,
+   * when enumerating EMS Subscriber objects, each filter specifies a number
+   * range of 1000 subscriber numbers.  Filters can be returned from
+   * getElements, getNextElements and getPossibleValues.
+   *
+   * @param  filters Sequence of strings containing the filter that is
+   *                 potentially this SE's parent.
+   *
+   * @return Index of the filter in the filters sequence that encapsulates this
+   *         SE.  If no filter encapsulates this SE, then -1 is returned.
+   *
+   * @throws ElementUnavailableException   See SEExceptions.idl.
+   * @throws ElementBrokenException        See SEExceptions.idl.
+   * @throws ElementDeletedException        See SEExceptions.idl.
+   * @throws NotAttachedException          See SEExceptions.idl.
+   * @throws InvalidFilterException        See SEExceptions.idl.
+   */
+  long indexOfFilter(in SequenceOfNames filters)
+      raises (ElementUnavailableException,
+              ElementBrokenException,
+              ElementDeletedException,
+              NotAttachedException,
+              InvalidFilterException);
+
+  /**
+   * Enumerates SEs that are children of this SE.
+   *
+   * For more information on the 'filters' mentioned below see the "MetaSwitch
+   * Class 5 Softswitch: Integration and Customization manual".
+   *
+   * @param childType  The type of child SE to return.
+   * @param filter     A filter string returned from a previous invocation of
+   *                   this method.  If no filter is required supply a
+   *                   zero-length string.  Set to the UNIVERSAL_FILTER
+   *                   to mandate that elements are returned rather than
+   *                   filters.
+   * @param maxElements  The maximum number of Elements to return.
+   * @param out numReturnedElements  Integer holder that contains the actual
+   *                   number Elements returned.
+   * @param out more       Boolean holder that indicates whether there are more
+   *                   Elements to return, but which were not returned because
+   *                   of the value of maxElements.  If true, invoke the
+   *                   getNextElements method to return them.
+   * @param out returnedFilters  Boolean holder that indicates whether the
+   *                   Elements returned are filters or the string identifiers
+   *                   of actual SEs.
+   *
+   * @return  A sequence of Element objects.  Elements contain an elementName
+   *          and a displayName.  The interpretation of these depends on the
+   *          returnedFilters flag.  If returnedFilters is false then
+   *          the elementName refers to a valid, queryable SE and the
+   *          displayName is either an NLS string or an emptyString.  Else if
+   *          the returnedFilters is true then the elementName is not a
+   *          queryable SE but the displayName is always a valid NLS string.
+   *          If returnedFilters is true, the Element is a 'wildcard'
+   *          representing a number of elements.  To obtain the Elements
+   *          representing actual SEs invoke the getNextElements method
+   *          supplying the filter as a parameter.
+   *
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws InvalidFilterException           Thrown if the value supplied for
+   *          the filter parameter is not a valid filter.  A filter returned by
+   *          this method for the same childType is always valid.
+   * @throws NotAttachedException             The SEAccessInterface does not
+   *          have to be attached to query children, but if it is not attached,
+   *          then the children are those of the top-level SE representing the
+   *          root of the SE tree.
+   * @throws NameUnknownException             Thrown if the creation of
+   *          this SE is not complete.  In other words, this
+   *          SEAccessInterface's attachToNew method has been called
+   *          successfully but doAction(APPLY) has not been successfully
+   *          invoked.
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   */
+  SequenceOfElements getElements(in string childType,
+                                 in string filter,
+                                 in long maxElements,
+                                 out long numReturnedElements,
+                                 out boolean more,
+                                 out boolean returnedFilters)
+      raises (ElementDeletedException,
+              ElementOperationFailedException,
+              InvalidFilterException,
+              NotAttachedException,
+              NameUnknownException,
+              ElementUnavailableException);
+
+  /**
+   * Enumerates the next series of child elements of this SE.  See the
+   * getElements comment above.
+   *
+   * @param childType   See getElements.
+   * @param startAfterElementName
+   *                    An elementName from an Element returned by a previous
+   *                    invocation of this method or getElements. The
+   *                    enumeration returned by this method invocation will
+   *                    contain Elements "after" the one specified by this
+   *                    parameter. This method guarantees to return the
+   *                    Elements in a fixed order; any two objects will always
+   *                    be placed in the same order. Note that the element
+   *                    specified by this parameter does not necessarily have
+   *                    to exist any more: if the SE specified has been deleted
+   *                    it will not affect this enumeration for most objects.
+   *                    However, for some objects a deleted startAfterElement
+   *                    (when the filter is not the universal SE filter) will
+   *                    result in an operation failed exception to avoid
+   *                    repeating or skipping elements.
+   * @param filter      See getElements.
+   * @param maxElements
+   *                    See getElements.
+   * @param out         numReturnedElements See getElements.
+   * @param out         more See getElements.
+   * @param out         returnedFilters See getElements.
+   *
+   * @return See        getElements.
+   *
+   * @throws ElementDeletedException
+   *                    See SEExceptions.idl.
+   * @throws ElementOperationFailedException
+   *                    See SEExceptions.idl.
+   * @throws InvalidFilterException
+   *                    Thrown if the value supplied for the filter parameter
+   *                    is not a valid filter. A filter returned by this method
+   *                    for the same childType is always valid.
+   * @throws InvalidNameException
+   *                    Thrown if the startAfterElementName is not a valid SE
+   *                    elementName. Any elementName returned by getElements or
+   *                    getNextElements, including filter names, is valid.
+   * @throws NotAttachedException
+   *                    The SEAccessInterface does not have to be attached to
+   *                    query children, but if it is not attached, then the
+   *                    children are those of the top-level SE representing the
+   *                    root of the SE tree.
+   * @throws NameUnknownException
+   *                    Thrown if the creation of this SE is not complete. In
+   *                    other words, this SEAccessInterface's attachToNew
+   *                    method has been called successfully but doAction(APPLY)
+   *                    has not been successfully invoked.
+   * @throws ElementUnavailableException
+   *                    See SEExceptions.idl.
+   */
+  SequenceOfElements getNextElements(in string childType,
+                                     in string startAfterElementName,
+                                     in string filter,
+                                     in long maxElements,
+                                     out long numReturnedElements,
+                                     out boolean more,
+                                     out boolean returnedFilters)
+      raises (ElementDeletedException,
+              ElementOperationFailedException,
+              InvalidFilterException,
+              InvalidNameException,
+              NotAttachedException,
+              NameUnknownException,
+              ElementUnavailableException);
+
+  /**
+   * Attempt to gain exclusive read and write access to the SE.
+   *
+   * CAUTION: Client applications should avoid using this method if possible.
+   * This is because the lock method can have unexpected consequences.  For
+   * example locking a parent SE may also cause its children to be locked.
+   * If the application had already locked the children a deadlock could occur.
+   * The precise locking behaviour is specific to each SE type and may even
+   * vary with the configuration of individual SE instances.
+   *
+   * The exclusive access gained by this method invocation can be forcibly
+   * broken by another SEAccessInterface after a fixed timeout period of 30
+   * seconds.  This ensures that no client application can permanently lock the
+   * system either through bad behavior or if the application unexpectedly
+   * terminates.
+   *
+   * Invoke the unlock method to release the lock.
+   *
+   * @throws ElementDeletedException        See SEExceptions.idl.
+   * @throws NotAttachedException           See SEExceptions.idl.
+   * @throws ElementAlreadyLockedException  See SEExceptions.idl.
+   * @throws ElementBrokenException         See SEExceptions.idl.
+   * @throws ElementUnavailableException    See SEExceptions.idl.
+   */
+  void lock()
+      raises (ElementDeletedException,
+              NotAttachedException,
+              ElementAlreadyLockedException,
+              ElementBrokenException,
+              ElementUnavailableException,
+              ElementOperationFailedException);
+
+  /**
+   * Releases the exclusive read and write access obtained by invoking the
+   * lock method.
+   *
+   * @throws ElementDeletedException      See SEExceptions.idl.
+   * @throws NotAttachedException         See SEExceptions.idl.
+   * @throws ElementNotLockedException    See SEExceptions.idl.
+   * @throws ElementBrokenException       See SEExceptions.idl.
+   * @throws ElementUnavailableException  See SEExceptions.idl.
+   * @throws LockTimeoutException         See SEExceptions.idl.
+   */
+  void unlock()
+      raises (ElementDeletedException,
+              NotAttachedException,
+              ElementNotLockedException,
+              ElementBrokenException,
+              ElementUnavailableException,
+              LockTimeoutException);
+
+  /**
+   * Captures an instantaneous "snapshot" of the SE's state.  This snapshot is
+   * then accessed by calling getSnapshot.
+   *
+   * The takeSnapshot request is an explicit request to obtain the latest
+   * snapshot information.  A takeSnapshot invocation is implicitly performed
+   * after an attachTo, attachToNew or doAction method invocation: so there is
+   * no need to call takeSnapshot after any of these method invocations, simply
+   * call getSnapshot.
+   *
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   * @throws NotAttachedException             See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws LockTimeoutException             See SEExceptions.idl.
+   */
+  void takeSnapshot()
+      raises (ElementDeletedException,
+              NotAttachedException,
+              ElementOperationFailedException,
+              LockTimeoutException);
+
+  /**
+   * Obtains the "snapshot" of the SE's state captured by the last explicit or
+   * implicit takeSnapshot invocation.
+   *
+   * @param out enabledActions  Sequence of integers listing the action
+   *                            identifiers of those actions currently enabled
+   *                            on this SE.
+   * @param out name            String identifier of this SE if available.
+   *                            If the name is not currently available then a
+   *                            zero-length string is returned.  The name is
+   *                            not available until the SE has been
+   *                            successfully and fully created.
+   * @param out displayName     String containing the displayable form of this
+   *                            SE's name if available.  If the name is not
+   *                            not currently available then a zero-length
+   *                            string is returned.
+   * @param out references      Sequence of Reference objects describing other
+   *                            SEs referenced by this SE.  A reference is
+   *                            where a field specifies the name of another SE.
+   *                            For example, the Signaling Gateway SE has a
+   *                            Signaling Point Timer Profile field that
+   *                            references the name of a particular Signaling
+   *                            Point Time Profile SE instance.
+   *
+   * @return                    SettingsUserInterface providing access to this
+   *                            SE's configuration fields. This settings object
+   *                            reference is valid for the life time of the
+   *                            SEAccessInterface.  To synchronize the state of
+   *                            information accessed through this interface
+   *                            with the current state of the SE call
+   *                            takeSnapshot.  To set the locally altered
+   *                            settings in the SE call doAction(APPLY).
+   *
+   * @throws ElementDeletedException      See SEExceptions.idl.
+   * @throws NotAttachedException         See SEExceptions.idl.
+   * @throws ElementUnavailableException  See SEExceptions.idl.  If this
+   *                            exception is thrown the client application can
+   *                            obtain a partially complete snapshot by calling
+   *                            the getPartialSnapshot method.
+   * @throws ElementBrokenException       See SEExceptions.idl.  If this
+   *                            exception is thrown the client application can
+   *                            obtain a partially complete snapshot by calling
+   *                            the getPartialSnapshot method.
+
+   */
+  SettingsUserInterface getSnapshot(out SequenceOfIntegers enabledActions,
+                                    out string name,
+                                    out string displayName,
+                                    out SequenceOfReferences references)
+      raises (ElementDeletedException,
+              NotAttachedException,
+              ElementUnavailableException,
+              ElementBrokenException);
+
+  /**
+   *
+   * Obtains the "snapshot" of the SE's state captured by the last explicit or
+   * implicit takeSnapshot invocation.
+   *
+   * @return                    See getSnapshot
+   *
+   * @throws ElementDeletedException      See SEExceptions.idl.
+   * @throws NotAttachedException         See SEExceptions.idl.
+   * @throws ElementUnavailableException  See SEExceptions.idl.  If this
+   *                            exception is thrown the client application can
+   *                            obtain a partially complete snapshot by calling
+   *                            the getPartialSnapshot method.
+   * @throws ElementBrokenException       See SEExceptions.idl.  If this
+   *                            exception is thrown the client application can
+   *                            obtain a partially complete snapshot by calling
+   *                            the getPartialSnapshot method.
+
+   */
+  SettingsUserInterface getSnapshot_Settings()
+      raises (ElementDeletedException,
+              NotAttachedException,
+              ElementUnavailableException,
+              ElementBrokenException);
+
+  /**
+   *
+   * Obtains the "snapshot" of the SE display and element name captured by the
+   * last explicit or implicit takeSnapshot invocation.
+   *
+   * @return DualString
+   *                    providing access to this SE display and element name
+   *
+   * @throws ElementDeletedException
+   *                    See SEExceptions.idl.
+   * @throws NotAttachedException
+   *                    See SEExceptions.idl.
+   * @throws ElementUnavailableException
+   *                    See SEExceptions.idl. If this exception is thrown the
+   *                    client application can obtain a partially complete
+   *                    snapshot by calling the getPartialSnapshot method.
+   * @throws ElementBrokenException
+   *                    See SEExceptions.idl. If this exception is thrown the
+   *                    client application can obtain a partially complete
+   *                    snapshot by calling the getPartialSnapshot method.
+
+   */
+  DualString getSnapshot_Element()
+      raises (ElementDeletedException,
+              NotAttachedException,
+              ElementUnavailableException,
+              ElementBrokenException);
+
+  /**
+   * Obtains the "snapshot" of the SE's state captured by the last explicit or
+   * implicit takeSnapshot invocation.  This method should only be called
+   * after getSnapshot threw an ElementUnavailableException or an
+   * ElementBrokenException.  The snapshot returned represents the best effort
+   * attempt to get the current SE's state.
+   *
+   * @param out enabledActions        See getSnapshot.
+   * @param out name                  See getSnapshot.
+   * @param out displayName           See getSnapshot.
+   * @param out references            See getSnapshot.
+   *
+   * @return                          See getSnapshot.
+   *
+   * @throws ElementDeletedException  See SEExceptions.idl.
+   * @throws NotAttachedException     See SEExceptions.idl.
+   */
+  SettingsUserInterface getPartialSnapshot(out SequenceOfIntegers enabledActions,
+                                           out string name,
+                                           out string displayName,
+                                           out SequenceOfReferences references)
+      raises (ElementDeletedException,
+              NotAttachedException);
+
+  /**
+   *
+   * Obtains the "snapshot" of the SE's state captured by the last explicit or
+   * implicit takeSnapshot invocation.  This method should only be called
+   * after getSnapshot threw an ElementUnavailableException or an
+   * ElementBrokenException.  The snapshot returned represents the best effort
+   * attempt to get the current SE's state.
+   *
+   * @param out enabledActions        See getSnapshot.
+   * @param out name                  See getSnapshot.
+   * @param out displayName           See getSnapshot.
+   * @param out references            See getSnapshot.
+   *
+   * @return                          See getSnapshot.
+   *
+   * @throws ElementDeletedException  See SEExceptions.idl.
+   * @throws NotAttachedException     See SEExceptions.idl.
+   */
+  SettingsUserInterface getPartialSnapshot_Settings()
+      raises (ElementDeletedException,
+              NotAttachedException);
+
+  /**
+   * Adds a listener so that it is notified of any changes to the SE's state.
+   * Only a single object can be listening at any one time.
+   *
+   * @param listener   SnapshotChangeListenerInterface to be notified
+   *                   of changes in the SE's state.
+   *
+   * @throws TooManySnapshotChangeListenersException  Thrown if a listener has
+   *                   already registered on this SEAccessInterface.
+   * @throws ElementDeletedException      See SEExceptions.idl.
+   * @throws NotAttachedException         See SEExceptions.idl.
+   * @throws ElementUnavailableException  See SEExceptions.idl.
+   */
+  void addSnapshotChangeListener(in SnapshotChangeListenerInterface listener)
+    raises (TooManySnapshotChangeListenersException,
+            ElementDeletedException,
+            NotAttachedException,
+            ElementUnavailableException);
+
+  /**
+   * Remove the listener registered on addSnapshotChangeListener.
+   *
+   * @throws NoSnapshotChangeListenersException  Thrown if no listener is
+   *                   currently registered on this SEAccessInterface.
+   * @throws ElementDeletedException      See SEExceptions.idl.
+   * @throws NotAttachedException         See SEExceptions.idl.
+   * @throws ElementUnavailableException  See SEExceptions.idl.
+   */
+  void removeSnapshotChangeListener()
+    raises (NoSnapshotChangeListenersException,
+            ElementDeletedException,
+            NotAttachedException,
+            ElementUnavailableException);
+
+  /**
+   * Destroys this SEAccessInterface.  All SEAccessInterface references
+   * returned by the SEAccessInterfaceFactory must be destroyed by calling
+   * this method.  If the client application terminates unexpectedly or
+   * loses connectivity with the EMS Server, the EMS Server will recover the
+   * memory allocated to the SEAccessInterface instance.  However, unless the
+   * destroy method is called, memory cannot be recovered while the client
+   * session is logged in.
+   */
+  void destroy();
+
+  /**
+   *
+   * Searches for the first instance of the specified element type below this
+   * SEAccessInterface in the OML tree and returns an SEAccessInterface
+   * attached to that element.
+   *
+   * @return                    SEAccessInterface providing access to the
+   *                            first element of the specified type found
+   *                            under this SEAccessInterface.
+   *
+   * @param in type             Type of element to search for
+   *
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws NameUnknownException             Thrown if the creation of
+   *          this SE is not complete.  In other words, this
+   *          SEAccessInterface's attachToNew method has been called
+   *          successfully but doAction(APPLY) has not been successfully
+   *          invoked.
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   *
+   */
+  SEAccessInterface findElement(in string type)
+     raises (ElementDeletedException,
+             ElementOperationFailedException,
+             NameUnknownException,
+             ElementUnavailableException);
+
+  /**
+   *
+   * Searches for the next instance of the specified element type below this
+   * SEAccessInterface in the OML tree and returns an SEAccessInterface
+   * attached to that element.
+   *
+   * @return SEAccessInterface
+   *                    providing access to the next element of the specified
+   *                    type found under this SEAccessInterface.
+   *
+   * @param in type     Type of element to search for
+   * @param in startAfterElementName
+   *                    An elementName from an Element
+   *                    returned by a previous invocation of this method or
+   *                    getElements. The enumeration returned by this method
+   *                    invocation will contain Elements "after" the one
+   *                    specified by this parameter.
+   *
+   * @throws ElementDeletedException
+   *                    See SEExceptions.idl.
+   * @throws ElementOperationFailedException
+   *                    See SEExceptions.idl.
+   * @throws NameUnknownException
+   *                    Thrown if the creation of this SE is not complete. In
+   *                    other words, this SEAccessInterface's attachToNew
+   *                    method has been called successfully but doAction(APPLY)
+   *                    has not been successfully invoked.
+   * @throws ElementUnavailableException
+   *                    See SEExceptions.idl.
+   *
+   */
+  SEAccessInterface findNextElement(in string type,
+                                    in string startAfterElementName)
+     raises (ElementDeletedException,
+             ElementOperationFailedException,
+             NameUnknownException,
+             ElementUnavailableException);
+
+  /**
+   *
+   * Searches for the first instance of the specified element type below this
+   * SEAccessInterface in the OML tree, with the specified String field set to
+   * the specified value, and returns an SEAccessInterface
+   * attached to that element.
+   *
+   * @return                    SEAccessInterface providing access to the
+   *                            first element of the specified type found
+   *                            under this SEAccessInterface.
+   *
+   * @param in type             Type of element to search for
+   * @param in fieldName        Field name of the element to match
+   * @param in fieldValue       Value of the field to match
+   *
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws NameUnknownException             Thrown if the creation of
+   *          this SE is not complete.  In other words, this
+   *          SEAccessInterface's attachToNew method has been called
+   *          successfully but doAction(APPLY) has not been successfully
+   *          invoked.
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   * @throws FieldNameOrIndexNotFoundException
+   *                   Thrown when fieldName could not be mapped to the
+   *                   name of a field in the settings for the type
+   *                   of SEAccessInterface to be returned.
+   *
+   */
+  SEAccessInterface findElementWithStringField(in string type,
+                                               in string fieldName,
+                                               in string fieldValue)
+     raises (ElementDeletedException,
+             ElementOperationFailedException,
+             NameUnknownException,
+             ElementUnavailableException,
+             FieldNameOrIndexNotFoundException);
+
+  /**
+   *
+   * Searches for the first instance of the specified element type below this
+   * SEAccessInterface in the OML tree, with the specified String field set to
+   * the specified value, and returns an SEAccessInterface
+   * attached to that element.
+   *
+   * @return                    SEAccessInterface providing access to the
+   *                            first element of the specified type found
+   *                            under this SEAccessInterface.
+   *
+   * @param in type             Type of element to search for
+   * @param in startAfterElementName
+   *                            An elementName from an Element
+   *                            returned by a previous invocation of this method or
+   *                            getElements. The enumeration returned by this method
+   *                            invocation will contain Elements "after" the one
+   *                            specified by this parameter.
+   * @param in fieldName        Field name of the element to match
+   * @param in fieldValue       Value of the field to match
+   *
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws NameUnknownException             Thrown if the creation of
+   *          this SE is not complete.  In other words, this
+   *          SEAccessInterface's attachToNew method has been called
+   *          successfully but doAction(APPLY) has not been successfully
+   *          invoked.
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   * @throws FieldNameOrIndexNotFoundException
+   *                   Thrown when fieldName could not be mapped to the
+   *                   name of a field in the settings for the type
+   *                   of SEAccessInterface to be returned.
+   *
+   */
+  SEAccessInterface findNextElementWithStringField(in string type,
+                                                   in string startAfterElementName,
+                                                   in string fieldName,
+                                                   in string fieldValue)
+     raises (ElementDeletedException,
+             ElementOperationFailedException,
+             NameUnknownException,
+             ElementUnavailableException,
+             FieldNameOrIndexNotFoundException);
+
+  /**
+   *
+   * Searches for the first instance of the specified element type below this
+   * SEAccessInterface in the OML tree, with the specified Int field set to
+   * the specified value, and returns an SEAccessInterface
+   * attached to that element.
+   *
+   * @return                    SEAccessInterface providing access to the
+   *                            first element of the specified type found
+   *                            under this SEAccessInterface.
+   *
+   * @param in type             Type of element to search for
+   * @param in fieldName        Field name of the element to match
+   * @param in fieldValue       Value of the field to match
+   *
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws NameUnknownException             Thrown if the creation of
+   *          this SE is not complete.  In other words, this
+   *          SEAccessInterface's attachToNew method has been called
+   *          successfully but doAction(APPLY) has not been successfully
+   *          invoked.
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   * @throws FieldNameOrIndexNotFoundException
+   *                   Thrown when fieldName could not be mapped to the
+   *                   name of a field in the settings for the type
+   *                   of SEAccessInterface to be returned.
+   * @throws FieldBadTypeException
+   *                   Thrown when the field is not of one of the
+   *                   following types: INT32, INT32_MAP, INT32_RANGE  and
+   *                   INT32_ARRAY field types.
+   *
+   */
+  SEAccessInterface findElementWithIntField(in string type,
+                                            in string fieldName,
+                                            in long fieldValue)
+     raises (ElementDeletedException,
+             ElementOperationFailedException,
+             NameUnknownException,
+             ElementUnavailableException,
+             FieldNameOrIndexNotFoundException,
+             FieldBadTypeException);
+
+  /**
+   *
+   * Searches for the first instance of the specified element type below this
+   * SEAccessInterface in the OML tree, with the specified Int field set to
+   * the specified value, and returns an SEAccessInterface
+   * attached to that element.
+   *
+   * @return                    SEAccessInterface providing access to the
+   *                            first element of the specified type found
+   *                            under this SEAccessInterface.
+   *
+   * @param in type             Type of element to search for
+   * @param in startAfterElementName
+   *                            An elementName from an Element
+   *                            returned by a previous invocation of this method or
+   *                            getElements. The enumeration returned by this method
+   *                            invocation will contain Elements "after" the one
+   *                            specified by this parameter.
+   * @param in fieldName        Field name of the element to match
+   * @param in fieldValue       Value of the field to match
+   *
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws NameUnknownException             Thrown if the creation of
+   *          this SE is not complete.  In other words, this
+   *          SEAccessInterface's attachToNew method has been called
+   *          successfully but doAction(APPLY) has not been successfully
+   *          invoked.
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   * @throws FieldNameOrIndexNotFoundException
+   *                   Thrown when fieldName could not be mapped to the
+   *                   name of a field in the settings for the type
+   *                   of SEAccessInterface to be returned.
+   * @throws FieldBadTypeException
+   *                   Thrown when the field is not of one of the
+   *                   following types: INT32, INT32_MAP, INT32_RANGE  and
+   *                   INT32_ARRAY field types.
+   *
+   */
+  SEAccessInterface findNextElementWithIntField(in string type,
+                                                in string startAfterElementName,
+                                                in string fieldName,
+                                                in long   fieldValue)
+     raises (ElementDeletedException,
+             ElementOperationFailedException,
+             NameUnknownException,
+             ElementUnavailableException,
+             FieldNameOrIndexNotFoundException,
+             FieldBadTypeException);
+
+  /**
+   *
+   * Searches for the first instance of the parent type for the specified
+   * element type below this SEAccessInterface in the OML tree, creates
+   * a new SE of the specified type below that parent, and returns an
+   * SEAccessInterface attached to that element.
+   *
+   * @return                    SEAccessInterface providing access to the
+   *                            newly create SE of the specified type.
+   *
+   * @param in type             Type of element to create
+   *
+   * @throws ElementDeletedException          See SEExceptions.idl.
+   * @throws ElementOperationFailedException  See SEExceptions.idl.
+   * @throws NameUnknownException             Thrown if the creation of
+   *          this SE is not complete.  In other words, this
+   *          SEAccessInterface's attachToNew method has been called
+   *          successfully but doAction(APPLY) has not been successfully
+   *          invoked.
+   * @throws ElementUnavailableException      See SEExceptions.idl.
+   * @throws InvalidElementTypeException  Thrown if the type is not
+   *                                      a valid child type.
+   * @throws CreationFailedException  See SEExceptions.idl.
+   *
+   */
+  SEAccessInterface createElement(in string type)
+     raises (ElementDeletedException,
+             ElementOperationFailedException,
+             NameUnknownException,
+             ElementUnavailableException,
+             InvalidElementTypeException,
+             CreationFailedException);
+};
+
+#endif

@@ -1,0 +1,4391 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN""http://www.w3.org/TR/REC-html40/loose.dtd">
+<!--NewPage-->
+<HTML>
+<HEAD>
+<TITLE>
+CommPortal
+</TITLE>
+<LINK REL ="stylesheet" TYPE="text/css" HREF="stylesheet.css" TITLE="Style">
+</HEAD>
+<SCRIPT>
+function asd()
+{
+parent.document.title="CommPortal";
+}
+</SCRIPT>
+<BODY BGCOLOR="white" onload="asd();">
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=3 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">  <A HREF="overview-summary-commportal.js.html"><FONT CLASS="NavBarFont1"><B>File</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev">&nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="overview-tree.html"><FONT CLASS="NavBarFont1"><B>Tree</B></FONT></A>&nbsp;</TD>
+  <!--TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"-->    <!--A HREF="deprecated-list.html"--><!--FONT CLASS="NavBarFont1">Deprecated</FONT--><!--/A--><!--&nbsp;</TD-->
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="index-all.html"--><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+<B></B>
+</EM>
+</TD
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="callstate.html"><B>PREV CLASS</B></A><!--
+   NEXT CLASS
+-->
+&nbsp;<A HREF="contact.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;
+<SCRIPT>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>
+</NOSCRIPT>
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+<!-- =========== END OF NAVBAR =========== -->
+<HR>
+
+<!-- ======== START OF CLASS DATA ======== -->
+<H2>Class CommPortal</H2>
+<PRE>Object
+   |
+   +--<b>CommPortal</b>
+</PRE>
+
+
+<HR>
+<DL>
+   <!-- Class definition -->
+   <DT>class
+   <B>CommPortal</B>
+   
+
+</DL>
+   
+   <P>
+   <BR/>See <a href="http://innovators.metaswitch.com">Innovators</a> for more details.
+
+ <p>
+ This is the namespace for the CommPortal JavaScript API.
+
+ <p>
+ There is a general convention followed in naming methods in this API.
+ </p>
+ <ul>
+ <li>Methods named <b>fetchXXX()</b> pass their values asynchrously to the supplied callback</li>
+ <li>Methods named <b>getXXX()</b> or <b>convertXXX()</b> return their values immediately, as the return value</li>
+ </ul>
+
+ <p>
+ Other action verbs, such as <b>add</b>, <b>modify</b>, <b>delete</b>,
+ <b>save</b> and <b>mark</b> also act asynchronously.
+ </p>
+
+ <p>
+ Where a method can reasonably be expected to act on either a single
+ item, or a set of items, the parameter will accept either a single
+ item id (as a string), or an Array of such items.
+ </p>
+
+ <BR/><I>Defined in <a href='overview-summary-commportal.js.html'>commportal.js</a></I><BR/><BR/>
+   </P>
+   
+   <HR>
+
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+
+<!-- ======== END NESTED CLASS SUMMARY ======== -->
+
+
+<!-- =========== FIELD SUMMARY =========== -->
+
+   <A NAME="field_summary"><!-- --></A>
+      <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+         <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+            <TD COLSPAN=2><FONT SIZE="+2">
+               <B>Field Summary</B></FONT></TD>
+         </TR>
+
+   <!-- This is one instance field summary -->
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&nbsp;Object</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#callEvent">callEvent</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_CALLING">CALLSTATE_CALLING</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: Command to start call has been issued</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_CLEARED">CALLSTATE_CLEARED</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The call has ended.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_CLEARING">CALLSTATE_CLEARING</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The command to cancel the call has been issued.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_FAILED">CALLSTATE_FAILED</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The call has failed.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_FINAL">CALLSTATE_FINAL</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The call still exists, but CommPortal has stepped out of
+ the call control path and so no further interaction with the call is
+ possible via this SDK.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_FIRST_ANSWERED">CALLSTATE_FIRST_ANSWERED</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The first phone has been answered</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_FIRST_RINGING">CALLSTATE_FIRST_RINGING</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The phone that forms the first leg of the call is ringing</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_INITIAL">CALLSTATE_INITIAL</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: Command to start call has yet to be issued</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_SECOND_ANSWERED">CALLSTATE_SECOND_ANSWERED</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The second phone has been answered</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!CALLSTATE_SECOND_RINGING">CALLSTATE_SECOND_RINGING</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The phone that forms the second leg of the call is
+ ringing</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_ACTION_INVALID_DATA">ERROR_ACTION_INVALID_DATA</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Action data not recognized by the server
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_CALL_IN_PROGRESS">ERROR_CALL_IN_PROGRESS</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Only allowed to have one call in progress.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_CALL_NOT_ANSWERED">ERROR_CALL_NOT_ANSWERED</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: No answer from called line.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_DATA_FETCH_ERROR">ERROR_DATA_FETCH_ERROR</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Error reported fetching data from server</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_DATA_SAVE_ERROR">ERROR_DATA_SAVE_ERROR</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Error reported saving data to server</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_INCOMPATIBLE_EVENTS">ERROR_INCOMPATIBLE_EVENTS</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Events are incompatible
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_INVALID_NUMBER">ERROR_INVALID_NUMBER</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Number to call is invalid
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_LINE_BUSY">ERROR_LINE_BUSY</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Called line is busy.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_LOGIN_ERROR">ERROR_LOGIN_ERROR</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Logging in was unsuccessful.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_LOGIN_TOKEN_TOO_NEW">ERROR_LOGIN_TOKEN_TOO_NEW</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Token was generated with a newer SDK version
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_LOGIN_WINDOW_BLOCKED">ERROR_LOGIN_WINDOW_BLOCKED</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Login window could not pop up.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_LOGIN_WINDOW_CLOSED">ERROR_LOGIN_WINDOW_CLOSED</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Login window was closed without logging in.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_MAKE_CALL_ERROR">ERROR_MAKE_CALL_ERROR</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Making a call gave an error</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_MISSING_UID">ERROR_MISSING_UID</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Must include a UID when modifying an existing contact.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_NO_CALLLISTS">ERROR_NO_CALLLISTS</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: The subscriber does not keep any call lists.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_NO_CORRESPONDING_HANDLER">ERROR_NO_CORRESPONDING_HANDLER</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: No corresponding call handler currently set
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_NO_CURRENT_CALL">ERROR_NO_CURRENT_CALL</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: There is no current call.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_NOT_LOGGED_IN">ERROR_NOT_LOGGED_IN</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Operation cannot proceed since you are not logged in.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_NOT_RAW_DATA">ERROR_NOT_RAW_DATA</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Cannot save cleaned data back to the server - it must be in raw format</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_SERVER_INVALID_FORMAT">ERROR_SERVER_INVALID_FORMAT</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Server string did not parse
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_SESSION_STATE_INVALID">ERROR_SESSION_STATE_INVALID</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Session state provided on a reconnect is no longer valid
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_SUBSCRIPTION_NOT_ALLOWED">ERROR_SUBSCRIPTION_NOT_ALLOWED</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Subscription not allowed
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_SUPPLIED_UID">ERROR_SUPPLIED_UID</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Cannot have an existing UID when creating a new contact.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!ERROR_UNKNOWN">ERROR_UNKNOWN</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Error: Unknown error - no more details available.</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;string</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!INCOMINGCALLSTATE_NOT_RINGING">INCOMINGCALLSTATE_NOT_RINGING</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The subscriber's phone is not ringing
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;string</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!INCOMINGCALLSTATE_RINGING">INCOMINGCALLSTATE_RINGING</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates state: The subscriber's phone is ringing
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;string</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!INCOMINGCALLTYPE_LIVE_MESSAGE_SCREENING">INCOMINGCALLTYPE_LIVE_MESSAGE_SCREENING</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates type: The incoming call type live message screening
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;string</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!INCOMINGCALLTYPE_NORMAL">INCOMINGCALLTYPE_NORMAL</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Indicates type: The incoming call type normal
+
+</TD>
+   </TR>
+   
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD ALIGN="right" VALIGN="top" WIDTH="1%"><FONT SIZE="-1">
+   <CODE>&lt;static&gt; &nbsp;&lt;final&gt;&nbsp;integer</CODE></FONT></TD>
+   <TD><CODE><B><A HREF="#!s!OPTIONS_USE_GET">OPTIONS_USE_GET</A></B></CODE>
+   <BR>
+   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Options: Use GET request (rather than POST) for all URLs.</TD>
+   </TR>
+   
+
+   </TABLE>
+   &nbsp;
+   
+
+   
+
+<!-- =========== END FIELD SUMMARY =========== -->
+
+
+<!-- ======== CONSTRUCTOR SUMMARY ======== -->
+
+<A NAME="constructor_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Constructor Summary</B></FONT></TD>
+</TR>
+<TR BGCOLOR="white" CLASS="TableRowColor">
+   <TD>
+      <CODE>
+         <B>
+            <A HREF="#CommPortal()">CommPortal</A></B>(&lt;String&gt; server, &lt;Integer&gt; flags)
+      </CODE>
+      <BR>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      The Main constructor object.
+      </TD>
+</TR>
+</TABLE>
+
+<!-- ======== END CONSTRUCTOR SUMMARY ======== -->
+
+&nbsp;
+
+<!-- ========== METHOD SUMMARY =========== -->
+
+<A NAME="method_summary"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+<TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+<TD COLSPAN=2><FONT SIZE="+2">
+<B>Method Summary</B></FONT></TD>
+</TR>
+
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#addContact">addContact</A></B>(&lt;<a href="contact.html">contact</a>&gt; contact, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Adds a contact.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#cancelCall">cancelCall</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Cancels making a phone call.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;<a href="error.html">error</a></CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#clearIncomingCallHandler">clearIncomingCallHandler</A></B>(&lt;String&gt; target)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Clear the incoming call handler
+
+
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#confirmFaxesViewed">confirmFaxesViewed</A></B>(&lt;String/String[]&gt; faxIds)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         A synchronous call (no callbacks) that indicates that the passed faxes
+ have (probably) been viewed, without making an explicit call to the
+ server to set this state.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#confirmVoicemailsHeard">confirmVoicemailsHeard</A></B>(&lt;String/String[]&gt; voicemailIds)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         A synchronous call (no callbacks) that indicates that the passed voicemails
+ have (probably) been heard, without making an explicit call to the
+ server to set this state.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;Date</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#convertDate">convertDate</A></B>(&lt;String&gt; dateString)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Converts a string format date, as contained in a
+ <a href="voicemail.html#">voicemail</a>, <a href="fax.html#">fax</a>, or <a href="call.html#">call</a>
+ entry into a JavaScript Date object.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#deleteContacts">deleteContacts</A></B>(&lt;String/String[]&gt; uids, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Deletes one or a number of contacts.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#deleteFaxes">deleteFaxes</A></B>(&lt;String/String[]&gt; faxIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Deletes one or a number of faxes.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#deleteVoicemails">deleteVoicemails</A></B>(&lt;String/String[]&gt; voicemailIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Deletes one or a number of voicemails.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchAnsweredCalls">fetchAnsweredCalls</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets access to the list of answered calls, in an easily accessed simple
+ array format.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchCodecs">fetchCodecs</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets the list of codecs supported by this EAS.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;Object</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchContacts">fetchContacts</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets access to the CommPortal contacts, in an easily accessed simple
+ array format.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;Object</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchData">fetchData</A></B>(&lt;String/String[]&gt; dataTypes, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Fetches data from the CommPortal server via the JSON interface.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchDialedCalls">fetchDialedCalls</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets access to the list of dialed calls, in an easily accessed simple
+ array format.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchFaxCount">fetchFaxCount</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets the count of faxes.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchFaxes">fetchFaxes</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets access to the CommPortal faxes, in an easily accessed simple
+ array format.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchGreetings">fetchGreetings</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback, codecs)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets details about the subscriber's greetings.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchMissedCalls">fetchMissedCalls</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets access to the list of missed calls, in an easily accessed simple
+ array format.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;Object</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchRawData">fetchRawData</A></B>(&lt;String/String[]&gt; dataTypes, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Fetches raw data from the CommPortal server via the JSON interface.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchSubscriberName">fetchSubscriberName</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets the logged in subscriber's name.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchSubscriberNumber">fetchSubscriberNumber</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets the logged in subscriber's phone number.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchToken">fetchToken</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets access to the authentication token for the current logged in
+ session.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchTranscriptionEnabled">fetchTranscriptionEnabled</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Checks whether voicemail transcriptions are allowed for this subscriber.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchVoicemailCount">fetchVoicemailCount</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets the count of voicemails.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#fetchVoicemails">fetchVoicemails</A></B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback, codecs)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Gets access to the CommPortal voicemails, in an easily accessed simple
+ array format.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;String</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#getCallId">getCallId</A></B>()
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Synchronous call to return the current call id string.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;String</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#getSessionId">getSessionId</A></B>()
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Synchronous call to return the current session id string.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;String</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#getSessionState">getSessionState</A></B>()
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Synchronous call to return the current session state string.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#invalidateCache">invalidateCache</A></B>()
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Invalidates the cache so that subsequent data fetches get the latest data
+ direct from the server.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#login">login</A></B>(&lt;String&gt; appId, &lt;function&gt; successCallback, &lt;function&gt; failureCallback, &lt;String&gt; tokenOrNumber, &lt;String&gt; password)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Logs in to CommPortal, thereby establishing a current session.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#logout">logout</A></B>()
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Logs out of the current session.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#makeCall">makeCall</A></B>(&lt;String&gt; numberTo, &lt;String&gt; numberFrom, &lt;function&gt; progressCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Makes a phone call.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#makeSASErrorLog">makeSASErrorLog</A></B>(&lt;String&gt; summary, &lt;String&gt; details)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Make a Service Assurance Server (SAS) error log.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#makeSASLog">makeSASLog</A></B>(&lt;String&gt; summary, &lt;String&gt; details)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Make a Service Assurance Server (SAS) log.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#markFaxesAsUnviewed">markFaxesAsUnviewed</A></B>(&lt;String/String[]&gt; faxIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Marks one or a number of faxes as unviewed.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#markFaxesAsViewed">markFaxesAsViewed</A></B>(&lt;String/String[]&gt; faxIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Marks one or a number of faxes as viewed.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#markVoicemailsAsHeard">markVoicemailsAsHeard</A></B>(&lt;String/String[]&gt; voicemailIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Marks one or a number of voicemails as heard.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#markVoicemailsAsUnheard">markVoicemailsAsUnheard</A></B>(&lt;String/String[]&gt; voicemailIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Marks one or a number of voicemails as unheard.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#modifyContact">modifyContact</A></B>(&lt;<a href="contact.html">contact</a>&gt; contact, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Modifies a contact
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#performAction">performAction</A></B>(&lt;Object&gt; data, &lt;function&gt; actionCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Perform the server action as described by the data parameter.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#reconnect">reconnect</A></B>(&lt;String&gt; sessionState, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Reconnect to an existing session
+ <p>
+ Useful if the client can save the session state locally over a page
+ refresh, since reconnecting to the open session takes less server
+ resources than logging in again.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#redirectCall">redirectCall</A></B>(&lt;String&gt; callId, &lt;String&gt; device, &lt;String&gt; newNumber, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Redirect an incoming call to another phone number
+
+
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#rejectCall">rejectCall</A></B>(&lt;String&gt; callId, &lt;String&gt; device, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Reject an incoming call.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#saveData">saveData</A></B>(&lt;String&gt; dataType, &lt;Object&gt; data, &lt;function&gt; successCallback, &lt;function&gt; failureCallback, &lt;Object&gt; objectIdentity, &lt;String&gt; logText)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Updates data on the CommPortal server via the JSON interface.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#sendVoicemail">sendVoicemail</A></B>(&lt;string&gt; destNumber, &lt;boolean&gt; isUrgent, &lt;boolean&gt; isPrivate, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Send a voicemail using the previously uploaded audio file.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#setClientVersion">setClientVersion</A></B>(version)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Setter for clientVersion.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;<a href="error.html">error</a></CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#setIncomingCallHandler">setIncomingCallHandler</A></B>(&lt;function&gt; incomingCallback, &lt;String&gt; target)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Set the incoming call handler, so that it is notified when an incoming
+ call occurs.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;<a href="error.html">error</a></CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#subscribeToEvents">subscribeToEvents</A></B>(&lt;String/String[]&gt; events, &lt;function&gt; eventCallback, &lt;String&gt; target, &lt;Integer&gt; timeout)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Subscribe to events
+
+
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;<a href="error.html">error</a></CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#unsubscribeFromEvents">unsubscribeFromEvents</A></B>(&lt;String/String[]&gt; events, &lt;String&gt; target)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Unsubscribe from events
+
+
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#updateDefaultGreeting">updateDefaultGreeting</A></B>(type, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Update which greeting type is currently the default.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#updateGreetingAudio">updateGreetingAudio</A></B>(&lt;string&gt; type, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Update the audio for a greeting type using a previously uploaded audio
+ file.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#uploadGreetingsAudio">uploadGreetingsAudio</A></B>(&lt;string&gt; formId, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Uploads a greetings audio file to the CommPortal server.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#uploadVoicemailAudio">uploadVoicemailAudio</A></B>(&lt;string&gt; formId, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         Uploads a voicemail audio file to the CommPortal server.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&lt;static&gt;&nbsp;String</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#!s!getRedirectUrl">getRedirectUrl</A></B>()
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Gets the redirect URL.
+      </TD>
+   </TR>
+
+   <TR BGCOLOR="white" CLASS="TableRowColor">
+      <TD ALIGN="right" VALIGN="top" WIDTH="1%">
+         <FONT SIZE="-1">
+            <CODE>&lt;static&gt;&nbsp;void</CODE>
+         </FONT>
+      </TD>
+      <TD>
+         <CODE>
+            <B>
+               <A HREF="#!s!setRedirectUrl">setRedirectUrl</A></B>(&lt;String&gt; redirectUrl)
+         </CODE>
+         <BR>
+         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+         CORE API: Sets the redirect URL.
+      </TD>
+   </TR>
+
+
+</TABLE>
+
+
+
+<P>
+<!-- ========== END METHOD SUMMARY =========== -->
+
+
+<!-- ============ FIELD DETAIL START =========== -->
+
+   <A NAME="field_detail"><!-- --></A>
+   <TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+      <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+         <TD COLSPAN=1><FONT SIZE="+2"><B>Field Detail</B></FONT></TD>
+      </TR>
+   </TABLE>
+
+   
+   <A NAME="callEvent"><!-- --></A>
+   <H3>callEvent</H3>
+   <PRE>Object&nbsp;<B>callEvent</B></PRE>
+   <UL>
+   
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_CALLING"><!-- --></A>
+   <H3>CALLSTATE_CALLING</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_CALLING</B></PRE>
+   <UL>
+   Indicates state: Command to start call has been issued
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_CALLING">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_CLEARED"><!-- --></A>
+   <H3>CALLSTATE_CLEARED</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_CLEARED</B></PRE>
+   <UL>
+   Indicates state: The call has ended.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_CLEARED">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_CLEARING"><!-- --></A>
+   <H3>CALLSTATE_CLEARING</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_CLEARING</B></PRE>
+   <UL>
+   Indicates state: The command to cancel the call has been issued.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_CLEARING">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_FAILED"><!-- --></A>
+   <H3>CALLSTATE_FAILED</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_FAILED</B></PRE>
+   <UL>
+   Indicates state: The call has failed.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_FAILED">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_FINAL"><!-- --></A>
+   <H3>CALLSTATE_FINAL</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_FINAL</B></PRE>
+   <UL>
+   Indicates state: The call still exists, but CommPortal has stepped out of
+ the call control path and so no further interaction with the call is
+ possible via this SDK.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_FINAL">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_FIRST_ANSWERED"><!-- --></A>
+   <H3>CALLSTATE_FIRST_ANSWERED</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_FIRST_ANSWERED</B></PRE>
+   <UL>
+   Indicates state: The first phone has been answered
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_FIRST_ANSWERED">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_FIRST_RINGING"><!-- --></A>
+   <H3>CALLSTATE_FIRST_RINGING</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_FIRST_RINGING</B></PRE>
+   <UL>
+   Indicates state: The phone that forms the first leg of the call is ringing
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_FIRST_RINGING">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_INITIAL"><!-- --></A>
+   <H3>CALLSTATE_INITIAL</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_INITIAL</B></PRE>
+   <UL>
+   Indicates state: Command to start call has yet to be issued
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_INITIAL">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_SECOND_ANSWERED"><!-- --></A>
+   <H3>CALLSTATE_SECOND_ANSWERED</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_SECOND_ANSWERED</B></PRE>
+   <UL>
+   Indicates state: The second phone has been answered
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_SECOND_ANSWERED">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!CALLSTATE_SECOND_RINGING"><!-- --></A>
+   <H3>CALLSTATE_SECOND_RINGING</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>CALLSTATE_SECOND_RINGING</B></PRE>
+   <UL>
+   Indicates state: The phone that forms the second leg of the call is
+ ringing
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!CALLSTATE_SECOND_RINGING">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_ACTION_INVALID_DATA"><!-- --></A>
+   <H3>ERROR_ACTION_INVALID_DATA</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_ACTION_INVALID_DATA</B></PRE>
+   <UL>
+   Error: Action data not recognized by the server
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_ACTION_INVALID_DATA">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_CALL_IN_PROGRESS"><!-- --></A>
+   <H3>ERROR_CALL_IN_PROGRESS</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_CALL_IN_PROGRESS</B></PRE>
+   <UL>
+   Error: Only allowed to have one call in progress.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_CALL_IN_PROGRESS">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_CALL_NOT_ANSWERED"><!-- --></A>
+   <H3>ERROR_CALL_NOT_ANSWERED</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_CALL_NOT_ANSWERED</B></PRE>
+   <UL>
+   Error: No answer from called line.
+
+ <p>New in version 7.3</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_CALL_NOT_ANSWERED">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_DATA_FETCH_ERROR"><!-- --></A>
+   <H3>ERROR_DATA_FETCH_ERROR</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_DATA_FETCH_ERROR</B></PRE>
+   <UL>
+   Error: Error reported fetching data from server
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_DATA_FETCH_ERROR">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_DATA_SAVE_ERROR"><!-- --></A>
+   <H3>ERROR_DATA_SAVE_ERROR</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_DATA_SAVE_ERROR</B></PRE>
+   <UL>
+   Error: Error reported saving data to server
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_DATA_SAVE_ERROR">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_INCOMPATIBLE_EVENTS"><!-- --></A>
+   <H3>ERROR_INCOMPATIBLE_EVENTS</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_INCOMPATIBLE_EVENTS</B></PRE>
+   <UL>
+   Error: Events are incompatible
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_INCOMPATIBLE_EVENTS">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_INVALID_NUMBER"><!-- --></A>
+   <H3>ERROR_INVALID_NUMBER</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_INVALID_NUMBER</B></PRE>
+   <UL>
+   Error: Number to call is invalid
+
+ <p>New in version 7.3</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_INVALID_NUMBER">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_LINE_BUSY"><!-- --></A>
+   <H3>ERROR_LINE_BUSY</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_LINE_BUSY</B></PRE>
+   <UL>
+   Error: Called line is busy.
+
+ <p>New in version 7.3</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_LINE_BUSY">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_LOGIN_ERROR"><!-- --></A>
+   <H3>ERROR_LOGIN_ERROR</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_LOGIN_ERROR</B></PRE>
+   <UL>
+   Error: Logging in was unsuccessful.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_LOGIN_ERROR">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_LOGIN_TOKEN_TOO_NEW"><!-- --></A>
+   <H3>ERROR_LOGIN_TOKEN_TOO_NEW</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_LOGIN_TOKEN_TOO_NEW</B></PRE>
+   <UL>
+   Error: Token was generated with a newer SDK version
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_LOGIN_TOKEN_TOO_NEW">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_LOGIN_WINDOW_BLOCKED"><!-- --></A>
+   <H3>ERROR_LOGIN_WINDOW_BLOCKED</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_LOGIN_WINDOW_BLOCKED</B></PRE>
+   <UL>
+   Error: Login window could not pop up.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_LOGIN_WINDOW_BLOCKED">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_LOGIN_WINDOW_CLOSED"><!-- --></A>
+   <H3>ERROR_LOGIN_WINDOW_CLOSED</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_LOGIN_WINDOW_CLOSED</B></PRE>
+   <UL>
+   Error: Login window was closed without logging in.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_LOGIN_WINDOW_CLOSED">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_MAKE_CALL_ERROR"><!-- --></A>
+   <H3>ERROR_MAKE_CALL_ERROR</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_MAKE_CALL_ERROR</B></PRE>
+   <UL>
+   Error: Making a call gave an error
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_MAKE_CALL_ERROR">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_MISSING_UID"><!-- --></A>
+   <H3>ERROR_MISSING_UID</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_MISSING_UID</B></PRE>
+   <UL>
+   Error: Must include a UID when modifying an existing contact.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_MISSING_UID">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_NO_CALLLISTS"><!-- --></A>
+   <H3>ERROR_NO_CALLLISTS</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_NO_CALLLISTS</B></PRE>
+   <UL>
+   Error: The subscriber does not keep any call lists.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_NO_CALLLISTS">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_NO_CORRESPONDING_HANDLER"><!-- --></A>
+   <H3>ERROR_NO_CORRESPONDING_HANDLER</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_NO_CORRESPONDING_HANDLER</B></PRE>
+   <UL>
+   Error: No corresponding call handler currently set
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_NO_CORRESPONDING_HANDLER">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_NO_CURRENT_CALL"><!-- --></A>
+   <H3>ERROR_NO_CURRENT_CALL</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_NO_CURRENT_CALL</B></PRE>
+   <UL>
+   Error: There is no current call.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_NO_CURRENT_CALL">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_NOT_LOGGED_IN"><!-- --></A>
+   <H3>ERROR_NOT_LOGGED_IN</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_NOT_LOGGED_IN</B></PRE>
+   <UL>
+   Error: Operation cannot proceed since you are not logged in.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_NOT_LOGGED_IN">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_NOT_RAW_DATA"><!-- --></A>
+   <H3>ERROR_NOT_RAW_DATA</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_NOT_RAW_DATA</B></PRE>
+   <UL>
+   Error: Cannot save cleaned data back to the server - it must be in raw format
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_NOT_RAW_DATA">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_SERVER_INVALID_FORMAT"><!-- --></A>
+   <H3>ERROR_SERVER_INVALID_FORMAT</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_SERVER_INVALID_FORMAT</B></PRE>
+   <UL>
+   Error: Server string did not parse
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_SERVER_INVALID_FORMAT">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_SESSION_STATE_INVALID"><!-- --></A>
+   <H3>ERROR_SESSION_STATE_INVALID</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_SESSION_STATE_INVALID</B></PRE>
+   <UL>
+   Error: Session state provided on a reconnect is no longer valid
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_SESSION_STATE_INVALID">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_SUBSCRIPTION_NOT_ALLOWED"><!-- --></A>
+   <H3>ERROR_SUBSCRIPTION_NOT_ALLOWED</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_SUBSCRIPTION_NOT_ALLOWED</B></PRE>
+   <UL>
+   Error: Subscription not allowed
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_SUBSCRIPTION_NOT_ALLOWED">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_SUPPLIED_UID"><!-- --></A>
+   <H3>ERROR_SUPPLIED_UID</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_SUPPLIED_UID</B></PRE>
+   <UL>
+   Error: Cannot have an existing UID when creating a new contact.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_SUPPLIED_UID">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!ERROR_UNKNOWN"><!-- --></A>
+   <H3>ERROR_UNKNOWN</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>ERROR_UNKNOWN</B></PRE>
+   <UL>
+   Error: Unknown error - no more details available.
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!ERROR_UNKNOWN">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!INCOMINGCALLSTATE_NOT_RINGING"><!-- --></A>
+   <H3>INCOMINGCALLSTATE_NOT_RINGING</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;string&nbsp;<B>INCOMINGCALLSTATE_NOT_RINGING</B></PRE>
+   <UL>
+   Indicates state: The subscriber's phone is not ringing
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!INCOMINGCALLSTATE_NOT_RINGING">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!INCOMINGCALLSTATE_RINGING"><!-- --></A>
+   <H3>INCOMINGCALLSTATE_RINGING</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;string&nbsp;<B>INCOMINGCALLSTATE_RINGING</B></PRE>
+   <UL>
+   Indicates state: The subscriber's phone is ringing
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!INCOMINGCALLSTATE_RINGING">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!INCOMINGCALLTYPE_LIVE_MESSAGE_SCREENING"><!-- --></A>
+   <H3>INCOMINGCALLTYPE_LIVE_MESSAGE_SCREENING</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;string&nbsp;<B>INCOMINGCALLTYPE_LIVE_MESSAGE_SCREENING</B></PRE>
+   <UL>
+   Indicates type: The incoming call type live message screening
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!INCOMINGCALLTYPE_LIVE_MESSAGE_SCREENING">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!INCOMINGCALLTYPE_NORMAL"><!-- --></A>
+   <H3>INCOMINGCALLTYPE_NORMAL</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;string&nbsp;<B>INCOMINGCALLTYPE_NORMAL</B></PRE>
+   <UL>
+   Indicates type: The incoming call type normal
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!INCOMINGCALLTYPE_NORMAL">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+   <A NAME="!s!OPTIONS_USE_GET"><!-- --></A>
+   <H3>OPTIONS_USE_GET</H3>
+   <PRE>&lt;static&gt;&nbsp;&lt;final&gt;&nbsp;integer&nbsp;<B>OPTIONS_USE_GET</B></PRE>
+   <UL>
+   Options: Use GET request (rather than POST) for all URLs.
+
+ <p>New in version 7.1</p>
+   
+    <P>
+    <DL>
+    <DT><B>See Also:</B><DD><A HREF="constant-values.html#CommPortal.!s!OPTIONS_USE_GET">Constant Field Values</A></DL>
+    </DL>
+
+   
+   </UL>
+   <HR>
+   
+
+
+<!-- ============ FIELD DETAIL END =========== -->
+
+    <!-- ========= CONSTRUCTOR DETAIL START ======== -->
+
+<A NAME="constructor_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+   <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+      <TD COLSPAN=1>
+      <FONT SIZE="+2"><B>Constructor Detail</B></FONT>
+      </TD>
+   </TR>
+</TABLE>
+
+<A NAME="CommPortal()"><!-- --></A><H3>
+CommPortal</H3>
+<PRE><B>CommPortal</B>(&lt;String&gt; server, &lt;Integer&gt; flags)</PRE>
+
+
+<UL>
+   The Main constructor object.
+ <p>
+ The object it returns embodies the full
+ CommPortal library's abilities, but will typically be thought of as an
+ object which simply implements one of the sub-interfaces, such as a
+ connection, or a call.
+ </p>
+
+ <p>
+ The server URL can take the form "domain/cust" or a more specific path
+ "domain/cust/login.html" if the first option loads something other than
+ the plain login page.
+
+ <p>
+ Possible flags are:
+ <ul>
+   <li><a href="#!s!OPTIONS_USE_GET">OPTIONS_USE_GET</a></li>
+ </ul>
+
+ <p>The flags parameter is new in version 7.1</p>
+</UL>
+
+
+
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>server</CODE> -  [optional] server to connect to  
+     </UL>
+   
+     <UL><CODE>flags</CODE> -  [optional] flags to control optional behaviour      
+     </UL>
+   
+   
+   </UL>
+
+
+<!-- Constructor return value(s) -->
+
+<!-- End constructor return value(s) -->
+
+<!-- ADDITIONAL ATTRIBUTES -->
+
+<HR/>
+<!-- END ADDITIONAL ATTRIBUTES  -->
+
+<!-- ========= CONSTRUCTOR DETAIL END ======== -->
+
+
+<!-- ============ METHOD DETAIL START ========== -->
+
+<A NAME="method_detail"><!-- --></A>
+<TABLE BORDER="1" CELLPADDING="3" CELLSPACING="0" WIDTH="100%">
+   <TR BGCOLOR="#CCCCFF" CLASS="TableHeadingColor">
+      <TD COLSPAN=1><FONT SIZE="+2">
+         <B>Method Detail</B></FONT>
+      </TD>
+   </TR>
+</TABLE>
+
+<!-- One single method detail entry -->
+
+   <A NAME="addContact"><!-- --></A>
+   <H3>addContact</H3>
+   <PRE>void <B>addContact</B>(&lt;<a href="contact.html">contact</a>&gt; contact, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Adds a contact.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>contact</CODE> -  contact object to be added  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is called on success (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#modifyContact">modifyContact()</a><BR/>- <a href="#deleteContacts">deleteContacts()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="cancelCall"><!-- --></A>
+   <H3>cancelCall</H3>
+   <PRE>void <B>cancelCall</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Cancels making a phone call.
+
+ <p>
+ Can be used to cancel the last call started via makeCall()
+ provided that the call has not already ended nor reached the
+ CommPortal.CALLSTATE_FINAL call state.
+ </p>
+
+ <p>
+ Note that the progressCallback of
+ the corresponding <a href="#makeCall">makeCall()</a> will be called to tell it that the
+ call has been canceled.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is called on success (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#makeCall">makeCall()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="clearIncomingCallHandler"><!-- --></A>
+   <H3>clearIncomingCallHandler</H3>
+   <PRE><a href="error.html">error</a> <B>clearIncomingCallHandler</B>(&lt;String&gt; target)</PRE>
+   
+      <UL>Clear the incoming call handler
+
+ <p>
+ The optional target line number may be specified to match that provided
+ to setIncomingCallHandler.
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>target</CODE> -  [optional] line number   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        undefined on success, or an error value such as if there is no    corresponding call handler currently set  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#setIncomingCallHandler">setIncomingCallHandler()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="confirmFaxesViewed"><!-- --></A>
+   <H3>confirmFaxesViewed</H3>
+   <PRE>void <B>confirmFaxesViewed</B>(&lt;String/String[]&gt; faxIds)</PRE>
+   
+      <UL>A synchronous call (no callbacks) that indicates that the passed faxes
+ have (probably) been viewed, without making an explicit call to the
+ server to set this state.  Allows the API to keep its state in sync.
+
+ <p>
+ Should be called whenever the <a href="fax.html#ImageFile">fax.ImageFile</a> or
+ <a href="fax.html#ImageFilePDF">fax.ImageFilePDF</a> field has been used to actually fetch the
+ referenced file.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>faxIds</CODE> -  single id as string, or array of ids   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#markFaxesAsViewed">markFaxesAsViewed()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="confirmVoicemailsHeard"><!-- --></A>
+   <H3>confirmVoicemailsHeard</H3>
+   <PRE>void <B>confirmVoicemailsHeard</B>(&lt;String/String[]&gt; voicemailIds)</PRE>
+   
+      <UL>A synchronous call (no callbacks) that indicates that the passed voicemails
+ have (probably) been heard, without making an explicit call to the
+ server to set this state.  Allows the API to keep its state in sync.
+
+ <p>
+ Should be called whenever the <a href="voicemail.html#AudioFile">voicemail.AudioFile</a> field has been
+ used to actually fetch the referenced file.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>voicemailIds</CODE> -  single id as string, or array of ids   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#markVoicemailsAsHeard">markVoicemailsAsHeard()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="convertDate"><!-- --></A>
+   <H3>convertDate</H3>
+   <PRE>Date <B>convertDate</B>(&lt;String&gt; dateString)</PRE>
+   
+      <UL>Converts a string format date, as contained in a
+ <a href="voicemail.html#">voicemail</a>, <a href="fax.html#">fax</a>, or <a href="call.html#">call</a>
+ entry into a JavaScript Date object.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>dateString</CODE> -  date as a string   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        the date as a JavaScript Date object  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="deleteContacts"><!-- --></A>
+   <H3>deleteContacts</H3>
+   <PRE>void <B>deleteContacts</B>(&lt;String/String[]&gt; uids, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Deletes one or a number of contacts.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>uids</CODE> -  the id(s) of the contacts to delete  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is called on success (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#addContact">addContact()</a><BR/>- <a href="#modifyContact">modifyContact()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="deleteFaxes"><!-- --></A>
+   <H3>deleteFaxes</H3>
+   <PRE>void <B>deleteFaxes</B>(&lt;String/String[]&gt; faxIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Deletes one or a number of faxes.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>faxIds</CODE> -  single id as string, or array of ids  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="deleteVoicemails"><!-- --></A>
+   <H3>deleteVoicemails</H3>
+   <PRE>void <B>deleteVoicemails</B>(&lt;String/String[]&gt; voicemailIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Deletes one or a number of voicemails.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>voicemailIds</CODE> -  single id as string, or array of ids  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchAnsweredCalls"><!-- --></A>
+   <H3>fetchAnsweredCalls</H3>
+   <PRE>void <B>fetchAnsweredCalls</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets access to the list of answered calls, in an easily accessed simple
+ array format.
+ <p>
+ The array of calls is passed asynchronously to the provided callback when
+ it is ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is passed the calls (See <a href="callbacks.html#callsCallback">callbacks.callsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchCodecs"><!-- --></A>
+   <H3>fetchCodecs</H3>
+   <PRE>void <B>fetchCodecs</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets the list of codecs supported by this EAS.
+ <p>
+ The details are passed asynchronously to the provided callback when ready.
+ </p>
+
+ <p>New in version 8.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called to pass the codec details (See <a href="callbacks.html#greetingsCallback">callbacks.greetingsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchContacts"><!-- --></A>
+   <H3>fetchContacts</H3>
+   <PRE>Object <B>fetchContacts</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets access to the CommPortal contacts, in an easily accessed simple
+ array format.
+ <p>
+ The contacts are passed asynchronously to the provided callback when
+ they are ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is passed the contacts  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is passed the contacts (See <a href="callbacks.html#contactsCallback">callbacks.contactsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchData"><!-- --></A>
+   <H3>fetchData</H3>
+   <PRE>Object <B>fetchData</B>(&lt;String/String[]&gt; dataTypes, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>CORE API: Fetches data from the CommPortal server via the JSON interface.
+
+ <p>
+ The data passed to the successCallback is a flattened and cleaned up
+ version of the data received over the wire.
+ </p>
+ <p>
+ Where multiple pieces of data are being fetched, one callback is called
+ for each piece of data.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>dataTypes</CODE> -  which data should be fetched.    Can consist of a single value, or an array of such values.  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called for each item of data    successfully fetched (See <a href="callbacks.html#fetchCallback">callbacks.fetchCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called for each error that occurs   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#fetchRawData">fetchRawData()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchDialedCalls"><!-- --></A>
+   <H3>fetchDialedCalls</H3>
+   <PRE>void <B>fetchDialedCalls</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets access to the list of dialed calls, in an easily accessed simple
+ array format.
+ <p>
+ The array of calls is passed asynchronously to the provided callback when
+ it is ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is passed the calls (See <a href="callbacks.html#callsCallback">callbacks.callsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchFaxCount"><!-- --></A>
+   <H3>fetchFaxCount</H3>
+   <PRE>void <B>fetchFaxCount</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets the count of faxes.
+ <p>
+ The count is passed asynchronously to the provided callback when ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called to pass the counts (See <a href="callbacks.html#countsCallback">callbacks.countsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#fetchFaxes">fetchFaxes()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchFaxes"><!-- --></A>
+   <H3>fetchFaxes</H3>
+   <PRE>void <B>fetchFaxes</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets access to the CommPortal faxes, in an easily accessed simple
+ array format.
+ <p>
+ The faxes are passed asynchronously to the provided callback when
+ they are ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called to pass the faxes (See <a href="callbacks.html#faxesCallback">callbacks.faxesCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#fetchFaxCount">fetchFaxCount()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchGreetings"><!-- --></A>
+   <H3>fetchGreetings</H3>
+   <PRE>void <B>fetchGreetings</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback, codecs)</PRE>
+   
+      <UL>Gets details about the subscriber's greetings.
+ <p>
+ The details are passed asynchronously to the provided callback when ready.
+ </p>
+
+ <p>New in version 7.3</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called to pass the greetings details (See <a href="callbacks.html#greetingsCallback">callbacks.greetingsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>String</CODE> - /String[]} (optional) a single codec or an array of codecs which the caller can handle. If not provided this will be assume to be g711u.      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchMissedCalls"><!-- --></A>
+   <H3>fetchMissedCalls</H3>
+   <PRE>void <B>fetchMissedCalls</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets access to the list of missed calls, in an easily accessed simple
+ array format.
+ <p>
+ The array of calls is passed asynchronously to the provided callback when
+ it is ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is passed the calls (See <a href="callbacks.html#callsCallback">callbacks.callsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchRawData"><!-- --></A>
+   <H3>fetchRawData</H3>
+   <PRE>Object <B>fetchRawData</B>(&lt;String/String[]&gt; dataTypes, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>CORE API: Fetches raw data from the CommPortal server via the JSON interface.
+
+ <p>
+ The data passed to the successCallback is exactly as received over the
+ wire, and as such is suitable for passing back in to the saveData method.
+ </p>
+ <p>
+ Where multiple pieces of data are being fetched, one callback is called
+ for each piece of data.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>dataTypes</CODE> -  which data should be fetched.    Can consist of a single value, or an array of such values.  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called for each item of data    successfully fetched (See <a href="callbacks.html#fetchCallback">callbacks.fetchCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called for each error that occurs   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#fetchData">fetchData()</a><BR/>- <a href="#saveData">saveData()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchSubscriberName"><!-- --></A>
+   <H3>fetchSubscriberName</H3>
+   <PRE>void <B>fetchSubscriberName</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets the logged in subscriber's name.
+ <p>
+ The name is passed asynchronously to the provided callback when ready.
+ </p>
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called to pass the number (See <a href="callbacks.html#nameCallback">callbacks.nameCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchSubscriberNumber"><!-- --></A>
+   <H3>fetchSubscriberNumber</H3>
+   <PRE>void <B>fetchSubscriberNumber</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets the logged in subscriber's phone number.
+ <p>
+ The number is passed asynchronously to the provided callback when ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called to pass the number (See <a href="callbacks.html#numberCallback">callbacks.numberCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchToken"><!-- --></A>
+   <H3>fetchToken</H3>
+   <PRE>void <B>fetchToken</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets access to the authentication token for the current logged in
+ session.
+ <p>
+ The token is passed asynchronously to the provided callback when
+ it is ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when token arrives (See <a href="callbacks.html#tokenCallback">callbacks.tokenCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchTranscriptionEnabled"><!-- --></A>
+   <H3>fetchTranscriptionEnabled</H3>
+   <PRE>void <B>fetchTranscriptionEnabled</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Checks whether voicemail transcriptions are allowed for this subscriber.
+
+ <p>New in version 7.3</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#transcriptsEnabledCallback">callbacks.transcriptsEnabledCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchVoicemailCount"><!-- --></A>
+   <H3>fetchVoicemailCount</H3>
+   <PRE>void <B>fetchVoicemailCount</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Gets the count of voicemails.
+ <p>
+ The count is passed asynchronously to the provided callback when ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called to pass the counts (See <a href="callbacks.html#countsCallback">callbacks.countsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#fetchVoicemails">fetchVoicemails()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="fetchVoicemails"><!-- --></A>
+   <H3>fetchVoicemails</H3>
+   <PRE>void <B>fetchVoicemails</B>(&lt;function&gt; successCallback, &lt;function&gt; failureCallback, codecs)</PRE>
+   
+      <UL>Gets access to the CommPortal voicemails, in an easily accessed simple
+ array format.
+ <p>
+ The voicemails are passed asynchronously to the provided callback when
+ they are ready.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called to pass the voicemails (See <a href="callbacks.html#voicemailsCallback">callbacks.voicemailsCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>String</CODE> - /String[]} (optional) a single codec or an array of codecs which the caller can handle. If not provided this will be assume to be g711u.   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#fetchVoicemailCount">fetchVoicemailCount()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="getCallId"><!-- --></A>
+   <H3>getCallId</H3>
+   <PRE>String <B>getCallId</B>()</PRE>
+   
+      <UL>CORE API: Synchronous call to return the current call id string.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        the call id string, or undefined if there is no call currently    in progress on this connection  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#makeCall">makeCall()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="getSessionId"><!-- --></A>
+   <H3>getSessionId</H3>
+   <PRE>String <B>getSessionId</B>()</PRE>
+   
+      <UL>CORE API: Synchronous call to return the current session id string.
+ <p>
+ The session id may be helpful if you are trying to manually form
+ urls outside of the SDK, but otherwise is of little use.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        the session id string, or undefined if this object does not    represent a valid, logged in session  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#login">login()</a><BR/>- <a href="#getSessionState">getSessionState()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="getSessionState"><!-- --></A>
+   <H3>getSessionState</H3>
+   <PRE>String <B>getSessionState</B>()</PRE>
+   
+      <UL>CORE API: Synchronous call to return the current session state string.
+ <p>
+ The session state may be passed back in to <a href="#reconnect">reconnect()</a>.
+ </p>
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        the session state string, or undefined if this object does not    represent a valid, logged in session  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#reconnect">reconnect()</a><BR/>- <a href="#getSessionId">getSessionId()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="invalidateCache"><!-- --></A>
+   <H3>invalidateCache</H3>
+   <PRE>void <B>invalidateCache</B>()</PRE>
+   
+      <UL>Invalidates the cache so that subsequent data fetches get the latest data
+ direct from the server.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="login"><!-- --></A>
+   <H3>login</H3>
+   <PRE>void <B>login</B>(&lt;String&gt; appId, &lt;function&gt; successCallback, &lt;function&gt; failureCallback, &lt;String&gt; tokenOrNumber, &lt;String&gt; password)</PRE>
+   
+      <UL>CORE API: Logs in to CommPortal, thereby establishing a current session.
+
+ <p>
+ If no authenication details are given, pops up a new frame to do the login.
+ Thus should always be called as a result of user action (click)
+ to prevent this being stopped by a popup blocker.
+ </p>
+
+ <p>
+ As an alternative, authentication details can be provided in the the form
+ of one string, which is treated as a persistent token, or as two strings
+ representing subscriber number and password (insecure as this is).
+ In these cases, login does not cause a popup to appear, and no such
+ restriction on only calling this as a result of user action is necessary.
+ </p>
+
+ <p>
+ The optional appId tells the CommPortal server the name of the
+ application, so that it can both log it and prioritize requests better
+ when under load (if the server in use has prioritization configured).
+ Application ids are limited to 32 characters in length, from the set of
+ capital and lower case letters, digits, and the underscore character.
+ The prefix "MS_" is reserved.
+ </p>
+
+ <p>The ability to pass an application id, and to log in using number and
+ password are new in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>appId</CODE> -  [optional] application id for this application  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successfully logged in (See <a href="callbacks.html#loginCallback">callbacks.loginCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>tokenOrNumber</CODE> -  [optional] persistent token to perform a    login without the user needing to reenter their credentials,    or if followed by another optional parameter, the phone number of a    subscriber being authenticated via phone number and password parameters  
+      </UL>
+   
+     <UL><CODE>password</CODE> -  [optional] password of subscriber      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#logout">logout()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="logout"><!-- --></A>
+   <H3>logout</H3>
+   <PRE>void <B>logout</B>()</PRE>
+   
+      <UL>CORE API: Logs out of the current session.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#login">login()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="makeCall"><!-- --></A>
+   <H3>makeCall</H3>
+   <PRE>void <B>makeCall</B>(&lt;String&gt; numberTo, &lt;String&gt; numberFrom, &lt;function&gt; progressCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Makes a phone call.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>numberTo</CODE> -  phone number to call  
+      </UL>
+   
+     <UL><CODE>numberFrom</CODE> -  [optional] phone number to call from  
+      </UL>
+   
+     <UL><CODE>progressCallback</CODE> -  called multiple times with progress state (See <a href="callbacks.html#progressCallback">callbacks.progressCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#cancelCall">cancelCall()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="makeSASErrorLog"><!-- --></A>
+   <H3>makeSASErrorLog</H3>
+   <PRE>void <B>makeSASErrorLog</B>(&lt;String&gt; summary, &lt;String&gt; details)</PRE>
+   
+      <UL>Make a Service Assurance Server (SAS) error log.
+
+ <p>WARNING.  Calling this function places additional load on the Service
+ Assurance Server and should only be called if you are sure that your
+ Service Assurance Server has sufficient capacity.</p>
+
+<p>
+ The Service Assurance Server supports the ISO-8859-1 character set so
+ the summary and details text must only use these characters.
+</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>summary</CODE> -  the summary information. This can be up to 128                  characters long. Any additional characters will be                  discarded and replaced with "..."                  It must not be blank or the log will be ignored.  
+      </UL>
+   
+     <UL><CODE>details</CODE> -  the detailed description. This can be up to 512                  characters long. Any additional characters will be                  discarded and replaced with "...". A stack trace is                  automatically appended to the details.  
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#makeSASLog">makeSASLog()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="makeSASLog"><!-- --></A>
+   <H3>makeSASLog</H3>
+   <PRE>void <B>makeSASLog</B>(&lt;String&gt; summary, &lt;String&gt; details)</PRE>
+   
+      <UL>Make a Service Assurance Server (SAS) log.
+
+ <p>WARNING.  Calling this function places additional load on the Service
+ Assurance Server and should only be called if you are sure that your
+ Service Assurance Server has sufficient capacity.</p>
+
+ <p>
+ The Service Assurance Server supports the ISO-8859-1 character set so
+ the summary and details text must only use these characters.
+</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>summary</CODE> -  the summary information. This can be up to 128                  characters long. Any additional characters will be                  discarded and replaced with "..."                  It must not be blank or the log will be ignored.  
+      </UL>
+   
+     <UL><CODE>details</CODE> -  the detailed description. This can be up to 512                  characters long. Any additional characters will be                  discarded and replaced with "...".  
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#makeSASErrorLog">makeSASErrorLog()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="markFaxesAsUnviewed"><!-- --></A>
+   <H3>markFaxesAsUnviewed</H3>
+   <PRE>void <B>markFaxesAsUnviewed</B>(&lt;String/String[]&gt; faxIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Marks one or a number of faxes as unviewed.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>faxIds</CODE> -  single id as string, or array of ids  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#markFaxesAsViewed">markFaxesAsViewed()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="markFaxesAsViewed"><!-- --></A>
+   <H3>markFaxesAsViewed</H3>
+   <PRE>void <B>markFaxesAsViewed</B>(&lt;String/String[]&gt; faxIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Marks one or a number of faxes as viewed.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>faxIds</CODE> -  single id as string, or array of ids  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#markFaxesAsUnviewed">markFaxesAsUnviewed()</a><BR/>- <a href="#confirmFaxesViewed">confirmFaxesViewed()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="markVoicemailsAsHeard"><!-- --></A>
+   <H3>markVoicemailsAsHeard</H3>
+   <PRE>void <B>markVoicemailsAsHeard</B>(&lt;String/String[]&gt; voicemailIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Marks one or a number of voicemails as heard.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>voicemailIds</CODE> -  single id as string, or array of ids  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#markVoicemailsAsUnheard">markVoicemailsAsUnheard()</a><BR/>- <a href="#confirmVoicemailsHeard">confirmVoicemailsHeard()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="markVoicemailsAsUnheard"><!-- --></A>
+   <H3>markVoicemailsAsUnheard</H3>
+   <PRE>void <B>markVoicemailsAsUnheard</B>(&lt;String/String[]&gt; voicemailIds, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Marks one or a number of voicemails as unheard.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>voicemailIds</CODE> -  single id as string, or array of ids  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#markVoicemailsAsHeard">markVoicemailsAsHeard()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="modifyContact"><!-- --></A>
+   <H3>modifyContact</H3>
+   <PRE>void <B>modifyContact</B>(&lt;<a href="contact.html">contact</a>&gt; contact, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Modifies a contact</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>contact</CODE> -  contact object to be modified  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback that is called on success (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#addContact">addContact()</a><BR/>- <a href="#deleteContacts">deleteContacts()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="performAction"><!-- --></A>
+   <H3>performAction</H3>
+   <PRE>void <B>performAction</B>(&lt;Object&gt; data, &lt;function&gt; actionCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>CORE API: Perform the server action as described by the data parameter.
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>data</CODE> -  contents of service indication describing the action  
+      </UL>
+   
+     <UL><CODE>actionCallback</CODE> -  callback called when successfully         performed the action (See <a href="callbacks.html#actionCallback">callbacks.actionCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs  (See         <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="reconnect"><!-- --></A>
+   <H3>reconnect</H3>
+   <PRE>void <B>reconnect</B>(&lt;String&gt; sessionState, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>CORE API: Reconnect to an existing session
+ <p>
+ Useful if the client can save the session state locally over a page
+ refresh, since reconnecting to the open session takes less server
+ resources than logging in again.
+ </p>
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>sessionState</CODE> -     session state that was previously valid  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -     callback called if session is valid (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -     callback called if session is invalid (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#getSessionState">getSessionState()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="redirectCall"><!-- --></A>
+   <H3>redirectCall</H3>
+   <PRE>void <B>redirectCall</B>(&lt;String&gt; callId, &lt;String&gt; device, &lt;String&gt; newNumber, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Redirect an incoming call to another phone number
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>callId</CODE> -  the id of the call to be redirected  
+      </UL>
+   
+     <UL><CODE>device</CODE> -  the device number that is receiving the call  
+      </UL>
+   
+     <UL><CODE>newNumber</CODE> -  the new phone number to redirect the call to  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when the call is successfully redirected (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="rejectCall"><!-- --></A>
+   <H3>rejectCall</H3>
+   <PRE>void <B>rejectCall</B>(&lt;String&gt; callId, &lt;String&gt; device, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Reject an incoming call.
+
+ <p/>
+ The rejected call may be ended, or sent to email instead dependent on the
+ line's settings.
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>callId</CODE> -  the id of the call to be rejected  
+      </UL>
+   
+     <UL><CODE>device</CODE> -  the device number that is receiving the call  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when the call is successfully terminated (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="saveData"><!-- --></A>
+   <H3>saveData</H3>
+   <PRE>void <B>saveData</B>(&lt;String&gt; dataType, &lt;Object&gt; data, &lt;function&gt; successCallback, &lt;function&gt; failureCallback, &lt;Object&gt; objectIdentity, &lt;String&gt; logText)</PRE>
+   
+      <UL>CORE API: Updates data on the CommPortal server via the JSON interface.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>dataType</CODE> -  service indication type as used by JSON interface  
+      </UL>
+   
+     <UL><CODE>data</CODE> -  contents of JSON service indication  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called if success  (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if error  (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>  
+      </UL>
+   
+     <UL><CODE>objectIdentity</CODE> -  [optional] can be used to specify a                           context other than the current subscriber  
+      </UL>
+   
+     <UL><CODE>logText</CODE> -  [optional] can be used to specify a                         summary of the update being performed which will be                         logged to your Service Assurance Server                         (if this is present and enabled).                         WARNING.  Supplying a logText parameter to this                         function places additional load on the Service                         Assurance Server and should only be called if                         you are sure that your Service Assurance Server                         has sufficient capacity.   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#fetchRawData">fetchRawData()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="sendVoicemail"><!-- --></A>
+   <H3>sendVoicemail</H3>
+   <PRE>void <B>sendVoicemail</B>(&lt;string&gt; destNumber, &lt;boolean&gt; isUrgent, &lt;boolean&gt; isPrivate, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Send a voicemail using the previously uploaded audio file.
+ See commportal#uploadVoicemailAudio for more details.
+
+ <p>New in version 7.3</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>destNumber</CODE> -  The number to send the voicemail to.  
+      </UL>
+   
+     <UL><CODE>isUrgent</CODE> -  Whether the voicemail should be marked urgent.  
+      </UL>
+   
+     <UL><CODE>isPrivate</CODE> -  Whether the voicemail should be marked private.  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="setClientVersion"><!-- --></A>
+   <H3>setClientVersion</H3>
+   <PRE>void <B>setClientVersion</B>(version)</PRE>
+   
+      <UL>Setter for clientVersion.</UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>Client</CODE> -  version to use.      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="setIncomingCallHandler"><!-- --></A>
+   <H3>setIncomingCallHandler</H3>
+   <PRE><a href="error.html">error</a> <B>setIncomingCallHandler</B>(&lt;function&gt; incomingCallback, &lt;String&gt; target)</PRE>
+   
+      <UL>Set the incoming call handler, so that it is notified when an incoming
+ call occurs.
+
+ <p>
+ The optional target phone number may be specified when needing to handle
+ incoming calls on other than the logged in subscriber's phone line.
+ (Only certain types of subscriber are able to access other phone lines in
+ this way).
+
+ <p>
+ You cannot set call handlers for multiple phone lines at once, nor mix
+ this method with the core API method <a href="#subscribeToEvents">subscribeToEvents()</a>
+ when that would also involve multiple target phone lines.  In such cases
+ a synchronous error is returned.
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>incomingCallback</CODE> -  callback called for each incoming call (See <a href="callbacks.html#incomingCallback">callbacks.incomingCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>target</CODE> -  [optional] phone number to monitor for incoming calls   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        undefined on success, or an error value if adding this call    handler is incompatible with other event monitoring already in place, or    if the subsriber account is not configured to allow incoming call    notifications  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#clearIncomingCallHandler">clearIncomingCallHandler()</a><BR/>- <a href="#subscribeToEvents">subscribeToEvents()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="subscribeToEvents"><!-- --></A>
+   <H3>subscribeToEvents</H3>
+   <PRE><a href="error.html">error</a> <B>subscribeToEvents</B>(&lt;String/String[]&gt; events, &lt;function&gt; eventCallback, &lt;String&gt; target, &lt;Integer&gt; timeout)</PRE>
+   
+      <UL>CORE API: Subscribe to events
+
+ <p>
+ Sets up a subscription for events that will be passed to the given
+ callback.
+
+ <p>
+ Can be called multiple times with different events specified, to
+ allow different events to be routed to different callbacks, or with
+ multiple events at once to pass them all to the same callback.
+ A subsequent call with a different callback will replace any existing
+ callback for that event.
+
+ <p>
+ Possible event strings are
+ <ul>
+   <li>IncomingCallManager - changes to ICM configuration</li>
+   <li>DoNotDisturb - changes to DND configuration</li>
+   <li>FindMeFollowMe - changes to MetaSwitch FMFM configuration</li>
+   <li>UnconditionalCallForwarding - changes to UCF configuration</li>
+   <li>VoicemailCount - changes to the numbers of read and unread voicemails</li>
+   <li>Contacts - changes to the contact list</li>
+   <li>ClickToDialConfig - changes to the click-to-dial configuration</li>
+   <li>IncomingCall - provides details of incoming calls</li>
+ </ul>
+
+ <p>
+ The optional target line number may be specified when requesting events on
+ other than the logged in subscriber's line.  (Only certain types of
+ subscriber are able to access other lines in this way).
+
+ <p>
+ The optional timeout parameter specifies a timeout which may be used to
+ tweak the number of requests that go out over the wire.  If multiple
+ calls use different timeout settings then the last value passed to any of
+ the calls is the one used.
+
+ <p>
+ You should be aware that some events can't be listened for simultaneously,
+ for instance, you can't do both of listen for incoming call events AND
+ listen on multiple lines at once.  In the case when incompatible events
+ are requested, an error will be returned.
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>events</CODE> -  which events should be subscribed to  
+      </UL>
+   
+     <UL><CODE>eventCallback</CODE> -  callback called for each event (See <a href="callbacks.html#eventCallback">callbacks.eventCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>target</CODE> -  [optional] line number to request events on  
+      </UL>
+   
+     <UL><CODE>timeout</CODE> -  [optional] maximum timeout to use in milliseconds   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        undefined on success, or an error value such as if asked to start    listening for events that are incompatible or if asked to listen to    an event that the subscriber is not allowed to listen for  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#unsubscribeFromEvents">unsubscribeFromEvents()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="unsubscribeFromEvents"><!-- --></A>
+   <H3>unsubscribeFromEvents</H3>
+   <PRE><a href="error.html">error</a> <B>unsubscribeFromEvents</B>(&lt;String/String[]&gt; events, &lt;String&gt; target)</PRE>
+   
+      <UL>CORE API: Unsubscribe from events
+
+ <p>
+ Clears a subscription for specified events.
+
+ <p>
+ Can be called multiple times with different events specified, or
+ with multiple events at once.  Only the events given are unsubscribed
+ from, and the groupings used when unsubscribing do not need to match those
+ used when subscribing.
+
+ <p>
+ The optional line number may be specified when unsubscribing from events
+ on other than the logged in subscriber's line.  (Only certain types of
+ subscriber are able to access other lines in this way).
+
+ <p>New in version 7.1</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>events</CODE> -  which events should be unsubscribed from  
+      </UL>
+   
+     <UL><CODE>target</CODE> -  [optional] phone number of line that event subscription relates to   
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+        undefined on success, or an error value if there was no    corresponding subscription request found  
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <UL>
+   <B>See:</B><UL>- <a href="#subscribeToEvents">subscribeToEvents()</a></UL>
+   </UL>
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="updateDefaultGreeting"><!-- --></A>
+   <H3>updateDefaultGreeting</H3>
+   <PRE>void <B>updateDefaultGreeting</B>(type, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Update which greeting type is currently the default. Some greeting types
+ cannot be set directly as the default and must be enabled through other
+ fields on the Meta_Subscriber_MetaSphere_Greetings indication. This
+ can be done using the commportal#saveData function.
+
+ <p>New in version 7.3</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="updateGreetingAudio"><!-- --></A>
+   <H3>updateGreetingAudio</H3>
+   <PRE>void <B>updateGreetingAudio</B>(&lt;string&gt; type, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Update the audio for a greeting type using a previously uploaded audio
+ file. See commportal#uploadGreetingsAudio for more details.
+
+ <p>New in version 7.3</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>type</CODE> -  The type of the greeting to update.  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="uploadGreetingsAudio"><!-- --></A>
+   <H3>uploadGreetingsAudio</H3>
+   <PRE>void <B>uploadGreetingsAudio</B>(&lt;string&gt; formId, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Uploads a greetings audio file to the CommPortal server.
+
+ <p>New in version 7.3</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>formId</CODE> -  The ID of the HTML <form> element containing the                         file input to be submitted to the server.  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="uploadVoicemailAudio"><!-- --></A>
+   <H3>uploadVoicemailAudio</H3>
+   <PRE>void <B>uploadVoicemailAudio</B>(&lt;string&gt; formId, &lt;function&gt; successCallback, &lt;function&gt; failureCallback)</PRE>
+   
+      <UL>Uploads a voicemail audio file to the CommPortal server.
+
+ <p>New in version 7.3</p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>formId</CODE> -  The ID of the HTML <form> element containing the                         file input to be submitted to the server.  
+      </UL>
+   
+     <UL><CODE>successCallback</CODE> -  callback called when successful (See <a href="callbacks.html#successCallback">callbacks.successCallback()</a>)  
+      </UL>
+   
+     <UL><CODE>failureCallback</CODE> -  callback called if an error occurs (See <a href="callbacks.html#failureCallback">callbacks.failureCallback()</a>)      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!getRedirectUrl"><!-- --></A>
+   <H3>getRedirectUrl</H3>
+   <PRE>&lt;static&gt; String <B>getRedirectUrl</B>()</PRE>
+   
+      <UL>CORE API: Gets the redirect URL.
+
+ <p>
+ See <a href="CommPortal.html#!s!setRedirectUrl">CommPortal.setRedirectUrl()</a> for details on its purpose and
+ valid values.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+   <UL>
+   <B>Returns:</B>
+        <UL>
+         the redirect URL
+        </UL>
+   </UL>
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+   <A NAME="!s!setRedirectUrl"><!-- --></A>
+   <H3>setRedirectUrl</H3>
+   <PRE>&lt;static&gt; void <B>setRedirectUrl</B>(&lt;String&gt; redirectUrl)</PRE>
+   
+      <UL>CORE API: Sets the redirect URL.
+
+ <p>
+ The redirect URL must point to a small file on the same domain as the
+ page.  It is used to work around "same-origin policy" restrictions.  If
+ requests to the URL returns an error (e.g. 404 File not Found), some
+ browsers may not notify the CommPortal SDK that requests have been
+ redirected and it will fail to operate correctly.
+ </p>
+
+ <p>
+ The redirect URL defaults to empty.txt in the same directory as the SDK
+ itself, as long as the SDK is hosted on the same domain as the page.  If
+ the SDK is not hosted on the same domain, it defaults to empty.txt in the
+ same directory as the page.
+ </p></UL>
+   
+
+   <!-- METHOD PARAMETERS START -->
+   
+   <UL>
+   <B>Parameters:</B>
+   
+     <UL><CODE>redirectUrl</CODE> -  the redirect URL      
+      </UL>
+   
+   </UL>
+   
+   <!-- METHOD PARAMETERS END -->
+
+   
+
+   <!-- ADDITIONAL ATTRIBUTES START -->
+   
+   <!-- ADDITIONAL ATTRIBUTES  END -->
+<HR>
+
+
+
+<!-- ============ METHOD DETAIL END ========== -->
+
+<!-- ========= END OF CLASS DATA ========= -->
+
+<!-- ========== START OF NAVBAR ========== -->
+<A NAME="navbar_bottom"><!-- --></A>
+<TABLE BORDER="0" WIDTH="100%" CELLPADDING="1" CELLSPACING="0">
+<TR>
+<TD COLSPAN=3 BGCOLOR="#EEEEFF" CLASS="NavBarCell1">
+<A NAME="navbar_bottom_firstrow"><!-- --></A>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="3">
+  <TR ALIGN="center" VALIGN="top">
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="overview-summary.html"><FONT CLASS="NavBarFont1"><B>Overview</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">  <A HREF="overview-summary-commportal.js.html"><FONT CLASS="NavBarFont1"><B>File</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#FFFFFF" CLASS="NavBarCell1Rev"> &nbsp;<FONT CLASS="NavBarFont1Rev"><B>Class</B></FONT>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="overview-tree.html"><FONT CLASS="NavBarFont1"><b>Tree</b></FONT></A>&nbsp;</TD>
+  <!--TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1"-->    <!--A HREF="deprecated-list.html"--><!--FONT CLASS="NavBarFont1">Deprecated</FONT--><!--/A--><!--&nbsp;</TD-->
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="index-all.html"><FONT CLASS="NavBarFont1"><B>Index</B></FONT></A>&nbsp;</TD>
+  <TD BGCOLOR="#EEEEFF" CLASS="NavBarCell1">    <A HREF="help-doc.html"><FONT CLASS="NavBarFont1"><B>Help</B></FONT></A>&nbsp;</TD>
+  </TR>
+</TABLE>
+</TD>
+<TD ALIGN="right" VALIGN="top" ROWSPAN=3><EM>
+<B></B>
+</EM>
+</TD
+</TR>
+
+<TR>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+&nbsp;<A HREF="callstate.html"><B>PREV CLASS</B></A><!--
+   NEXT CLASS
+-->
+&nbsp;<A HREF="contact.html"><B>NEXT CLASS</B></A></FONT></TD>
+<TD BGCOLOR="white" CLASS="NavBarCell2"><FONT SIZE="-2">
+  <A HREF="index.html" TARGET="_top"><B>FRAMES</B></A>  &nbsp;
+&nbsp;<A HREF="" TARGET="_top"><B>NO FRAMES</B></A>  &nbsp;
+&nbsp;
+<SCRIPT>
+  <!--
+  if(window==top) {
+    document.writeln('<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>');
+  }
+  //-->
+</SCRIPT>
+<NOSCRIPT>
+<A HREF="allclasses-noframe.html" TARGET=""><B>All Classes</B></A>
+</NOSCRIPT>
+</FONT></TD>
+</TR>
+<TR>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+  SUMMARY:&nbsp;<A HREF="#field_summary">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_summary">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_summary">METHOD</A></FONT></TD>
+<TD VALIGN="top" CLASS="NavBarCell3"><FONT SIZE="-2">
+DETAIL:&nbsp;<A HREF="#field_detail">FIELD</A>&nbsp;|&nbsp;<A HREF="#constructor_detail">CONSTR</A>&nbsp;|&nbsp;<A HREF="#method_detail">METHOD</A></FONT></TD>
+</TR>
+</TABLE>
+
+<!-- =========== END OF NAVBAR =========== -->
+
+<HR>
+<FONT SIZE="-1">
+
+</FONT>
+<div>Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_parent">JSDoc</a></div>
+</BODY>
+</HTML>

@@ -1,0 +1,1242 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "title": "MetaView Provisioning API",
+    "description": "A Request to the MetaView Web Provisioning API",
+    "type": "object",
+    "oneOf":     [
+                {
+            "title": "Business Group",
+            "properties":             {
+                "action": {"enum":                 [
+                    "create",
+                    "update"
+                ]},
+                "templates":                 {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {"type": "string"},
+                    "uniqueItems": true
+                },
+                "oneOf": [{"values":                 {
+                    "description": "Auto-generated fields from ShMetaData",
+                    "type": "object",
+                    "properties":                     {
+                        "MetaSphere CFS": {"type": "string"},
+                        "MetaSphere EAS": {"type": "string"},
+                        "Business Group": {"type": "string"},
+                        "Network wide Business Group ID (CFS)": {"type": "string"},
+                        "Network wide Business Group ID (EAS)": {"type": "string"},
+                        "Delegated Management Group": {"type": "string"},
+                        "CFS Persistent Profile": {"type": "string"},
+                        "Network Node (for Voice Quality Monitoring)": {"type": "string"},
+                        "Local CNAM name": {"type": "string"},
+                        "Long distance carrier": {"type": "string"},
+                        "IntraLATA carrier": {"type": "string"},
+                        "International carrier": {"type": "string"},
+                        "Locale": {"type": "string"},
+                        "Second locale": {"type": "string"},
+                        "Billing type": {"enum":                         [
+                            "Flat rate",
+                            "Message rate"
+                        ]},
+                        "Billing type - intercom calls": {"enum":                         [
+                            "All flat rate",
+                            "All message rate",
+                            "Local calls flat rate"
+                        ]},
+                        "Number Validation and routing attributes":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "Pre-paid / off-switch calling card subscriber",
+                                "Fax / Modem subscriber",
+                                "Nomadic subscriber"
+                            ]}
+                        },
+                        "Business Group forced off-switch routing": {"enum":                         [
+                            "None",
+                            "Route out-of-BG calls off-switch",
+                            "Route out-of-department calls off-switch"
+                        ]},
+                        "Deny all usage sensitive features": {"type": "boolean"},
+                        "Distinctive alerting": {"enum":                         [
+                            "None",
+                            "External",
+                            "Internal"
+                        ]},
+                        "Service Suspended": {"enum":                         [
+                            "None",
+                            "Incoming calls",
+                            "Outgoing calls",
+                            "Incoming and Outgoing calls"
+                        ]},
+                        "Enable advanced alerting features": {"type": "boolean"},
+                        "Default ESA Protection Domain for SIP subscribers": {"type": "string"},
+                        "Traffic Study": {"type": "boolean"},
+                        "Send advanced SIP messages to Service Assurance Server": {"type": "boolean"},
+                        "Business Group Call Logs - enabled": {"type": "boolean"},
+                        "Allow BG administrators to change expansion modules": {"type": "boolean"},
+                        "Prefix caller ID with External Line Code": {"type": "boolean"},
+                        "Business Group Lines share presence": {"type": "boolean"},
+                        "Default Business Group line privileges": {"type": "integer"},
+                        "Site Selection DN": {"type": "string"},
+                        "Preferred site": {"type": "string"},
+                        "Preferred site (CFS)": {"type": "string"},
+                        "Preferred site (EAS)": {"type": "string"},
+                        "Subscriber Group for non-reserved numbers": {"type": "string"},
+                        "VQM call logging": {"type": "boolean"},
+                        "Line Class Code 1": {"type": "string"},
+                        "Line Class Code 2": {"type": "string"},
+                        "Line Class Code 3": {"type": "string"},
+                        "Line Class Code 4": {"type": "string"},
+                        "Line Class Code 5": {"type": "string"},
+                        "Line Class Code 6": {"type": "string"},
+                        "Line Class Code 7": {"type": "string"},
+                        "Line Class Code 8": {"type": "string"},
+                        "Line Class Code 9": {"type": "string"},
+                        "Line Class Code 10": {"type": "string"},
+                        "Line Class Code 11": {"type": "string"},
+                        "Line Class Code 12": {"type": "string"},
+                        "Line Class Code 13": {"type": "string"},
+                        "Line Class Code 14": {"type": "string"},
+                        "Line Class Code 15": {"type": "string"},
+                        "Line Class Code 16": {"type": "string"},
+                        "Line Class Code 17": {"type": "string"},
+                        "Line Class Code 18": {"type": "string"},
+                        "Line Class Code 19": {"type": "string"},
+                        "Line Class Code 20": {"type": "string"},
+                        "Restricted Line State Monitoring Notifications": {"enum":                         [
+                            "Unrestricted",
+                            "Restricted MADN/MLHG alerting"
+                        ]},
+                        "MLHG Automated Call Distribution - MWB enabled": {"type": "boolean"},
+                        "MLHG Automated Call Distribution - agent status refresh interval":                         {
+                            "type": "integer",
+                            "minimum": 5,
+                            "maximum": 30
+                        },
+                        "MLHG Automated Call Distribution - availability enabled": {"type": "boolean"},
+                        "MLHG Automated Call Distribution - unavailability reason 1": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 2": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 3": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 4": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 5": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 6": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 7": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 8": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 9": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 10": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 11": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 12": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 13": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 14": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 15": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 16": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 17": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 18": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 19": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 20": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 21": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 22": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 23": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 24": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 25": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 26": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 27": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 28": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 29": {"type": "string"},
+                        "MLHG Automated Call Distribution - unavailability reason 30": {"type": "string"},
+                        "MLHG Automated Call Distribution - basic ACD licenses": {"enum":                         [
+                            "None",
+                            "Unlimited",
+                            "Limited"
+                        ]},
+                        "MLHG Automated Call Distribution - number of Basic ACD licenses":                         {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                        },
+                        "MLHG Automated Call Distribution - premium ACD licenses": {"enum":                         [
+                            "None",
+                            "Unlimited",
+                            "Limited"
+                        ]},
+                        "MLHG Automated Call Distribution - number of Premium ACD licenses":                         {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 2147483647
+                        },
+                        "Facility Group Limits - external calls": {"enum":                         [
+                            "Not Permitted",
+                            "Unlimited",
+                            "Limited"
+                        ]},
+                        "Facility Group Limits - maximum external calls": {"type": "integer"},
+                        "Facility Group Limits - terminating calls": {"enum":                         [
+                            "Not Permitted",
+                            "Unlimited",
+                            "Limited"
+                        ]},
+                        "Facility Group Limits - maximum terminating calls": {"type": "integer"},
+                        "Facility Group Limits - originating calls": {"enum":                         [
+                            "Not Permitted",
+                            "Unlimited",
+                            "Limited"
+                        ]},
+                        "Facility Group Limits - maximum originating calls": {"type": "integer"},
+                        "External line code (CFS)": {"type": "string"},
+                        "External line code (EAS)": {"type": "string"},
+                        "Star replacement for pulse dialing": {"type": "string"},
+                        "Voicemail code prefix": {"type": "string"},
+                        "Force simple matching": {"type": "boolean"},
+                        "Inter-switch Business Group dialing permitted": {"type": "boolean"},
+                        "Intercom code digit map": {"type": "string"},
+                        "Recording Service - play tone during recordings": {"type": "boolean"},
+                        "Recording Service - allow recording of intra-Business Group calls": {"type": "boolean"},
+                        "Outgoing Call Notifications - subscribed": {"type": "boolean"},
+                        "Outgoing Call Notifications - application server": {"type": "string"},
+                        "Outgoing Call Notifications - call types":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum": ["Emergency"]}
+                        },
+                        "Restrict Subscriber-to-Subscriber Messaging to the BG": {"type": "boolean"},
+                        "Represent intra-BG Calling Number by extension": {"type": "boolean"},
+                        "Operator Number": {"type": "string"},
+                        "MLHG Automated Call Distribution - Maximum number of scheduled reports": {"type": "integer"},
+                        "Call Barring - exempt business group calls from call barring": {"type": "boolean"},
+                        "Call Park - Subscribed": {"type": "boolean"},
+                        "Call Park - maximum number of Call Park Orbits allowed": {"type": "integer"},
+                        "Call Park - Timed Recall": {"type": "boolean"},
+                        "Call Park - duration of Timed Recall timer": {"type": "integer"},
+                        "Call Park - Call Park timeout": {"type": "integer"},
+                        "Call Park - message for Call Park announcement": {"type": "string"},
+                        "Call Park - message for successful Call Park": {"type": "string"},
+                        "Call Park - message for unsuccessful Call Park": {"type": "string"},
+                        "Call Pickup - Subscribed": {"type": "boolean"},
+                        "Directed Pickup (no barge-in) - Subscribed": {"type": "boolean"},
+                        "Directed Pickup (no barge-in) - default Business Group Line setting": {"type": "boolean"},
+                        "Orbit Code Range": {},
+                        "Mandatory Account Codes - valid account codes": {"type": "string"},
+                        "Mandatory Account Codes - Subscribed": {"type": "boolean"},
+                        "Mandatory Account Codes - default variant": {"enum":                         [
+                            "Non-validated",
+                            "Validated"
+                        ]},
+                        "Mandatory Account Codes - allow override of subscription": {"type": "boolean"},
+                        "Mandatory Account Codes - default call types (UK)":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "International",
+                                "Mobile",
+                                "National",
+                                "Local",
+                                "Operator",
+                                "Premium",
+                                "Directory",
+                                "Local Business Group",
+                                "Other Business Group",
+                                "Regional",
+                                "Carrier dialed"
+                            ]}
+                        },
+                        "Mandatory Account Codes - default call types (US)":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "Local",
+                                "Operator",
+                                "Premium",
+                                "Directory",
+                                "Local Business Group",
+                                "Other Business Group",
+                                "National",
+                                "Regional",
+                                "Carrier dialed",
+                                "International"
+                            ]}
+                        },
+                        "Mandatory Account Codes - allow override of call types": {"type": "boolean"},
+                        "Mandatory Account Codes - default code length": {"type": "integer"},
+                        "Mandatory Account Codes - allow override of codes and code length": {"type": "boolean"},
+                        "Mandatory Account Codes - user can view BG codes": {"type": "boolean"},
+                        "Mandatory Account Codes - user access to BG line codes": {"enum":                         [
+                            "Visible, writeable",
+                            "Visible, read-only",
+                            "Hidden"
+                        ]},
+                        "Mandatory Account Codes - default max incorrect code attempts per call": {"type": "integer"},
+                        "Mandatory Account Codes - default max incorrect code attempts": {"type": "integer"},
+                        "Multi Line Hunt Groups - statistics enabled": {"type": "boolean"},
+                        "Multi Line Hunt Groups - multiple logins allowed": {"type": "boolean"},
+                        "Multi Line Hunt Groups - interrupt Music on Hold to provide Ringback": {"type": "boolean"},
+                        "Music On Hold Service - Subscribed": {"type": "boolean"},
+                        "Music On Hold Service - class of service": {"type": "integer"},
+                        "Music On Hold Service - limit concurrent calls": {"type": "boolean"},
+                        "Music On Hold Service - maximum concurrent calls": {"type": "integer"}
+                    }
+                }}]
+            },
+            "required": ["action"]
+        },
+                {
+            "title": "CFS Free DN",
+            "properties":             {
+                "action": {"enum": ["query"]},
+                "oneOf": [{"fields":                 {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {"enum": ["Telephone number"]},
+                    "uniqueItems": true
+                }}]
+            },
+            "required": ["action"]
+        },
+                {
+            "title": "CFS Free DN Block",
+            "properties":             {
+                "action": {"enum": ["query"]},
+                "oneOf": [{"fields":                 {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {"enum":                     [
+                        "First telephone number",
+                        "Last telephone number"
+                    ]},
+                    "uniqueItems": true
+                }}]
+            },
+            "required": ["action"]
+        },
+                {
+            "title": "Subscriber",
+            "properties":             {
+                "action": {"enum":                 [
+                    "create",
+                    "update"
+                ]},
+                "templates":                 {
+                    "type": "array",
+                    "minItems": 1,
+                    "items": {"type": "string"},
+                    "uniqueItems": true
+                },
+                "oneOf": [{"values":                 {
+                    "description": "Auto-generated fields from ShMetaData",
+                    "type": "object",
+                    "properties":                     {
+                        "MetaSphere CFS": {"type": "string"},
+                        "MetaSphere EAS": {"type": "string"},
+                        "Access Gateway Controller": {"type": "string"},
+                        "Phone number": {"type": "string"},
+                        "Business Group (CFS)": {"type": "string"},
+                        "Business Group (EAS)": {"type": "string"},
+                        "MLHG Name": {"type": "string"},
+                        "Presentation number": {"type": "string"},
+                        "Charge number": {"type": "string"},
+                        "Calling party number": {"type": "string"},
+                        "Department (CFS)": {"type": "string"},
+                        "Department (EAS)": {"type": "string"},
+                        "Calling party number for emergency calls": {"type": "string"},
+                        "Delegated Management Group": {"type": "string"},
+                        "CFS Persistent Profile": {"type": "string"},
+                        "Persistent Profile (AGC)": {"type": "string"},
+                        "Allow direct dialing": {"type": "boolean"},
+                        "CFS Subscriber Group": {"type": "string"},
+                        "CFS Number status": {"enum":                         [
+                            "Normal",
+                            "Ported to",
+                            "Ported from (UK only)",
+                            "Recently moved",
+                            "Reserved - old number",
+                            "Reserved for future use",
+                            "Ported out (North America only)",
+                            "Reserved - ported in (North America only)",
+                            "Non-geographic"
+                        ]},
+                        "Ported routing method": {"enum":                         [
+                            "Default",
+                            "Configured Location Routing Number"
+                        ]},
+                        "Location Routing Number": {"type": "string"},
+                        "Recently moved from old number": {"type": "boolean"},
+                        "Moved from phone number": {"type": "string"},
+                        "Connect call after announcement": {"type": "boolean"},
+                        "Moved to phone number": {"type": "string"},
+                        "Moved to number as dialed": {"type": "string"},
+                        "Moved date":                         {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "Expire after": {"type": "integer"},
+                        "Ported exchange ID": {"type": "string"},
+                        "Call Feature Server signaling type": {"enum":                         [
+                            "Analog Line/T1 CAS",
+                            "ISDN PRI",
+                            "SIP",
+                            "None"
+                        ]},
+                        "No user equipment": {"type": "boolean"},
+                        "Flash-hook call services provided by": {"enum":                         [
+                            "MetaSphere CFS",
+                            "Endpoint"
+                        ]},
+                        "Flash-hook call services provided by (AGC)": {"enum":                         [
+                            "TAS",
+                            "Metaswitch AGC"
+                        ]},
+                        "Calling number precedence for emergency calls": {"enum":                         [
+                            "CPN - UPN - DN",
+                            "CPN - DN",
+                            "UPN - CPN - DN",
+                            "UPN - DN",
+                            "DN"
+                        ]},
+                        "Gateway": {"type": "string"},
+                        "Access Device": {"type": "string"},
+                        "Access Line number": {"type": "integer"},
+                        "ISDN Interface": {"type": "string"},
+                        "Cascade fault monitoring level on apply": {"type": "boolean"},
+                        "ISDN default bearer capabilities":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "Speech or 31kHz audio",
+                                "64kbps data",
+                                "56kbps data",
+                                "64kbps restricted"
+                            ]}
+                        },
+                        "Deliver ISDN User Provided Number on emergency call": {"type": "boolean"},
+                        "Use phone number for SIP user name": {"type": "boolean"},
+                        "SIP user name": {"type": "string"},
+                        "SIP domain name": {"type": "string"},
+                        "Authentication username includes domain": {"type": "boolean"},
+                        "Maximum simultaneous registrations":                         {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 32
+                        },
+                        "Accession Client only": {"type": "boolean"},
+                        "Media Gateway Model": {"type": "string"},
+                        "Use static NAT mapping": {"type": "boolean"},
+                        "SIP authentication required": {"type": "boolean"},
+                        "New SIP password":                         {
+                            "description": "Password",
+                            "type": "string"
+                        },
+                        "Confirm new SIP password":                         {
+                            "description": "Password",
+                            "type": "string"
+                        },
+                        "Network Node (for Voice Quality Monitoring)": {"type": "string"},
+                        "Location (for UMG resource allocation)": {"type": "string"},
+                        "ESA Protection Domain": {"type": "string"},
+                        "Maximum call appearances": {"type": "integer"},
+                        "Maximum permitted contact refresh interval": {"type": "integer"},
+                        "Signal function code": {"enum":                         [
+                            "Loop start",
+                            "Ground start",
+                            "E and M wink start",
+                            "E and M wink start (Originating), delay start (Terminating)",
+                            "E and M wink start (Originating only)",
+                            "E and M immediate start (Originating only)",
+                            "E and M wink start (Terminating only)",
+                            "E and M delay start (Terminating only)",
+                            "LRB wink start",
+                            "LRB wink start (Originating only)",
+                            "LRB wink start (Terminating only)",
+                            "Reversed LRB wink start (Originating only)",
+                            "LRB delay start (Terminating only)",
+                            "LRB wink start (Originating) delay start (Terminating)"
+                        ]},
+                        "Line usage": {"enum":                         [
+                            "Voice and fax",
+                            "Fax only"
+                        ]},
+                        "Nailed-up connection": {"type": "boolean"},
+                        "GR-303 dial type": {"enum":                         [
+                            "DTMF or Pulse Dial",
+                            "Pulse Dial only"
+                        ]},
+                        "FSK format": {"enum":                         [
+                            "Bellcore",
+                            "UK"
+                        ]},
+                        "Long distance carrier": {"type": "string"},
+                        "IntraLATA carrier": {"type": "string"},
+                        "International carrier": {"type": "string"},
+                        "PIN (CFS)":                         {
+                            "description": "PIN",
+                            "type": "string"
+                        },
+                        "PIN (EAS)":                         {
+                            "description": "PIN",
+                            "type": "string"
+                        },
+                        "Locale": {"type": "string"},
+                        "Second locale": {"type": "string"},
+                        "Billing type": {"enum":                         [
+                            "Flat rate",
+                            "Message rate",
+                            "FX rate"
+                        ]},
+                        "Advice of Charge - AOC-D": {"enum":                         [
+                            "Never provided",
+                            "Provided on request",
+                            "Always provided"
+                        ]},
+                        "Advice of Charge - AOC-E": {"enum":                         [
+                            "Never provided",
+                            "Provided on request",
+                            "Always provided"
+                        ]},
+                        "Number Validation and routing attributes":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "Pre-paid / off-switch calling card subscriber",
+                                "Fax / Modem subscriber",
+                                "Nomadic subscriber"
+                            ]}
+                        },
+                        "Deny all usage sensitive features": {"type": "boolean"},
+                        "Line side answer supervision supported": {"type": "boolean"},
+                        "Service suspended": {"enum":                         [
+                            "None",
+                            "Incoming calls",
+                            "Outgoing calls",
+                            "Incoming and Outgoing calls"
+                        ]},
+                        "CFS Service suspended": {"enum":                         [
+                            "None",
+                            "Incoming calls",
+                            "Outgoing calls",
+                            "Incoming and Outgoing calls"
+                        ]},
+                        "Digit masking required": {"type": "boolean"},
+                        "Tariff group": {"type": "integer"},
+                        "Originating facility marks - disabled": {"type": "boolean"},
+                        "Originating facility marks - attended call office": {"type": "boolean"},
+                        "Originating facility marks - AD & C": {"type": "boolean"},
+                        "Terminating facility marks - service interception": {"type": "boolean"},
+                        "Terminating facility marks - fixed destination service": {"type": "boolean"},
+                        "Force LNP lookup for calls to this subscriber": {"type": "boolean"},
+                        "Adjust for daylight savings": {"type": "boolean"},
+                        "Timezone (CFS)": {"type": "string"},
+                        "Timezone (EAS)": {"type": "string"},
+                        "Timezone (AGC)": {"type": "string"},
+                        "Line Traffic Study": {"type": "boolean"},
+                        "Business Group line privileges": {"type": "integer"},
+                        "Payphone metering": {"type": "boolean"},
+                        "Charge indication": {"enum":                         [
+                            "None",
+                            "Charge",
+                            "No charge"
+                        ]},
+                        "Calling category": {"enum":                         [
+                            "Ordinary calling subscriber",
+                            "Calling subscriber with priority",
+                            "Operator",
+                            "Payphone",
+                            "Test call"
+                        ]},
+                        "Network disconnect signal duration":                         {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535
+                        },
+                        "Preferred site (CFS)": {"type": "string"},
+                        "Preferred site (EAS)": {"type": "string"},
+                        "Preferred site": {"type": "string"},
+                        "Name": {"type": "string"},
+                        "PIN": {"type": "string"},
+                        "Language": {"type": "string"},
+                        "Timezone": {"type": "string"},
+                        "Business Call Manager - subscribed": {"type": "boolean"},
+                        "Intercom Call Dialed Name Delivery - subscribed": {"type": "boolean"},
+                        "Intercom Call Dialed Name Delivery - enabled": {"type": "boolean"},
+                        "Call Lists - subscribed": {"type": "boolean"},
+                        "Call Lists - maximum number of calls per list": {"type": "integer"},
+                        "High risk call limits - limit type": {"enum":                         [
+                            "Unlimited",
+                            "Soft limit",
+                            "Limited",
+                            "Not permitted"
+                        ]},
+                        "High risk call limits - maximum high risk calls":                         {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "Music on Hold (Integrated) - subscribed": {"type": "boolean"},
+                        "Announcement on Hold - subscribed": {"type": "boolean"},
+                        "CFS Customer info": {"type": "string"},
+                        "CFS Customer info 2": {"type": "string"},
+                        "CFS Customer info 3": {"type": "string"},
+                        "CFS Customer info 4": {"type": "string"},
+                        "CFS Customer info 5": {"type": "string"},
+                        "Name (CFS)": {"type": "string"},
+                        "Name (EAS)": {"type": "string"},
+                        "Line Class Code 1": {"type": "string"},
+                        "Line Class Code 2": {"type": "string"},
+                        "Line Class Code 3": {"type": "string"},
+                        "Line Class Code 4": {"type": "string"},
+                        "Line Class Code 5": {"type": "string"},
+                        "Line Class Code 6": {"type": "string"},
+                        "Line Class Code 7": {"type": "string"},
+                        "Line Class Code 8": {"type": "string"},
+                        "Line Class Code 9": {"type": "string"},
+                        "Line Class Code 10": {"type": "string"},
+                        "Line Class Code 11": {"type": "string"},
+                        "Line Class Code 12": {"type": "string"},
+                        "Line Class Code 13": {"type": "string"},
+                        "Line Class Code 14": {"type": "string"},
+                        "Line Class Code 15": {"type": "string"},
+                        "Line Class Code 16": {"type": "string"},
+                        "Line Class Code 17": {"type": "string"},
+                        "Line Class Code 18": {"type": "string"},
+                        "Line Class Code 19": {"type": "string"},
+                        "Line Class Code 20": {"type": "string"},
+                        "Long Distance Alert - subscribed": {"type": "boolean"},
+                        "Automated Call Distribution - availability": {"enum":                         [
+                            "Available",
+                            "Wrap-up",
+                            "UnavailabilityReason1",
+                            "UnavailabilityReason2",
+                            "UnavailabilityReason3",
+                            "UnavailabilityReason4",
+                            "UnavailabilityReason5",
+                            "UnavailabilityReason6",
+                            "UnavailabilityReason7",
+                            "UnavailabilityReason8",
+                            "UnavailabilityReason9",
+                            "UnavailabilityReason10",
+                            "UnavailabilityReason11",
+                            "UnavailabilityReason12",
+                            "UnavailabilityReason13",
+                            "UnavailabilityReason14",
+                            "UnavailabilityReason15",
+                            "UnavailabilityReason16",
+                            "UnavailabilityReason17",
+                            "UnavailabilityReason18",
+                            "UnavailabilityReason19",
+                            "UnavailabilityReason20",
+                            "UnavailabilityReason21",
+                            "UnavailabilityReason22",
+                            "UnavailabilityReason23",
+                            "UnavailabilityReason24",
+                            "UnavailabilityReason25",
+                            "UnavailabilityReason26",
+                            "UnavailabilityReason27",
+                            "UnavailabilityReason28",
+                            "UnavailabilityReason29",
+                            "UnavailabilityReason30"
+                        ]},
+                        "Automated Call Distribution - last answered MLHG": {"type": "string"},
+                        "Automated Call Distribution - disposition code": {"type": "integer"},
+                        "Recording Service (SIP) - Subscribed": {"type": "boolean"},
+                        "Recording Service (SIP) - enabled": {"type": "boolean"},
+                        "Recording Service (SIP) - server": {"type": "string"},
+                        "Business Group Administration - account type (CFS)": {"enum":                         [
+                            "Normal",
+                            "Administrator"
+                        ]},
+                        "Business Group Administration - account type (EAS)": {"enum":                         [
+                            "Normal",
+                            "Administrator"
+                        ]},
+                        "Business Group Administration - administration department (CFS)": {"type": "string"},
+                        "Business Group Administration - administration department (EAS)": {"type": "string"},
+                        "Business Group Administration - ACD supervisor": {"type": "boolean"},
+                        "Ro parties charged": {"enum":                         [
+                            "None",
+                            "Originating",
+                            "Originating and Terminating"
+                        ]},
+                        "Line Group (AGC)": {"type": "string"},
+                        "SIP Registrar (AGC)": {"type": "string"},
+                        "Use phone number for SIP user name (AGC)": {"type": "boolean"},
+                        "SIP user name (AGC)": {"type": "string"},
+                        "Use SIP domain name from registrar (AGC)": {"type": "boolean"},
+                        "SIP domain name (AGC)": {"type": "string"},
+                        "SIP authentication required (AGC)": {"type": "boolean"},
+                        "New SIP password (AGC)":                         {
+                            "description": "Password",
+                            "type": "string"
+                        },
+                        "Confirm new SIP password (AGC)":                         {
+                            "description": "Password",
+                            "type": "string"
+                        },
+                        "Network Node (for Voice Quality Monitoring) (AGC)": {"type": "string"},
+                        "Location (for UMG resource allocation) (AGC)": {"type": "string"},
+                        "Line usage (AGC)": {"enum":                         [
+                            "Voice and fax",
+                            "Fax only"
+                        ]},
+                        "Network disconnect signal duration (AGC)":                         {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 65535
+                        },
+                        "Customer info (AGC)": {"type": "string"},
+                        "Customer info 2 (AGC)": {"type": "string"},
+                        "Customer info 3 (AGC)": {"type": "string"},
+                        "Customer info 4 (AGC)": {"type": "string"},
+                        "Customer info 5 (AGC)": {"type": "string"},
+                        "Line Class Code 1 (AGC)": {"type": "string"},
+                        "Line Class Code 2 (AGC)": {"type": "string"},
+                        "Line Class Code 3 (AGC)": {"type": "string"},
+                        "Line Class Code 4 (AGC)": {"type": "string"},
+                        "Line Class Code 5 (AGC)": {"type": "string"},
+                        "Line Class Code 6 (AGC)": {"type": "string"},
+                        "Line Class Code 7 (AGC)": {"type": "string"},
+                        "Line Class Code 8 (AGC)": {"type": "string"},
+                        "Line Class Code 9 (AGC)": {"type": "string"},
+                        "Line Class Code 10 (AGC)": {"type": "string"},
+                        "Line Class Code 11 (AGC)": {"type": "string"},
+                        "Line Class Code 12 (AGC)": {"type": "string"},
+                        "Line Class Code 13 (AGC)": {"type": "string"},
+                        "Line Class Code 14 (AGC)": {"type": "string"},
+                        "Line Class Code 15 (AGC)": {"type": "string"},
+                        "Line Class Code 16 (AGC)": {"type": "string"},
+                        "Line Class Code 17 (AGC)": {"type": "string"},
+                        "Line Class Code 18 (AGC)": {"type": "string"},
+                        "Line Class Code 19 (AGC)": {"type": "string"},
+                        "Line Class Code 20 (AGC)": {"type": "string"},
+                        "Diagnostics - logging - log level (AGC)": {"enum":                         [
+                            "Level 10 (diagnostics)",
+                            "Level 20 (verbose statistics)",
+                            "Level 30 (verbose operational)",
+                            "Level 40 (statistics)",
+                            "Level 50 (audit)",
+                            "Level 60 (operational)",
+                            "Level 70 (unexpected)",
+                            "Level 80 (error)",
+                            "Level 90 (fatal)",
+                            "Default level"
+                        ]},
+                        "Diagnostics - API trace - enabled (AGC)": {"type": "boolean"},
+                        "Diagnostics - API trace - trace tag (AGC)": {"type": "string"},
+                        "Diagnostics - API trace - trace remote number (AGC)": {"type": "string"},
+                        "VQM call logging (AGC)": {"type": "boolean"},
+                        "Test Calls - overriding Config Set (AGC)": {"type": "string"},
+                        "Fault Monitoring Profile (AGC)": {"type": "string"},
+                        "Apply Fault Monitoring Profile to related object types (AGC)":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "TDM Port",
+                                "Subscriber Gateway",
+                                "TAG Access Device",
+                                "ISDN PRI"
+                            ]}
+                        },
+                        "Allow Fault Monitoring Profiles from related objects to apply (AGC)": {"type": "boolean"},
+                        "Export - file (AGC)": {"type": "string"},
+                        "EAS Class of Service": {"type": "string"},
+                        "Fax Number": {"type": "string"},
+                        "EAS Disabled": {"type": "boolean"},
+                        "EAS Disabled for Migration": {"type": "boolean"},
+                        "EAS Preferred Language": {"type": "string"},
+                        "EAS Customer Group": {"type": "string"},
+                        "Email Domain": {"type": "string"},
+                        "EAS Device Type": {"enum":                         [
+                            "Landline",
+                            "Cellular"
+                        ]},
+                        "EAS Account Type": {"enum":                         [
+                            "Primary",
+                            "Secondary",
+                            "Additional device"
+                        ]},
+                        "EAS Main Number": {"type": "string"},
+                        "EAS Alternate Number for Outdial": {"type": "string"},
+                        "EAS iPhone Device": {"type": "boolean"},
+                        "EAS Password":                         {
+                            "description": "Password",
+                            "type": "string"
+                        },
+                        "EAS Exceeded Login Count": {"type": "boolean"},
+                        "Last date the PIN was changed":                         {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "Last date the Password was changed":                         {
+                            "type": "string",
+                            "format": "date-time"
+                        },
+                        "Self Provisioning Status": {"type": "string"},
+                        "Actual iPhone VVM State": {"enum":                         [
+                            "On",
+                            "Off",
+                            "Reset"
+                        ]},
+                        "iPhone VVM State": {"type": "boolean"},
+                        "iPhone VVM Available": {"type": "boolean"},
+                        "OMTP VVM Available": {"type": "boolean"},
+                        "Custom VVM Available": {"type": "boolean"},
+                        "Trigger VVM State Reset": {"type": "boolean"},
+                        "iPhone VVM enabled": {"type": "boolean"},
+                        "OMTP VVM notifications supported": {"type": "boolean"},
+                        "OMTP VVM enabled": {"type": "boolean"},
+                        "OMTP VVM client port": {"type": "integer"},
+                        "OMTP VVM client prefix": {"type": "string"},
+                        "Custom VVM notifications supported": {"type": "boolean"},
+                        "Custom VVM enabled": {"type": "boolean"},
+                        "EAS Primary Number": {"type": "string"},
+                        "EAS Leave Message Languages": {"type": "string"},
+                        "Initialize EAS Service": {"type": "boolean"},
+                        "EAS Operator Number": {"type": "string"},
+                        "EAS MWI State": {"enum":                         [
+                            "On",
+                            "Off",
+                            "Reset"
+                        ]},
+                        "Call Tree Forwarding Number": {"type": "string"},
+                        "Is ACDRS allowed": {"type": "boolean"},
+                        "Scheduled Greetings": {"type": "boolean"},
+                        "Secondary Mailbox": {"type": "boolean"},
+                        "3-Way Calling - Subscribed": {"type": "boolean"},
+                        "3-Way Calling (AGC) - Subscribed": {"type": "boolean"},
+                        "Call Transfer - Subscribed": {"type": "boolean"},
+                        "Call Transfer - Subscribed (AGC)": {"type": "boolean"},
+                        "Advanced voice codecs - Subscribed": {"type": "boolean"},
+                        "Anonymous Call Rejection - Subscribed": {"type": "boolean"},
+                        "Anonymous Call Rejection - Enabled": {"type": "boolean"},
+                        "Anonymous Call Rejection - usage sensitive billing": {"type": "boolean"},
+                        "Automatic Callback - Subscribed": {"type": "boolean"},
+                        "Automatic Callback - usage sensitive billing": {"type": "boolean"},
+                        "Automatic Recall - Subscribed": {"type": "boolean"},
+                        "Automatic Recall - usage sensitive billing": {"type": "boolean"},
+                        "Basic Line Hunting - Subscribed": {"type": "boolean"},
+                        "Basic Line Hunting - Enabled": {"type": "boolean"},
+                        "Basic Line Hunting - no reply time": {"type": "integer"},
+                        "Basic Line Hunting - arrangement": {"enum":                         [
+                            "Circular",
+                            "Regular"
+                        ]},
+                        "Busy Call Forwarding - Subscribed": {"type": "boolean"},
+                        "Busy Call Forwarding - variant": {"enum":                         [
+                            "Variable",
+                            "Fixed number"
+                        ]},
+                        "Busy Call Forwarding - Enabled": {"type": "boolean"},
+                        "Busy Call Forwarding - number": {"type": "string"},
+                        "Unconditional, Busy or Delayed Call Forwarding - usage sensitive billing": {"type": "boolean"},
+                        "Call Barring - Subscribed": {"type": "boolean"},
+                        "Call Barring - usage sensitive billing": {"type": "boolean"},
+                        "Call Barring - current subscriber-barred call types":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "International",
+                                "National and mobile",
+                                "Local",
+                                "Operator",
+                                "Access codes",
+                                "Premium",
+                                "Access codes that change configuration",
+                                "Directory assistance",
+                                "National",
+                                "Mobile"
+                            ]}
+                        },
+                        "Call Barring - current operator-barred call types":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "International",
+                                "National and mobile",
+                                "Local",
+                                "Operator",
+                                "Access codes",
+                                "Premium",
+                                "Access codes that change configuration",
+                                "Directory assistance",
+                                "National",
+                                "Mobile"
+                            ]}
+                        },
+                        "Maximum simultaneous forwardings": {"type": "integer"},
+                        "User notification of call diversion": {"type": "boolean"},
+                        "Deliver redirecting number as calling number": {"type": "boolean"},
+                        "Number released to diverted-to user": {"type": "boolean"},
+                        "Number released to caller": {"type": "boolean"},
+                        "Diverted-to number released to caller": {"type": "boolean"},
+                        "Require courtesy call": {"type": "boolean"},
+                        "Play confirm tone": {"type": "boolean"},
+                        "Call Hold - Subscribed": {"type": "boolean"},
+                        "Call Hold (AGC) - Subscribed": {"type": "boolean"},
+                        "Call Trace - Subscribed": {"type": "boolean"},
+                        "Call Trace - usage sensitive billing": {"type": "boolean"},
+                        "3-Way Calling / Call Transfer billing - conferencing - usage sensitive billing": {"type": "boolean"},
+                        "Call Waiting - Subscribed": {"type": "boolean"},
+                        "Call Waiting - Enabled": {"type": "boolean"},
+                        "Call Waiting With Caller ID - Subscribed": {"type": "boolean"},
+                        "Call Waiting (AGC) - Subscribed": {"type": "boolean"},
+                        "Call Waiting (AGC) - Enabled": {"type": "boolean"},
+                        "Call Waiting With Caller ID (AGC) - Subscribed": {"type": "boolean"},
+                        "Caller ID Presentation - Subscribed": {"type": "boolean"},
+                        "Caller ID Presentation - withhold number by default": {"type": "boolean"},
+                        "Caller ID Presentation - number withhold rejection reason": {"enum":                         [
+                            "Blocked",
+                            "Number unavailable"
+                        ]},
+                        "Caller ID Presentation - present number by default": {"type": "boolean"},
+                        "Caller ID Presentation - withhold phone number": {"type": "boolean"},
+                        "Caller ID Presentation - always present number for intercom calls": {"type": "boolean"},
+                        "Calling Number Delivery - Subscribed": {"type": "boolean"},
+                        "Calling Number Delivery - Enabled": {"type": "boolean"},
+                        "Calling Number Delivery - usage sensitive billing": {"type": "boolean"},
+                        "Calling Number Delivery - preferred SIP format": {"enum":                         [
+                            "Directory Number",
+                            "SIP URI"
+                        ]},
+                        "Calling Number Delivery Blocking - Subscribed": {"type": "boolean"},
+                        "Calling Number Delivery Blocking - usage sensitive billing": {"type": "boolean"},
+                        "Calling Name Delivery - Subscribed": {"type": "boolean"},
+                        "Calling Name Delivery - local name": {"type": "string"},
+                        "Calling Name Delivery - local name (BG subscriber)": {"type": "string"},
+                        "Calling Name Delivery - use local name for intercom calls only (BG subscriber)": {"type": "boolean"},
+                        "Calling Name Delivery - Enabled": {"type": "boolean"},
+                        "Calling Name Delivery - usage sensitive billing": {"type": "boolean"},
+                        "Calling Name and Number Delivery over IP - Subscribed": {"type": "boolean"},
+                        "Calling Name and Number Delivery over IP - Enabled": {"type": "boolean"},
+                        "Calling Name and Number Delivery over IP - destination": {"type": "string"},
+                        "Connected Line ID Presentation - subscribed": {"type": "boolean"},
+                        "Connected Line ID Presentation - withhold number": {"type": "boolean"},
+                        "Connected Line ID Presentation - present number": {"type": "boolean"},
+                        "Connected Name Delivery - subscribed": {"type": "boolean"},
+                        "Connected Number Delivery - subscribed": {"type": "boolean"},
+                        "Delayed Call Forwarding - Subscribed": {"type": "boolean"},
+                        "Delayed Call Forwarding - variant": {"enum":                         [
+                            "Variable",
+                            "Fixed number"
+                        ]},
+                        "Delayed Call Forwarding - Enabled": {"type": "boolean"},
+                        "Delayed Call Forwarding - number": {"type": "string"},
+                        "Delayed Call Forwarding - no reply time": {"type": "integer"},
+                        "Unconditional, Busy or Delayed Call Forwarding usage sensitive billing": {"type": "boolean"},
+                        "Device twinning - support": {"enum":                         [
+                            "Not subscribed",
+                            "Subscribed, not enabled",
+                            "Subscribed and enabled"
+                        ]},
+                        "Device twinning - twinned use DN for identification": {"type": "boolean"},
+                        "Device twinning - twinned SIP user name": {"type": "string"},
+                        "Device twinning - twinned SIP domain name": {"type": "string"},
+                        "Device twinning - twinned maximum simultaneous registrations": {"type": "integer"},
+                        "Device twinning - twinned Media Gateway Model": {"type": "string"},
+                        "Device twinning - twinned use static NAT mapping": {"type": "boolean"},
+                        "Device twinning - twinned SIP authentication required": {"type": "boolean"},
+                        "Device twinning - twinned new SIP password":                         {
+                            "description": "Password",
+                            "type": "string"
+                        },
+                        "Device twinning - twinned confirm new SIP password":                         {
+                            "description": "Password",
+                            "type": "string"
+                        },
+                        "Device twinning - twinned preferred location of Trunk Gateway": {"type": "string"},
+                        "Device twinning - twinned maximum call appearances": {"type": "integer"},
+                        "Device twinning - twinned maximum permitted contact refresh interval": {"type": "integer"},
+                        "Diagnostics - logging - log level": {"enum":                         [
+                            "Level 10 (diagnostics)",
+                            "Level 20 (verbose statistics)",
+                            "Level 30 (verbose operational)",
+                            "Level 40 (statistics)",
+                            "Level 50 (audit)",
+                            "Level 60 (operational)",
+                            "Level 70 (unexpected)",
+                            "Level 80 (error)",
+                            "Level 90 (fatal)",
+                            "Default level"
+                        ]},
+                        "Diagnostics - API trace - enabled": {"type": "boolean"},
+                        "Diagnostics - API trace - trace tag": {"type": "string"},
+                        "Diagnostics - API trace - trace remote number": {"type": "string"},
+                        "VQM call logging": {"type": "boolean"},
+                        "Directed Pickup (no barge-in) - Subscribed": {"type": "boolean"},
+                        "Do Not Disturb - Subscribed": {"type": "boolean"},
+                        "Do Not Disturb - Enabled": {"type": "boolean"},
+                        "Do Not Disturb - service level": {"enum":                         [
+                            "Selective Call Acceptance",
+                            "Do Not Disturb"
+                        ]},
+                        "Do Not Disturb - single ring": {"type": "boolean"},
+                        "Do Not Disturb - integrated DND": {"type": "boolean"},
+                        "Do Not Disturb - Selective Call Acceptance - usage sensitive billing": {"type": "boolean"},
+                        "Selective Call Forwarding Numbers": {},
+                        "Priority Call Numbers": {},
+                        "Find-me-follow-me rule": {},
+                        "Additional Identity Numbers": {},
+                        "Do Not Disturb Selective Call Acceptance Numbers": {},
+                        "Selective Call Rejection Numbers": {},
+                        "Basic Line Hunting": {},
+                        "Mandatory Account Codes - valid account codes": {"type": "string"},
+                        "Reminder Calls": {},
+                        "Speed Calling Numbers": {},
+                        "Broadcast Groups": {"type": "string"},
+                        "CNS Service Provider Targets": {},
+                        "Service Provider": {"type": "string"},
+                        "Call Router - Linked Subscribers": {"type": "string"},
+                        "Call Router - Menu": {"type": "string"},
+                        "Find-me-follow-me - Subscribed": {"type": "boolean"},
+                        "Find-me-follow-me - service level": {"enum":                         [
+                            "Basic (SimRing)",
+                            "Enhanced"
+                        ]},
+                        "Find-me-follow-me - enabled": {"type": "boolean"},
+                        "Home Intercom - Subscribed": {"type": "boolean"},
+                        "Home Intercom - Distinctive Ringing": {"type": "boolean"},
+                        "Home Intercom (AGC) - Subscribed": {"type": "boolean"},
+                        "Home Intercom (AGC) - Distinctive Ringing": {"type": "boolean"},
+                        "Last Caller ID Erasure - Subscribed": {"type": "boolean"},
+                        "Line State Monitoring - Subscribed": {"type": "boolean"},
+                        "Line State Monitoring - maximum number of monitored lines": {"type": "integer"},
+                        "Line State Monitoring - monitor Do Not Disturb status": {"type": "boolean"},
+                        "Mandatory Account Codes - Subscribed": {"type": "boolean"},
+                        "Mandatory Account Codes - variant": {"enum":                         [
+                            "Non-validated",
+                            "Validated"
+                        ]},
+                        "Mandatory Account Codes - call types (US)":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "Local",
+                                "Operator",
+                                "Premium",
+                                "Directory",
+                                "Local Business Group",
+                                "Other Business Group",
+                                "National",
+                                "Regional",
+                                "Carrier dialed",
+                                "International"
+                            ]}
+                        },
+                        "Mandatory Account Codes - call types (UK)":                         {
+                            "type": "array",
+                            "uniqueItems": true,
+                            "description": "Bitmask field is an array of bits to set",
+                            "items": {"enum":                             [
+                                "International",
+                                "Mobile",
+                                "National",
+                                "Local",
+                                "Operator",
+                                "Premium",
+                                "Directory",
+                                "Local Business Group",
+                                "Other Business Group",
+                                "Regional",
+                                "Carrier dialed"
+                            ]}
+                        },
+                        "Mandatory Account Codes - inherit codes and code length": {"type": "boolean"},
+                        "Mandatory Account Codes - code length": {"type": "integer"},
+                        "Mandatory Account Codes - max incorrect code attempts per call": {"type": "integer"},
+                        "Mandatory Account Codes - max incorrect code attempts": {"type": "integer"},
+                        "Mandatory Account Codes - blocked": {"type": "boolean"},
+                        "Off-Hook Delay Subscriber Trigger - Subscribed": {"type": "boolean"},
+                        "Off-Hook Delay Subscriber Trigger - trigger": {"type": "string"},
+                        "Originating Service (SIP) - Subscribed": {"type": "boolean"},
+                        "Originating Service (SIP) - server": {"type": "string"},
+                        "PIN Change - Subscribed": {"type": "boolean"},
+                        "Presence Service - ACD Presence Server": {"type": "string"},
+                        "Priority Call - Subscribed": {"type": "boolean"},
+                        "Priority Call - Enabled": {"type": "boolean"},
+                        "Priority Call - usage sensitive billing": {"type": "boolean"},
+                        "Reminder Calls - Subscribed": {"type": "boolean"},
+                        "Reminder Calls - usage sensitive billing": {"enum":                         [
+                            "Never",
+                            "Answered",
+                            "All"
+                        ]},
+                        "Regular Reminder Calls - Subscribed": {"type": "boolean"},
+                        "Remote Access to Call Forwarding - subscribed": {"type": "boolean"},
+                        "Remote Access to Call Forwarding - blocked": {"type": "boolean"},
+                        "Remote Access to Call Forwarding - blocked on last pull": {"type": "boolean"},
+                        "Selective Call Forwarding - Subscribed": {"type": "boolean"},
+                        "Selective Call Forwarding - Enabled": {"type": "boolean"},
+                        "Selective Call Forwarding - number to forward to": {"type": "string"},
+                        "Selective Call Forwarding - single ring": {"type": "boolean"},
+                        "Selective Call Forwarding - usage sensitive billing": {"type": "boolean"},
+                        "Selective Call Rejection - Subscribed": {"type": "boolean"},
+                        "Selective Call Rejection - Enabled": {"type": "boolean"},
+                        "Selective Call Rejection - usage sensitive billing": {"type": "boolean"},
+                        "Speed Calling - Subscribed": {"type": "boolean"},
+                        "Speed Calling - allowed types": {"enum":                         [
+                            "One digit",
+                            "Two digit",
+                            "One and two digit"
+                        ]},
+                        "Speed Calling - handset access allowed": {"type": "boolean"},
+                        "Teen Service Line 1 - configured": {"type": "boolean"},
+                        "Teen Service Line 1 - Phone Number": {"type": "string"},
+                        "Teen Service Line 1 - Ring Pattern": {"enum":                         [
+                            "Long-Long",
+                            "Short-Long-Short",
+                            "Short-Short-Long",
+                            "Cadence 1",
+                            "Cadence 2",
+                            "Cadence 3",
+                            "Distinctive Ring Pattern 2",
+                            "Distinctive Ring Pattern 3",
+                            "Distinctive Ring Pattern 4"
+                        ]},
+                        "Teen Service Line 1 - Number status": {"enum":                         [
+                            "Normal",
+                            "Ported to",
+                            "Ported from (UK only)",
+                            "Recently moved",
+                            "Reserved - old number",
+                            "Reserved for future use",
+                            "Ported out (North America only)",
+                            "Reserved - ported in (North America only)",
+                            "Non-geographic"
+                        ]},
+                        "Teen Service Line 2 - configured": {"type": "boolean"},
+                        "Teen Service Line 2 - Phone Number": {"type": "string"},
+                        "Teen Service Line 2 - Ring Pattern": {"enum":                         [
+                            "Long-Long",
+                            "Short-Long-Short",
+                            "Short-Short-Long",
+                            "Cadence 1",
+                            "Cadence 2",
+                            "Cadence 3",
+                            "Distinctive Ring Pattern 2",
+                            "Distinctive Ring Pattern 3",
+                            "Distinctive Ring Pattern 4"
+                        ]},
+                        "Teen Service Line 2 - Number status": {"enum":                         [
+                            "Normal",
+                            "Ported to",
+                            "Ported from (UK only)",
+                            "Recently moved",
+                            "Reserved - old number",
+                            "Reserved for future use",
+                            "Ported out (North America only)",
+                            "Reserved - ported in (North America only)",
+                            "Non-geographic"
+                        ]},
+                        "Teen Service Line 3 - configured": {"type": "boolean"},
+                        "Teen Service Line 3 - Phone Number": {"type": "string"},
+                        "Teen Service Line 3 - Ring Pattern": {"enum":                         [
+                            "Long-Long",
+                            "Short-Long-Short",
+                            "Short-Short-Long",
+                            "Cadence 1",
+                            "Cadence 2",
+                            "Cadence 3",
+                            "Distinctive Ring Pattern 2",
+                            "Distinctive Ring Pattern 3",
+                            "Distinctive Ring Pattern 4"
+                        ]},
+                        "Teen Service Line 3 - Number status": {"enum":                         [
+                            "Normal",
+                            "Ported to",
+                            "Ported from (UK only)",
+                            "Recently moved",
+                            "Reserved - old number",
+                            "Reserved for future use",
+                            "Ported out (North America only)",
+                            "Reserved - ported in (North America only)",
+                            "Non-geographic"
+                        ]},
+                        "Terminating Service (SIP) - Subscribed": {"type": "boolean"},
+                        "Terminating Service (SIP) - server": {"type": "string"},
+                        "Termination Attempt Trigger (AIN) - Subscribed": {"type": "boolean"},
+                        "Termination Attempt Trigger (AIN) - trigger": {"type": "string"},
+                        "Test Calls - overriding Config Set": {"type": "string"},
+                        "Unavailable Call Forwarding - Subscribed": {"type": "boolean"},
+                        "Unavailable Call Forwarding - enabled": {"type": "boolean"},
+                        "Unavailable Call Forwarding - number": {"type": "string"},
+                        "Unconditional Call Forwarding - Subscribed": {"type": "boolean"},
+                        "Unconditional Call Forwarding - variant": {"enum":                         [
+                            "Variable",
+                            "Fixed number"
+                        ]},
+                        "Unconditional Call Forwarding - Enabled": {"type": "boolean"},
+                        "Unconditional Call Forwarding - number": {"type": "string"},
+                        "Unconditional Call Forwarding - single ring": {"type": "boolean"},
+                        "Video Codecs - Subscribed": {"type": "boolean"},
+                        "Voicemail - Share Primary Line Voicemail Mailbox": {"type": "boolean"},
+                        "Voicemail - Subscribed": {"type": "boolean"},
+                        "Voicemail - call delivery method": {"enum":                         [
+                            "None",
+                            "SMDI",
+                            "TDM",
+                            "SIP"
+                        ]},
+                        "Voicemail - Voicemail System Line Group": {"type": "string"},
+                        "Voicemail - retrieval number": {"type": "string"},
+                        "Voicemail - incoming number": {"type": "string"},
+                        "Voicemail - Application Server": {"type": "string"},
+                        "Voicemail - indicator notification method": {"enum":                         [
+                            "None",
+                            "SMDI",
+                            "TCAP",
+                            "SIP"
+                        ]},
+                        "Voicemail - SMDI Link": {"type": "string"},
+                        "Voicemail - authorized ID for indicator control": {"type": "string"},
+                        "Voicemail - Indicator Notification Application Server": {"type": "string"},
+                        "Voicemail - Visual Message Waiting Indicator": {"type": "boolean"},
+                        "Voicemail - Audible Message Waiting Indicator": {"type": "boolean"},
+                        "Voicemail - SIP Message Waiting Indicator": {"type": "boolean"},
+                        "Voicemail - call transfer time": {"type": "integer"},
+                        "Route Identifier": {"type": "string"},
+                        "Route Identifier (UNS)": {"type": "string"},
+                        "MWI Mechanism": {"enum":                         [
+                            "SMDI",
+                            "SIP",
+                            "GR866",
+                            "msgdir",
+                            "SMPP"
+                        ]},
+                        "EAS Landline incoming indicator notification method": {"enum":                         [
+                            "SMDI",
+                            "SIP",
+                            "GR866"
+                        ]},
+                        "EAS Wireless incoming indicator notification method": {"enum":                         [
+                            "msgdir",
+                            "SMPP"
+                        ]},
+                        "SMS Center ID": {"type": "string"},
+                        "SMDI Server": {"type": "string"},
+                        "SIP Notify Domain": {"type": "string"},
+                        "Service Providers": {},
+                        "Custom Info": {"type": "string"},
+                        "Warm / Hot Line - Subscribed": {"type": "boolean"},
+                        "Warm / Hot Line - service level": {"enum":                         [
+                            "Warm Line",
+                            "Hot Line"
+                        ]},
+                        "Warm / Hot Line - timeout": {"type": "integer"},
+                        "Warm / Hot Line - Enabled": {"type": "boolean"},
+                        "Warm / Hot Line - number": {"type": "string"},
+                        "Web Services - API trace - enabled": {"type": "boolean"},
+                        "Web Services - API trace - trace tag": {"type": "string"}
+                    }
+                }}]
+            },
+            "required": ["action"]
+        }
+    ]
+}

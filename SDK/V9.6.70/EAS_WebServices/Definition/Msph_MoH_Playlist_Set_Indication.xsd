@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_MoH_Playlist_Set_Indication">
+    <xs:annotation>
+      <xs:documentation>
+        Music on Hold Service Playlist Set indication. Used to create and delete Music on Hold playlist sets, playlists and tracks.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="PlaylistSetContext" type="tMsph_MoH_Playlist_Set_Context">
+        <xs:annotation>
+          <xs:documentation>
+            Container for playlist set contexts.
+            <d:DisplayName>Playlist Set Context</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="PlaylistData" type="tMsph_MoH_Playlist_Set_Playlist">
+        <xs:annotation>
+          <xs:documentation>
+            An entry representing a single playlist.
+            <d:DisplayName>Playlist Data</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="TrackData" type="tMsph_MoH_Playlist_Set_Track_Data">
+        <xs:annotation>
+          <xs:documentation>
+            An entry representing a single track.
+            <d:DisplayName>Track Data</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_MoH_Playlist_Set_Context">
+    <xs:annotation>
+      <xs:documentation>A container for playlist set contexts</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="BusinessGroup" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of this business group.
+            <d:DisplayName>Business Group</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="Department" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of this particular department, including the parent department names, separated by '/'. e.g. Development / System Test for the System Test department within the Development department.  The root department is identified with /None.
+            <d:DisplayName>Department</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tMsph_MoH_Playlist_Set_Playlist">
+    <xs:annotation>
+      <xs:documentation>A container for zero or more playlists.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="FriendlyName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The friendly name of the playlist.  Max 48 bytes (must encode to max 64 B64 encoded chars).
+            <d:DisplayName>Friendly Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="StartPoint" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Which method to use to determine the track to start with when beginning the playlist.  Allowable values are "first" and "random".
+            <d:DisplayName>Start Point</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="NextAction" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The next action to take after completing the playlist.  Allowable values are "repeat" and "go to playlist".  If the later, then a NextPlaylist is mandatory.
+            <d:DisplayName>Next Action</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="NextPlaylist" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Optional Set ID and name of next playlist to play once this playlist completes.  Mandatory if NextAction = "go to playlist".  If set ID is omitted, e.g. :PlaylistX, the current set is assumed.
+            <d:DisplayName>Next Playlist</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="InterruptionInterval" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            The interval in seconds between playlist interruptions.  Zero is not allowed.
+            <d:DisplayName>Interruption Interval</d:DisplayName>
+            <d:Type>Integer</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InterruptionTrack" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Optional Set ID and name of target track to periodically interrupt playback with, if configured.  If set ID it omitted, e.g. :TrackY, the current set is assumed.
+            <d:DisplayName>Interruption Track</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="PlaylistTrackList" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Comma separated list of IDs of the tracks in this playlist.  e.g. ABCDEFGHI:Track1,JKLMNOPQ:Track3.  If the set ID it omitted, e.g. :PlaylistX, then the current set id is assumed.
+            <d:DisplayName>Playlist Track List</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tMsph_MoH_Playlist_Set_Track_Data">
+    <xs:annotation>
+      <xs:documentation>A container for playlist set contexts</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="TrackFriendlyName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The friendly name of the track.  Max 48 bytes (must encode to max 64 B64 encoded chars).
+            <d:DisplayName>Track Friendly Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="TrackAudio" type="tBinaryData">
+        <xs:annotation>
+          <xs:documentation>
+            The audio to use for the track. The data in this file and its corresponding content type must be in one of the supported formats defined in the EAS System Planning Guide.
+            <d:DisplayName>Track Audio</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

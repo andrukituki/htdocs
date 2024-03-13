@@ -1,0 +1,2241 @@
+METASWITCH-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+        MODULE-IDENTITY, OBJECT-TYPE, Integer32, enterprises,
+        NOTIFICATION-TYPE, Unsigned32, Counter64
+                                            FROM SNMPv2-SMI
+        TEXTUAL-CONVENTION, TruthValue, DisplayString
+                                            FROM SNMPv2-TC;
+
+
+  metaSwitch MODULE-IDENTITY
+        LAST-UPDATED "202306141957Z"
+        ORGANIZATION "MetaSwitch"
+        CONTACT-INFO
+          "MetaSwitch
+           100 Church Street
+           Enfield
+           EN2 6BQ
+           United Kingdom
+           Tel: +44 20 8366 1177"
+        DESCRIPTION  ""
+        ::= { dataConnection 6 }
+
+
+-- /**********************************************************/
+-- /* The object identifier subtree for the MetaSwitch MIBs. */
+-- /**********************************************************/
+
+memberBody      OBJECT IDENTIFIER ::= { iso 2 }
+gb              OBJECT IDENTIFIER ::= { memberBody 826 }
+gbNational      OBJECT IDENTIFIER ::= { gb 0 }
+gbNatCompany    OBJECT IDENTIFIER ::= { gbNational 1 }
+dataConnection  OBJECT IDENTIFIER ::= { gbNatCompany 1578918 }
+dataConnectionTraps  OBJECT IDENTIFIER ::= { enterprises 19444 }
+metaSwitchEMS  OBJECT IDENTIFIER ::= { dataConnectionTraps 6 }
+unassignedOID   OBJECT IDENTIFIER ::= { metaSwitch 999999 }
+
+
+-- /*********************************************************/
+-- /* Textual Conventions                                   */
+-- /*********************************************************/
+
+  LongDisplayString ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "65535a"
+    STATUS       current
+    DESCRIPTION  ""
+    SYNTAX       OCTET STRING( SIZE(0..65535) )
+
+  OperStatus ::= TEXTUAL-CONVENTION
+    STATUS       current
+    DESCRIPTION  ""
+    SYNTAX       INTEGER {
+                   operStatusUp(1),
+                   operStatusDown(2),
+                   operStatusGoingUp(3),
+                   operStatusGoingDown(4),
+                   operStatusActFailed(5),
+                   operStatusQuiescing(6),
+                   operStatusNotReady(7),
+                   operStatusFailed(8),
+                   operStatusParentFailed(9),
+                   operStatusUnknown(10)
+                 }
+
+  RowStatus ::= TEXTUAL-CONVENTION
+    STATUS       current
+    DESCRIPTION  ""
+    SYNTAX       INTEGER {
+                   active(1),
+                   notInService(2),
+                   notReady(3),
+                   createAndGo(4),
+                   createAndWait(5),
+                   destroy(6)
+                 }
+
+  AdminStatus ::= TEXTUAL-CONVENTION
+    STATUS       current
+    DESCRIPTION  ""
+    SYNTAX       INTEGER {
+                   adminStatusUp(1),
+                   adminStatusDown(2)
+                 }
+
+
+-- /*********************************************************/
+-- /* MIB Info Section                                      */
+-- /*********************************************************/
+
+metaswitchInfo  OBJECT IDENTIFIER ::= { metaSwitch 1 }
+
+  metaswitchInfoVersion OBJECT-TYPE
+    SYNTAX       DisplayString
+    MAX-ACCESS   read-only
+    STATUS       current
+    DESCRIPTION  "MetaSwitch MIB Version"
+    ::= { metaswitchInfo 1 }
+
+
+
+-- /*********************************************************/
+-- /* Traps section                                         */
+-- /*********************************************************/
+
+metaswitchTraps OBJECT IDENTIFIER ::= { metaSwitchEMS 2 }
+
+-- /**************************************************************************/
+-- /* Trap for MetaSwitch alarms.                                            */
+-- /**************************************************************************/
+alarmTrapsPrefix OBJECT IDENTIFIER ::= { metaswitchTraps 1 }
+
+  alarmTrap NOTIFICATION-TYPE
+    OBJECTS      { alarmTrapElementName,
+                   alarmTrapElementInstance,
+                   alarmTrapElementDisplayType,
+                   alarmTrapElementType,
+                   alarmTrapDisplayName,
+                   alarmTrapDisplayPath,
+                   alarmTrapGroupDisplay,
+                   alarmTrapGroup,
+                   alarmTrapAlarmOID,
+                   alarmTrapAlarmedObjectPrimaryOID,
+                   alarmTrapSeverity,
+                   alarmTrapAlarmType,
+                   alarmTrapDescription,
+                   alarmTrapCause,
+                   alarmTrapEffect,
+                   alarmTrapAction,
+                   alarmTrapAssociatedProblemDescription,
+                   alarmTrapLogCorrelator,
+                   alarmTrapLogID,
+                   alarmTrapEMSIdentifier,
+                   alarmTrapEMSName,
+                   alarmTrapEMSIPAddress,
+                   alarmTrapEquipmentType,
+                   alarmTrapEquipmentIdentifier,
+                   alarmTrapEquipmentName,
+                   alarmTrapEquipmentIPAddress,
+                   alarmTrapEquipmentSoftwareVersion,
+                   alarmTrapEquipmentSoftwareVersionDisplay,
+                   alarmTrapObjectAdditionalInformation,
+                   alarmTrapObjectLocation,
+                   alarmTrapAlarmTimestamp,
+                   alarmTrapAlarmCount,
+                   alarmTrapCountResetTimestamp,
+                   alarmTrapAlarmFaultType
+                   }
+    STATUS       current
+    DESCRIPTION  "This is the alarm trap table for MetaSwitch.  A
+                  notify is sent on this table when a MetaSwitch
+                  object is either alarmed or cleared.  Logs associated
+                  with the alarmed object are supplied in the 
+                  Description, Cause, Effect and Action fields.  If
+                  no log is found then these fields are not filled in.
+                  The EMSUniqueIdentifier and Alarm OID together
+                  provide a unique identifier across all MetaViews. "
+    ::= { alarmTrapsPrefix 1 }
+
+  alarmTrapElementName OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..1024))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The internal OML name of the alarmed element"
+    ::= { alarmTrap  2 }
+
+  alarmTrapElementInstance OBJECT-TYPE
+    SYNTAX       Unsigned32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The instance of the alarmed element"
+    ::= { alarmTrap  3 }
+
+  alarmTrapElementDisplayType OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..64))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The display type of alarmed element"
+    ::= { alarmTrap  4 }
+
+  alarmTrapElementType OBJECT-TYPE
+    SYNTAX       INTEGER {
+                   netElementConn(1),
+                   unsupNetElement(2),
+                   netElement(3),
+                   netElStats(4),
+                   uMG(5),
+                   uMGStats(6),
+                   hwCon(7),
+                   pCISeg(8),
+                   adaptor(9),
+                   adaptorStats(10),
+                   iPMediaPort(15),
+                   iPMediaPortStats(16),
+                   mTP2Ctrler(17),
+                   mTP2CtrlerStats(18),
+                   lAPDResource(19),
+                   lAPDResourceStats(20),
+                   lAPDTerm(21),
+                   physDS1Port(22),
+                   physDS1PortStats(23),
+                   physDS1DS0Term(24),
+                   physDS3Port(25),
+                   physDS3PortStats(26),
+                   dS1OvrDS3Prt(27),
+                   dS1OverDS3PortStats(28),
+                   dS1OverDS3DS0Term(29),
+                   virtPortCon(30),
+                   mGRTPPort(35),
+                   mGRTPPortStats(36),
+                   mFProfile(37),
+                   mGMtp2ProtProf(38),
+                   mGSigCCCon(39),
+                   mGSigCrConn(40),
+                   connHwCon(41),
+                   iDTContainer(53),
+                   iDT(54),
+                   iDTStats(55),
+                   iDTInterface(56),
+                   iDTSubscrLnTm(57),
+                   sigGateway(58),
+                   sigDest(59),
+                   sigRoute(60),
+                   sigLinkset(61),
+                   sigLink(62),
+                   sigLinkTP(63),
+                   sigLinksetTP(64),
+                   sigPointTP(65),
+                   cFS(66),
+                   cFSStatsSI(67),
+                   cFSStats(68),
+                   cntrldGwCon(69),
+                   mGModelCon(70),
+                   mediaGatewayModel(71),
+                   location(72),
+                   staticNATMapping(73),
+                   tAGCon(74),
+                   tAG(75),
+                   cFSRTPPort(76),
+                   iSDNSCTPAssocCon(77),
+                   iSDNSCTPAssoc(78),
+                   iSDNSCTPStream(79),
+                   tDMPortCon(81),
+                   tDMPort(82),
+                   tDMTerm(83),
+                   tAGAccDevCon(85),
+                   tAGAccessDevice(86),
+                   tAGAccessLine(87),
+                   subGCon(89),
+                   subG(90),
+                   subGAccessDevice(91),
+                   subGAccessLine(92),
+                   cfgSIPBindCon(96),
+                   cfgSIPBind(97),
+                   subGMaintList(99),
+                   accDevMaintList(100),
+                   signalingCon(101),
+                   lineSig(102),
+                   iSDN(103),
+                   iSDNInterfaceProfile(104),
+                   iSDNPRICon(105),
+                   iSDNPRI(106),
+                   iSDNPRIStats(107),
+                   iSDNPRIDS1(108),
+                   iSDNPRIDS0(109),
+                   sIP(110),
+                   sIPTrunkCon(111),
+                   sIPTrunk(112),
+                   sIPTrunkStats(113),
+                   mFLocalEx(114),
+                   mFLocalExStats(115),
+                   mFRemEx(116),
+                   mFRemExStats(117),
+                   mFCircGp(118),
+                   mFCircGpStats(119),
+                   mFCirc(120),
+                   mFMediaChan(121),
+                   mFMediaChanStats(122),
+                   mFCallProfileRoot(123),
+                   mFCallProfileData(124),
+                   mFCallTrace(125),
+                   sS7SigCon(126),
+                   iSUPLclSigDest(127),
+                   iSUPLocalSigDestStats(128),
+                   iSUPStackMessages(129),
+                   iSUPRemSigDest(130),
+                   iSUPRemSigDestStats(131),
+                   iSUPCircGp(132),
+                   iSUPCircGpStats(133),
+                   iSUPCirc(134),
+                   iSUPPrxdCircGp(135),
+                   iSUPMediaChan(136),
+                   iSUPMediaChanStats(137),
+                   iSUPCallTrace(138),
+                   tCAPAppContext(151),
+                   tCAPSLHR(152),
+                   tCAPSLHRStats(153),
+                   tCAPAutoCodeGappingCtrl(154),
+                   billCon(155),
+                   classServs(159),
+                   genCallServCtrl(160),
+                   appServs(161),
+                   appServ(162),
+                   appServStats(163),
+                   callFwdServ(164),
+                   callFwdServStats(165),
+                   cPUServ(167),
+                   cPUServStats(168),
+                   cIDServ(169),
+                   cIDServStats(170),
+                   inServ(171),
+                   inServStats(172),
+                   iN(173),
+                   iNServiceStats(174),
+                   iNServiceTrigger(175),
+                   iNSTrigStats(176),
+                   msgServ(177),
+                   msgServStats(178),
+                   vSLink(179),
+                   vSLinkStats(180),
+                   vSLineGp(181),
+                   vSLineGpStats(182),
+                   vSLine(183),
+                   multiPartyServ(184),
+                   multiPartyServStats(185),
+                   oPX(186),
+                   outServ(187),
+                   outServStats(188),
+                   teen(189),
+                   webServices(190),
+                   rPS(191),
+                   rPSCfgSet(192),
+                   rPSDigitMapCon(193),
+                   rPSDigitMap(194),
+                   rPSDigitMapSection(195),
+                   rPSNumValidationCon(196),
+                   rPSAttrSet(197),
+                   rPSAttrEntry(198),
+                   rPSNumVldnTable(199),
+                   rPSNVEntry(200),
+                   rPSLocalRtgCon(201),
+                   rPSLocalAreaNumbers(202),
+                   rPSLocationRoutingNum(203),
+                   rPSTrunkRtgCon(204),
+                   rPSRoutingTable(205),
+                   rPSAction(206),
+                   subConfCon(207),
+                   numberRange(208),
+                   reservedNumberRange(209),
+                   reservedNumber(210),
+                   subGp(211),
+                   indLineCon(212),
+                   indLine(213),
+                   indLineGClSrvCtrl(214),
+                   indLineAppServs(215),
+                   indLineCallFwd(216),
+                   indLineLineHuntNum(217),
+                   indLineSelFwdNum(218),
+                   indLineSelFwdAnonNum(219),
+                   indLineCID(220),
+                   indLineARACRequest(221),
+                   indLineIn(222),
+                   indLineSelCallRejNum(223),
+                   indLineSelCallRejAnonNum(224),
+                   indLinePCN(225),
+                   indLinePCAN(226),
+                   indLineMsg(227),
+                   indLineRemCall(228),
+                   indLineMultiParty(229),
+                   indLineOPX(230),
+                   indLineOut(231),
+                   indLineSPDNum(232),
+                   indLineTeen(233),
+                   indLineWeb(234),
+                   busGrpCon(235),
+                   busGrp(236),
+                   busGrpNumBlock(237),
+                   busGrpExcludedRange(238),
+                   bGLine(239),
+                   bGLnGnCllSrvCtrl(240),
+                   bGLineAppServs(241),
+                   bGLineCallFwd(242),
+                   bGLineLineHuntNum(243),
+                   bGLineSelFwdNum(244),
+                   bGLineSelFwdAnonNum(245),
+                   bGLineCPU(246),
+                   bGLineCID(247),
+                   bGLineARACRequest(248),
+                   bGLineIn(249),
+                   bGLineSelCallRejNum(250),
+                   bGLineSelCallRejAnonNum(251),
+                   bGLinePCN(252),
+                   bGLinePCAN(253),
+                   bGLineMsg(254),
+                   bGLineRemCall(255),
+                   bGLineMultiParty(256),
+                   bGLineOut(257),
+                   bGLineSPDNum(258),
+                   bGLineWeb(259),
+                   busGrpDialingPlan(260),
+                   busGrpIntercomCodeRange(261),
+                   busGrpShortCode(262),
+                   mADNCon(263),
+                   mADN(264),
+                   mADNStats(265),
+                   mADNCallFwd(266),
+                   mADNLineHuntNum(267),
+                   mADNSelFwdNum(268),
+                   mADNSelFwdAnonNum(269),
+                   mADNIn(270),
+                   mADNSelCallRejNum(271),
+                   mADNSelCallRejAnonNum(272),
+                   mADNAppServs(273),
+                   mADNMsg(274),
+                   mADNMember(275),
+                   busGrpCPU(276),
+                   busGrpCPUStats(277),
+                   cPUGroup(278),
+                   cPUGroupStats(279),
+                   cPUGroupMember(280),
+                   busGrpOut(281),
+                   pBXCon(282),
+                   pBX(283),
+                   pBXStats(284),
+                   pBXLineCon(285),
+                   pBXLine(286),
+                   pBXDICNumber(287),
+                   pBXGenCallServCtrl(288),
+                   pBXAppServs(289),
+                   pBXCallFwd(290),
+                   pBXLineHuntNum(291),
+                   pBXSelFwdNum(292),
+                   pBXSelFwdAnonNum(293),
+                   pBXCID(294),
+                   pBXIn(295),
+                   pBXSelCallRejNum(296),
+                   pBXSelCallRejAnonNum(297),
+                   pBXMsg(298),
+                   pBXOut(299),
+                   pBXSPDNum(300),
+                   pBXWeb(301),
+                   subMaintList(302),
+                   subAtndDpMaintList(303),
+                   callTraceControl(304),
+                   callTraceEntry(305),
+                   rVTContainer(306),
+                   rVTTestGroup(307),
+                   rVTTestTrunk(308),
+                   rVTTestSub(309),
+                   testCalls(310),
+                   testCallsStats(311),
+                   dNSDNS(312),
+                   dNSNmSvrGpCon(313),
+                   dNSNameServerGp(314),
+                   dNSDomainNameSuffix(315),
+                   dNSNameServer(316),
+                   sysHardwareCon(317),
+                   sysEthernetSwitch(318),
+                   sysEthernetPort(319),
+                   sysPTIEthernetSwitch(320),
+                   sysPTIEthernetPort(321),
+                   uX9000SS(322),
+                   cFSServerPowerSupply(323),
+                   fTEthernetIntface(324),
+                   fTEthernetPort(325),
+                   sysAlarmCard(326),
+                   sysAlarmCardPSupply(327),
+                   aPITrace(328),
+                   aPITracingObject(329),
+                   billUser(330),
+                   netElementCraftUser(331),
+                   ems(332),
+                   emsStats(333),
+                   reportCon(334),
+                   report(335),
+                   logCollector(336),
+                   emailNotification(337),
+                   nMSCertificate(338),
+                   emsUserContainer(339),
+                   emsUser(340),
+                   emsCraftUser(341),
+                   tDMPortMaintList(345),
+                   callerIDIPDest(346),
+                   netElementUsers(347),
+                   emsUsers(348),
+                   trafficStudy(350),
+                   perProfCon(351),
+                   perProf(352),
+                   perProfGClSrvCtrl(353),
+                   perProfAppServ(354),
+                   perProfCallFwd(355),
+                   perProfCPU(356),
+                   perProfCallerID(357),
+                   perProfIn(358),
+                   perProfMsg(359),
+                   perProfMultiParty(360),
+                   perProfOut(361),
+                   perProfWeb(362),
+                   indLineStats(364),
+                   bGLineStats(366),
+                   callLogging(367),
+                   detailedCallLog(368),
+                   mFIncCallProfileRoot(369),
+                   mFIncCallProfileData(370),
+                   mFProtocolProfile(371),
+                   indLineFmfmRule(377),
+                   indLineSCANum(378),
+                   indLineSCAAnonNum(379),
+                   busGrpStats(382),
+                   bGLineFmfmRule(383),
+                   bGLineSCANum(384),
+                   bGLineSCAAnonNum(385),
+                   mADNSCANum(387),
+                   mADNSCAAnonNum(388),
+                   mLHGCon(389),
+                   mLHG(390),
+                   mLHGStats(392),
+                   mLHGPilotDN(393),
+                   mLHGPilotDNAppServ(394),
+                   mLHGPltDNCallFwd(395),
+                   mLHGPilotDNSelFwdNum(396),
+                   mLHGPilotDNSelFwdAnonNum(397),
+                   mLHGPilotDNIn(398),
+                   mLHGPilotDNSCRNum(399),
+                   mLHGPilotDNSCRAnonNum(400),
+                   mLHGPilotDNMsg(401),
+                   mLHGMember(402),
+                   pBXFmfmRule(403),
+                   pBXSCANum(404),
+                   pBXSCAAnonNum(405),
+                   sys2510EthSwitch(406),
+                   sys2510EthPort(407),
+                   sigGtwCon(408),
+                   iSUPLocalSigDestCon(409),
+                   sCCPCon(410),
+                   tAGStatsSI(415),
+                   tAGStats(416),
+                   sCCP2(417),
+                   sCCP2Stats(419),
+                   sCCP2LocAccPnt(420),
+                   sCCP2LocAccPntStats(422),
+                   sCCP2PrxdAccPt(423),
+                   sCCP2RemSigDst(424),
+                   sCCP2RemSigDstStats(426),
+                   sCCP2RemAccPt(427),
+                   sCCP2RemoteConcArea(428),
+                   sCCP2RemoteDestListEntry(429),
+                   sCCP2EntitySet(430),
+                   sCCP2GTTranslator(431),
+                   mACTableCon(432),
+                   mACTable(433),
+                   perProfINS(434),
+                   indLineINS(435),
+                   bGLineINS(436),
+                   mADNINS(437),
+                   mLHGPilotDNINS(438),
+                   pBXINS(439),
+                   longDistance(440),
+                   longDistServStats(442),
+                   longDistServClassCon(443),
+                   longDistServClass(444),
+                   aNIScrnTblCon(445),
+                   aNIScrnTbl(446),
+                   aNIScreeningEntry(447),
+                   authCodeTablesCon(448),
+                   authCodeTable(449),
+                   authCode(450),
+                   nomE911(451),
+                   nomE911Record(452),
+                   rPSAttrSetTabCon(453),
+                   rPSNumVldnTabCon(454),
+                   emsUserType(455),
+                   sNMPAlarmDest(456),
+                   eSAServer(457),
+                   eSAProtDomCon(458),
+                   eSAProtDom(459),
+                   iSDNCallTrace(461),
+                   sIPCallTrace(463),
+                   callPark(464),
+                   callParkStats(466),
+                   lineCCCon(467),
+                   lineCC(468),
+                   userDefAttrCon(469),
+                   userDefAttr(470),
+                   busGrpAppServ(471),
+                   bGCallPark(472),
+                   busGrpCallParkStats(474),
+                   busGrpOrbitCodeRange(475),
+                   cFSStatsCon(476),
+                   iSUPMediaChanStatsCon(477),
+                   cASProtocolProfile(478),
+                   subGwStats(480),
+                   cMTSCon(481),
+                   cMTSConStats(483),
+                   cMTS(484),
+                   cMTSStats(486),
+                   flowSpecMapping(488),
+                   tCAPSLHRQryRtsCon(489),
+                   tCAPSLHRQueryRoute(490),
+                   systemPTIEthPtStatsCon(491),
+                   systemPTIEthPtStats(492),
+                   systemCH2510EthPtStatsCon(493),
+                   systemCH2510EthPtStats(494),
+                   systemFTEthPtStatsCon(495),
+                   systemFTEthPtStats(496),
+                   uMGStatsCon(497),
+                   sIPTrunkStatsCon(498),
+                   mFMediaChannelStatsCon(499),
+                   statsDb(500),
+                   aSRepositoryData(501),
+                   iSDNPRIMaintList(502),
+                   iSDNPRIAtndDpMntLst(503),
+                   department(505),
+                   registeredSIPBFUCon(506),
+                   registeredSIPBinding(507),
+                   emsStatsCon(508),
+                   metaSphereServerConn(509),
+                   metaSphereServer(510),
+                   metaSphereApplication(511),
+                   metaSphereCommPortal(512),
+                   metaSphereDirectory(513),
+                   metaSphereMailboxStore(514),
+                   metaSphereMediaServer(515),
+                   metaSphereNotification(516),
+                   metaSphereSMTP(517),
+                   metaSphereWeb(518),
+                   metaSphereServiceMonitor(519),
+                   metaSphereStatisticsMonitor(520),
+                   metaSphereAdjunctDevice(521),
+                   networkNodesCon(522),
+                   networkNode(523),
+                   networkInterconnect(524),
+                   rPSOnSwitchCarrier(525),
+                   bGLineDigitMaps(526),
+                   managedDevice(528),
+                   servAssServ(530),
+                   mVConfigDBConn(531),
+                   delegatedManagementGroupCon(532),
+                   sIPToTCAPMWIConv(533),
+                   mVD(534),
+                   locSrc(535),
+                   mVDConn(536),
+                   delegatedManagementGroup(537),
+                   shadowCfgDb(538),
+                   faultMonitoringProfile(539),
+                   sysIPSub(540),
+                   sysPTIIPSub(541),
+                   sysCH2510IPSub(542),
+                   cFSMVDIPSub(543),
+                   m2PASigLink(544),
+                   m2PAProtProfile(545),
+                   dMGNumberRange(547),
+                   perProfDMGInformation(548),
+                   pBXDIDNumClServs(549),
+                   pBXTmpDIDNumClServs(551),
+                   pBXMultiParty(552),
+                   restrictedNumber(554),
+                   mdRscSrvrCon(555),
+                   mdRscSrvr(556),
+                   callLogUser(558),
+                   m3UARoute(562),
+                   rPASEthInt(563),
+                   rTMUplink(564),
+                   portGrp(565),
+                   besIPSub(566),
+                   cesIPSub(567),
+                   tDMCarrier(568),
+                   bITSPort(569),
+                   mGResRTPPort(570),
+                   mGResMTP2Port(571),
+                   mGResLAPDPort(572),
+                   mGResIVRPort(573),
+                   clocking(574),
+                   systemConn(578),
+                   system(579),
+                   tDMConfig(580),
+                   tDMDefCarrier(582),
+                   tDMCrrDS0Term(583),
+                   lclClkRef(584),
+                   mGResLAPDTerm(585),
+                   m3UAAS(586),
+                   m3UADestinationCon(587),
+                   m3UADestination(588),
+                   iMSOfflChrg(589),
+                   addValAccCodes(590),
+                   lclDiamEnt(592),
+                   ethRsrcs(593),
+                   bes(594),
+                   ces(596),
+                   sysHwInv(597),
+                   sysHISlot(598),
+                   sysHICESBlade(599),
+                   sysHwInvBlade(600),
+                   sysHIShMgr(601),
+                   sysHIFanTray(602),
+                   sysHIPwrEntMod(603),
+                   sysHIUsrCard(604),
+                   sysEthRsrcs(605),
+                   sysCES(606),
+                   sysClkMod(607),
+                   sysUplnk(608),
+                   sysPortGrp(609),
+                   sysCESIPSub(610),
+                   sysUsers(611),
+                   sysCraftUsr(613),
+                   sysShMgmnt(614),
+                   sysShMgr(615),
+                   sysDryAlarms(616),
+                   perimetaConn(617),
+                   servBrkrConn(618),
+                   sIPSessRtrConn(619),
+                   perimeta(620),
+                   servBrkr(621),
+                   sIPSessRtr(622),
+                   staticDomain(624),
+                   result(625),
+                   aGCLine(626),
+                   aGCLineOPX(627),
+                   aGCPBX(628),
+                   aGCPBXLine(629),
+                   clusterMgr(630),
+                   billAppCtrl(631),
+                   billEventInfo(632),
+                   billFileCtrl(633),
+                   alrmLogFileMgr(634),
+                   sIPRegistrar(636),
+                   billXMLAppCtrl(637),
+                   billXMLFlCtrl(638),
+                   aGCLineCon(639),
+                   aGCLineMsg(640),
+                   aGCLineOut(641),
+                   aGCPBXCon(642),
+                   aGCPBXLineCon(643),
+                   iSISSub(644),
+                   procEth(645),
+                   iSISPort(646),
+                   iSISIPAddr(647),
+                   sysISISSub(648),
+                   virtPltfrmConn(649),
+                   virtPltfrm(650),
+                   m3UARemAS(651),
+                   m3UARemASP(652),
+                   iUACrConn(653),
+                   h248M3UARemAS(654),
+                   h248M3UARemIPSP(655),
+                   iDTSubscrLnTmCon(656),
+                   realmsCon(658),
+                   realm(659),
+                   mediaIPIntsCon(660),
+                   mediaProfsCon(661),
+                   mediaIPInt(662),
+                   qosClassesCon(663),
+                   qosClass(664),
+                   vqProfsCon(665),
+                   vqProf(666),
+                   h248Cfg(667),
+                   h248MGC(668),
+                   h248Prof(669),
+                   sISChrg(670),
+                   iMSOnChrg(671),
+                   perProfOnChrgCtrls(672),
+                   indLineOnChrgCtrls(673),
+                   bGLineOnChrgCtrls(674),
+                   pBXOnChrgCtrls(675),
+                   iMSOnPeer(676),
+                   mVStatCon(678),
+                   diagDS0(679),
+                   iMSCore(680),
+                   clusterSiteConn(681),
+                   connToOBS(682),
+                   linkToOBS(683),
+                   hSSIConn(685),
+                   dellServerConn(686),
+                   dellServer(687),
+                   bGMultiParty(688),
+                   mADNWeb(689),
+                   mLHGPilotDNWeb(690),
+                   v5PortCon(691),
+                   v5Port(692),
+                   v5Link(693),
+                   v5SubscriberLineTermCon(694),
+                   v5SubscriberLineTerm(695),
+                   aGCSIP(696),
+                   virtNtwkInt(697),
+                   virtIPSub(698),
+                   sysLogMgr(699),
+                   mVRpi(700),
+                   mVRpiCfs(701),
+                   numRngCon(702),
+                   eSAP(703),
+                   eSAPEthInt(704),
+                   outClBrngLvlsCon(705),
+                   outClBrngLvl(706),
+                   indLineMngdDevCon(707),
+                   indLineMngdDev(708),
+                   aGCLineMultiParty(709),
+                   carrSig(710),
+                   uDSAsCon(711),
+                   uDSA(712),
+                   licFeat(713),
+                   cwCoreDep(719),
+                   sproutCluster(720),
+                   sproutNode(721),
+                   homesteadCluster(722),
+                   homesteadNode(723),
+                   ralfCluster(724),
+                   ralfNode(725),
+                   mswCCFDep(726),
+                   cCFCluster(727),
+                   ccfNode(728),
+                   rhinoDep(729),
+                   rhinoCluster(730),
+                   rhinoNode(731),
+                   voLTEMgmtNodeConn(732),
+                   voLTEMgmtNode(733),
+                   mRFConn(734),
+                   mRF(735),
+                   cNAMCacheEntry(736),
+                   cNAMNetQry(737),
+                   lNPNetQry(738),
+                   lNPCacheEntry(739),
+                   tFLNetQry(740),
+                   tR08IDTPort(741),
+                   analytics(742),
+                   licStatus(743),
+                   cCGenCluster(744),
+                   cCGenNode(745),
+                   tR08IDTPortCon(746),
+                   oBS(747),
+                   sDEConn(748),
+                   sDE(749),
+                   eCBCategsCon(750),
+                   rPSNVTagsCon(751),
+                   eCBCateg(752),
+                   eCBCategRule(753),
+                   rPSNVTag(754),
+                   indLineSCBBlklstNum(755),
+                   indLineSCBSflstNum(756),
+                   bGLineSCBBlklstNum(757),
+                   bGLineSCBSflstNum(758),
+                   mLHGPltDNGnClSvCtl(759),
+                   pBXSCBBlklstNum(760),
+                   pBXSCBSflstNum(761),
+                   bGLineAddIdCon(762),
+                   bGLineAddId(763),
+                   cXServersCon(764),
+                   cXServerConn(765),
+                   cXServer(766),
+                   iMSOfflChrgPeer(767),
+                   indLineDigitMaps(768),
+                   routingPoliciesCon(769),
+                   rtgPlcy(770),
+                   rtgPlcyLine(771),
+                   cSGsCon(772),
+                   cSG(773),
+                   cSGCallFwd(774),
+                   cSGOutgoing(775),
+                   indLineSchedsCon(776),
+                   indLineSched(777),
+                   indLineSchdPrd(778),
+                   bGLineSchedsCon(779),
+                   bGLineSched(780),
+                   bGLineSchdPrd(781),
+                   bGLineFwdSched(782),
+                   mLHGPilotDNSchedsCon(783),
+                   mLHGPilotDNSched(784),
+                   mLHGPilotDNSchdPrd(785),
+                   mLHGPilotDNFwdSched(786),
+                   pBXSchedsCon(787),
+                   pBXSched(788),
+                   pBXSchdPrd(789),
+                   pBXFwdSched(790),
+                   indLineFwdSched(791),
+                   sIMonConn(792),
+                   sIMon(793),
+                   telcoBridgesTMGConn(794),
+                   telcoBridgesTMG(795),
+                   busGrpCallServices(796)
+                 }
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The type of alarmed element"
+    ::= { alarmTrap 5 }
+
+  alarmTrapDisplayName OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..128))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The user-friendly display name of the alarmed element"
+    ::= { alarmTrap 6 }
+
+  alarmTrapDisplayPath OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..1024))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The user-friendly display name of the alarmed element,
+                  including ancestors"
+    ::= { alarmTrap 7 }
+
+  alarmTrapGroupDisplay OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..32))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The display name of the group 
+                  containing the alarmed element"
+    ::= { alarmTrap 8 }
+
+  alarmTrapGroup OBJECT-TYPE
+    SYNTAX       INTEGER {
+                   metaSwitchConnection(1),
+                   metaSwitch(2),
+                   mediaGateway(3),
+                   hardware(4),
+                   virtualPorts(5),
+                   signalingCrossConnects(6),
+                   iDTs(7),
+                   signalingDestinations(8),
+                   signalingLinksets(9),
+                   callAgent(10),
+                   trunkAccessGateway(11),
+                   lAPDResources(12),
+                   configuredSIPBindings(13),
+                   iSDN(14),
+                   iSUP(15),
+                   mF(16),
+                   sIP(17),
+                   sCCP(18),
+                   billing(19),
+                   callServices(20),
+                   applicationServers(21),
+                   callerID(22),
+                   intelligentNetworking(23),
+                   messageServices(24),
+                   pCM(25),
+                   webServices(26),
+                   lawfulInterception(27),
+                   routing(28),
+                   persistentProfile(29),
+                   callTrace(30),
+                   rVT(31),
+                   dNS(32),
+                   systemHardware(33),
+                   aPITrace(34),
+                   reports(35),
+                   logCollector(36),
+                   emailNotifications(37),
+                   iads(38),
+                   subscribers(40),
+                   subscriberGateways(42),
+                   accessDevices(43),
+                   tdmPorts(44),
+                   esaServer(45),
+                   esaProtectionDomains(46),
+                   cMTS(47),
+                   metaViewServer(48),
+                   statisticsDatabase(49),
+                   appServerRepositoryData(50),
+                   iSDNPrimaryRateInterfaces(51),
+                   networkNode(52),
+                   networkInterconnect(53),
+                   metaSphereServer(54),
+                   metaSphereAdjunctDevice(55),
+                   serviceAssuranceServer(56),
+                   mVD(57),
+                   serviceBroker(58),
+                   perimeta(59),
+                   sipRouter(60),
+                   perimetaHpi(61),
+                   system(62),
+                   chassisManagement(63),
+                   hardwareInventory(64),
+                   mediaResourceServer(65),
+                   m3ua(66),
+                   rPAS(67),
+                   colibria(68),
+                   virtualizationPlatform(69),
+                   hSSI(70),
+                   cDRC(71),
+                   statConn(72),
+                   v5(73),
+                   dellServer(74),
+                   oBS(75),
+                   rPI(76),
+                   messagingServer(77),
+                   eSAP(78),
+                   licensedFeatures(79),
+                   cwCore(80),
+                   mswCCF(81),
+                   voLTEMgmt(82),
+                   mRF(83),
+                   rhino(84),
+                   tR08IDTs(85),
+                   licStatus(86),
+                   sDE(87),
+                   cxServer(88),
+                   sIMon(89),
+                   telcoBridgesTMG(90),
+                   businessGroupApplicationServers(91)
+                 }
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The group containing the alarmed element"
+    ::= { alarmTrap 9 }
+
+  alarmTrapAlarmOID OBJECT-TYPE
+    SYNTAX       OBJECT IDENTIFIER
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The OID of the alarm.  In this release this
+                  is purely for deduplification.  Queries on this the
+                  Alarm MIB are not supported. "
+    ::= { alarmTrap 10 }
+
+  alarmTrapAlarmedObjectPrimaryOID OBJECT-TYPE
+    SYNTAX       OBJECT IDENTIFIER
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The OID of the alarmed obect.  Gets and Sets on
+                  this OID are supported. "
+    ::= { alarmTrap 11 }
+
+  alarmTrapSeverity OBJECT-TYPE
+    SYNTAX       Unsigned32 ( 0..100 )
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Severity of the alarm condition.
+                  80     Unknown
+             or   0-19   Diagnostics
+                  20-29  Verbose statistics
+                  30-39  Verbose operational
+                  40-49  Statistics
+                  50-59  Audit
+                  60-69  Operational
+                  70-79  Unexpected
+                  80-89  Error
+                  90-100 Fatal"
+    ::= { alarmTrap 20 }
+
+  alarmTrapAlarmType OBJECT-TYPE
+    SYNTAX       INTEGER {
+                   clear(1),
+                   attentionRequired(2),
+                   attendToDependent(3)
+                 }
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Type of the alarm. AttentionRequired implies the element
+                  itself required attention, AttendToDependent implies
+                  an element on which this element relies is
+                  AttentionRequired."
+    ::= { alarmTrap 21 }
+
+  alarmTrapDescription OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..4096))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Detailed description of the alarmed condition."
+    ::= { alarmTrap 23 }
+
+  alarmTrapCause OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..4096))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Information on possible causes of the alarmed condition."
+    ::= { alarmTrap 24 }
+
+  alarmTrapEffect OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..4096))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Information on other events that may occur as a
+                  result of the alarmed condition."
+    ::= { alarmTrap 25 }
+
+  alarmTrapAction OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..4096))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Suggested actions that you can take to resolve the problem."
+    ::= { alarmTrap 26 }
+
+  alarmTrapAssociatedProblemDescription OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..4096))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Description of an associated problem."
+    ::= { alarmTrap 27 }
+
+  alarmTrapLogCorrelator OBJECT-TYPE
+    SYNTAX       Counter64
+    MAX-ACCESS   read-only
+    STATUS       current
+    DESCRIPTION  "The correlator of the main log of the alarm."
+    ::= { alarmTrap 28 }
+
+  alarmTrapLogID OBJECT-TYPE
+    SYNTAX       Integer32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Identifier for the main log of the alarm"
+    ::= {alarmTrap 29 }
+
+  alarmTrapEMSIdentifier OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..64))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The unique identifier of the MetaView Server."
+    ::= { alarmTrap 50 }
+
+  alarmTrapEMSName OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..64))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The name of the MetaView Server."
+    ::= { alarmTrap 51 }
+
+  alarmTrapEMSIPAddress OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..64))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The IP address of the MetaView Server."
+    ::= { alarmTrap 52 }
+
+  alarmTrapEquipmentType OBJECT-TYPE
+    SYNTAX       INTEGER {
+                   unknown(0),
+                   metaSwitchCallAgent(1),
+                   metaSwitchMediaGateway(2),
+                   metaSwitchIntegratedSoftswitch(3),
+                   metaSwitchEMS(100),
+                   metaSphereSDP(101),
+                   metaSphereUMS(102),
+                   metaSphereAdjunctDevice(103),
+                   serviceBroker(104),
+                   sessionController(105),
+                   sipSessionRouter(106),
+                   mediaResourceServer(107),
+                   system(108),
+                   colibria(109),
+                   serviceAssuranceServer(110),
+                   virtualizationPlatform(111),
+                   metaSwitchAccessGatewayController(112),
+                   hssi(113),
+                   cdrc(114),
+                   statCon(115),
+                   dellServer(116),
+                   rPI(117),
+                   messagingServer(118),
+                   representativeApplicationServer(119),
+                   emergencyStandaloneProxy(120),
+                   cwCore(121),
+                   mswCCF(122),
+                   voLTEMgmt(123),
+                   mRF(124),
+                   rhino(125),
+                   sDE(126),
+                   cxServer(127),
+                   sIMon(128),
+                   telcoBridgesTMG(129)
+                 }
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The type of the equipment on which the alarmed condition
+                  has been identified."
+    ::= {alarmTrap 53 }
+
+  alarmTrapEquipmentIdentifier OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..64))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The unique identifier of the NE or MetaView Server."
+    ::= {alarmTrap 54 }
+
+  alarmTrapEquipmentName OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..32))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The name of the equipment. This will be the NE or MetaView Server name."
+    ::= {alarmTrap 55 }
+
+  alarmTrapEquipmentIPAddress OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..32))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The IP address of the equipment. This will be the
+                  NE or MetaView Server IP address."
+    ::= {alarmTrap 56 }
+
+  alarmTrapEquipmentSoftwareVersion OBJECT-TYPE
+    SYNTAX       Unsigned32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The version of the software on the equipment."
+    ::= {alarmTrap 57 }
+
+  alarmTrapEquipmentSoftwareVersionDisplay OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..64))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The displayable form of the version."
+    ::= {alarmTrap 58 }
+
+  alarmTrapObjectAdditionalInformation OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..256))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "User comment relating to the alarmed element."
+    ::= {alarmTrap 80 }
+
+  alarmTrapObjectLocation OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..64))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The physical location of the alarmed element."
+    ::= { alarmTrap 81 }
+
+  alarmTrapAlarmCount OBJECT-TYPE
+    SYNTAX       Integer32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Number of times this element has been alarmed"
+    ::= {alarmTrap 82 }
+
+  alarmTrapCountResetTimestamp OBJECT-TYPE
+    SYNTAX       Unsigned32
+    UNITS        "UTC"
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Time the alarm count on this element was last reset
+                  in seconds since Jan 1 1970."
+    ::= {alarmTrap 83 }
+
+  alarmTrapAlarmTimestamp OBJECT-TYPE
+    SYNTAX       Unsigned32
+    UNITS        "UTC"
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Time of the last alarm in seconds since Jan 1 1970."
+    ::= {alarmTrap 84 }
+
+  alarmTrapAlarmFaultType OBJECT-TYPE
+    SYNTAX       Integer32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Whether this fault represents a (stateful) alarm or an event."
+    ::= {alarmTrap 90 }
+
+-- /**************************************************************************/
+-- /* Short Trap for MetaSwitch alarms.                                      */
+-- /* Valid from: 7.1                                                        */
+-- /**************************************************************************/
+
+  alarmShortTrap NOTIFICATION-TYPE
+    OBJECTS      {
+                   alarmShortTrapElementInstance,
+                   alarmShortTrapElementType,
+                   alarmShortTrapDisplayName,
+                   alarmShortTrapGroup,
+                   alarmShortTrapAlarmedObjectPrimaryOID,
+                   alarmShortTrapSeverity,
+                   alarmShortTrapAlarmType,
+                   alarmShortTrapDescription,
+                   alarmShortTrapAssociatedProblemDescription,
+                   alarmShortTrapLogCorrelator,
+                   alarmShortTrapLogID,
+                   alarmShortTrapEMSName,
+                   alarmShortTrapEquipmentType,
+                   alarmShortTrapEquipmentName,
+                   alarmShortTrapEquipmentSoftwareVersion,
+                   alarmShortTrapAlarmTimestamp,
+                   alarmShortTrapAlarmCount,
+                   alarmShortTrapCountResetTimestamp,
+                   alarmShortTrapAlarmIndex
+                   }
+    STATUS       current
+    DESCRIPTION  "This is a short alarm trap table for MetaSwitch.
+                  This behaves similarly to the alarmTrap MIB, but
+                  contains fewer fields. This should be used when
+                  your network or alarm monitoring application requires
+                  alarm notifcations that are not fragmented. Sending
+                  this trap type is configured through the MetaView
+                  Explorer on the SNMP Alarm Destination object."
+    ::= { alarmTrapsPrefix 2 }
+
+  alarmShortTrapElementInstance OBJECT-TYPE
+    SYNTAX       Unsigned32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The instance of the alarmed element"
+    ::= { alarmShortTrap 3 }
+
+  alarmShortTrapElementType OBJECT-TYPE
+    SYNTAX       INTEGER {
+                   netElementConn(1),
+                   unsupNetElement(2),
+                   netElement(3),
+                   netElStats(4),
+                   uMG(5),
+                   uMGStats(6),
+                   hwCon(7),
+                   pCISeg(8),
+                   adaptor(9),
+                   adaptorStats(10),
+                   iPMediaPort(15),
+                   iPMediaPortStats(16),
+                   mTP2Ctrler(17),
+                   mTP2CtrlerStats(18),
+                   lAPDResource(19),
+                   lAPDResourceStats(20),
+                   lAPDTerm(21),
+                   physDS1Port(22),
+                   physDS1PortStats(23),
+                   physDS1DS0Term(24),
+                   physDS3Port(25),
+                   physDS3PortStats(26),
+                   dS1OvrDS3Prt(27),
+                   dS1OverDS3PortStats(28),
+                   dS1OverDS3DS0Term(29),
+                   virtPortCon(30),
+                   mGRTPPort(35),
+                   mGRTPPortStats(36),
+                   mFProfile(37),
+                   mGMtp2ProtProf(38),
+                   mGSigCCCon(39),
+                   mGSigCrConn(40),
+                   connHwCon(41),
+                   iDTContainer(53),
+                   iDT(54),
+                   iDTStats(55),
+                   iDTInterface(56),
+                   iDTSubscrLnTm(57),
+                   sigGateway(58),
+                   sigDest(59),
+                   sigRoute(60),
+                   sigLinkset(61),
+                   sigLink(62),
+                   sigLinkTP(63),
+                   sigLinksetTP(64),
+                   sigPointTP(65),
+                   cFS(66),
+                   cFSStatsSI(67),
+                   cFSStats(68),
+                   cntrldGwCon(69),
+                   mGModelCon(70),
+                   mediaGatewayModel(71),
+                   location(72),
+                   staticNATMapping(73),
+                   tAGCon(74),
+                   tAG(75),
+                   cFSRTPPort(76),
+                   iSDNSCTPAssocCon(77),
+                   iSDNSCTPAssoc(78),
+                   iSDNSCTPStream(79),
+                   tDMPortCon(81),
+                   tDMPort(82),
+                   tDMTerm(83),
+                   tAGAccDevCon(85),
+                   tAGAccessDevice(86),
+                   tAGAccessLine(87),
+                   subGCon(89),
+                   subG(90),
+                   subGAccessDevice(91),
+                   subGAccessLine(92),
+                   cfgSIPBindCon(96),
+                   cfgSIPBind(97),
+                   subGMaintList(99),
+                   accDevMaintList(100),
+                   signalingCon(101),
+                   lineSig(102),
+                   iSDN(103),
+                   iSDNInterfaceProfile(104),
+                   iSDNPRICon(105),
+                   iSDNPRI(106),
+                   iSDNPRIStats(107),
+                   iSDNPRIDS1(108),
+                   iSDNPRIDS0(109),
+                   sIP(110),
+                   sIPTrunkCon(111),
+                   sIPTrunk(112),
+                   sIPTrunkStats(113),
+                   mFLocalEx(114),
+                   mFLocalExStats(115),
+                   mFRemEx(116),
+                   mFRemExStats(117),
+                   mFCircGp(118),
+                   mFCircGpStats(119),
+                   mFCirc(120),
+                   mFMediaChan(121),
+                   mFMediaChanStats(122),
+                   mFCallProfileRoot(123),
+                   mFCallProfileData(124),
+                   mFCallTrace(125),
+                   sS7SigCon(126),
+                   iSUPLclSigDest(127),
+                   iSUPLocalSigDestStats(128),
+                   iSUPStackMessages(129),
+                   iSUPRemSigDest(130),
+                   iSUPRemSigDestStats(131),
+                   iSUPCircGp(132),
+                   iSUPCircGpStats(133),
+                   iSUPCirc(134),
+                   iSUPPrxdCircGp(135),
+                   iSUPMediaChan(136),
+                   iSUPMediaChanStats(137),
+                   iSUPCallTrace(138),
+                   tCAPAppContext(151),
+                   tCAPSLHR(152),
+                   tCAPSLHRStats(153),
+                   tCAPAutoCodeGappingCtrl(154),
+                   billCon(155),
+                   classServs(159),
+                   genCallServCtrl(160),
+                   appServs(161),
+                   appServ(162),
+                   appServStats(163),
+                   callFwdServ(164),
+                   callFwdServStats(165),
+                   cPUServ(167),
+                   cPUServStats(168),
+                   cIDServ(169),
+                   cIDServStats(170),
+                   inServ(171),
+                   inServStats(172),
+                   iN(173),
+                   iNServiceStats(174),
+                   iNServiceTrigger(175),
+                   iNSTrigStats(176),
+                   msgServ(177),
+                   msgServStats(178),
+                   vSLink(179),
+                   vSLinkStats(180),
+                   vSLineGp(181),
+                   vSLineGpStats(182),
+                   vSLine(183),
+                   multiPartyServ(184),
+                   multiPartyServStats(185),
+                   oPX(186),
+                   outServ(187),
+                   outServStats(188),
+                   teen(189),
+                   webServices(190),
+                   rPS(191),
+                   rPSCfgSet(192),
+                   rPSDigitMapCon(193),
+                   rPSDigitMap(194),
+                   rPSDigitMapSection(195),
+                   rPSNumValidationCon(196),
+                   rPSAttrSet(197),
+                   rPSAttrEntry(198),
+                   rPSNumVldnTable(199),
+                   rPSNVEntry(200),
+                   rPSLocalRtgCon(201),
+                   rPSLocalAreaNumbers(202),
+                   rPSLocationRoutingNum(203),
+                   rPSTrunkRtgCon(204),
+                   rPSRoutingTable(205),
+                   rPSAction(206),
+                   subConfCon(207),
+                   numberRange(208),
+                   reservedNumberRange(209),
+                   reservedNumber(210),
+                   subGp(211),
+                   indLineCon(212),
+                   indLine(213),
+                   indLineGClSrvCtrl(214),
+                   indLineAppServs(215),
+                   indLineCallFwd(216),
+                   indLineLineHuntNum(217),
+                   indLineSelFwdNum(218),
+                   indLineSelFwdAnonNum(219),
+                   indLineCID(220),
+                   indLineARACRequest(221),
+                   indLineIn(222),
+                   indLineSelCallRejNum(223),
+                   indLineSelCallRejAnonNum(224),
+                   indLinePCN(225),
+                   indLinePCAN(226),
+                   indLineMsg(227),
+                   indLineRemCall(228),
+                   indLineMultiParty(229),
+                   indLineOPX(230),
+                   indLineOut(231),
+                   indLineSPDNum(232),
+                   indLineTeen(233),
+                   indLineWeb(234),
+                   busGrpCon(235),
+                   busGrp(236),
+                   busGrpNumBlock(237),
+                   busGrpExcludedRange(238),
+                   bGLine(239),
+                   bGLnGnCllSrvCtrl(240),
+                   bGLineAppServs(241),
+                   bGLineCallFwd(242),
+                   bGLineLineHuntNum(243),
+                   bGLineSelFwdNum(244),
+                   bGLineSelFwdAnonNum(245),
+                   bGLineCPU(246),
+                   bGLineCID(247),
+                   bGLineARACRequest(248),
+                   bGLineIn(249),
+                   bGLineSelCallRejNum(250),
+                   bGLineSelCallRejAnonNum(251),
+                   bGLinePCN(252),
+                   bGLinePCAN(253),
+                   bGLineMsg(254),
+                   bGLineRemCall(255),
+                   bGLineMultiParty(256),
+                   bGLineOut(257),
+                   bGLineSPDNum(258),
+                   bGLineWeb(259),
+                   busGrpDialingPlan(260),
+                   busGrpIntercomCodeRange(261),
+                   busGrpShortCode(262),
+                   mADNCon(263),
+                   mADN(264),
+                   mADNStats(265),
+                   mADNCallFwd(266),
+                   mADNLineHuntNum(267),
+                   mADNSelFwdNum(268),
+                   mADNSelFwdAnonNum(269),
+                   mADNIn(270),
+                   mADNSelCallRejNum(271),
+                   mADNSelCallRejAnonNum(272),
+                   mADNAppServs(273),
+                   mADNMsg(274),
+                   mADNMember(275),
+                   busGrpCPU(276),
+                   busGrpCPUStats(277),
+                   cPUGroup(278),
+                   cPUGroupStats(279),
+                   cPUGroupMember(280),
+                   busGrpOut(281),
+                   pBXCon(282),
+                   pBX(283),
+                   pBXStats(284),
+                   pBXLineCon(285),
+                   pBXLine(286),
+                   pBXDICNumber(287),
+                   pBXGenCallServCtrl(288),
+                   pBXAppServs(289),
+                   pBXCallFwd(290),
+                   pBXLineHuntNum(291),
+                   pBXSelFwdNum(292),
+                   pBXSelFwdAnonNum(293),
+                   pBXCID(294),
+                   pBXIn(295),
+                   pBXSelCallRejNum(296),
+                   pBXSelCallRejAnonNum(297),
+                   pBXMsg(298),
+                   pBXOut(299),
+                   pBXSPDNum(300),
+                   pBXWeb(301),
+                   subMaintList(302),
+                   subAtndDpMaintList(303),
+                   callTraceControl(304),
+                   callTraceEntry(305),
+                   rVTContainer(306),
+                   rVTTestGroup(307),
+                   rVTTestTrunk(308),
+                   rVTTestSub(309),
+                   testCalls(310),
+                   testCallsStats(311),
+                   dNSDNS(312),
+                   dNSNmSvrGpCon(313),
+                   dNSNameServerGp(314),
+                   dNSDomainNameSuffix(315),
+                   dNSNameServer(316),
+                   sysHardwareCon(317),
+                   sysEthernetSwitch(318),
+                   sysEthernetPort(319),
+                   sysPTIEthernetSwitch(320),
+                   sysPTIEthernetPort(321),
+                   uX9000SS(322),
+                   cFSServerPowerSupply(323),
+                   fTEthernetIntface(324),
+                   fTEthernetPort(325),
+                   sysAlarmCard(326),
+                   sysAlarmCardPSupply(327),
+                   aPITrace(328),
+                   aPITracingObject(329),
+                   billUser(330),
+                   netElementCraftUser(331),
+                   ems(332),
+                   emsStats(333),
+                   reportCon(334),
+                   report(335),
+                   logCollector(336),
+                   emailNotification(337),
+                   nMSCertificate(338),
+                   emsUserContainer(339),
+                   emsUser(340),
+                   emsCraftUser(341),
+                   tDMPortMaintList(345),
+                   callerIDIPDest(346),
+                   netElementUsers(347),
+                   emsUsers(348),
+                   trafficStudy(350),
+                   perProfCon(351),
+                   perProf(352),
+                   perProfGClSrvCtrl(353),
+                   perProfAppServ(354),
+                   perProfCallFwd(355),
+                   perProfCPU(356),
+                   perProfCallerID(357),
+                   perProfIn(358),
+                   perProfMsg(359),
+                   perProfMultiParty(360),
+                   perProfOut(361),
+                   perProfWeb(362),
+                   indLineStats(364),
+                   bGLineStats(366),
+                   callLogging(367),
+                   detailedCallLog(368),
+                   mFIncCallProfileRoot(369),
+                   mFIncCallProfileData(370),
+                   mFProtocolProfile(371),
+                   indLineFmfmRule(377),
+                   indLineSCANum(378),
+                   indLineSCAAnonNum(379),
+                   busGrpStats(382),
+                   bGLineFmfmRule(383),
+                   bGLineSCANum(384),
+                   bGLineSCAAnonNum(385),
+                   mADNSCANum(387),
+                   mADNSCAAnonNum(388),
+                   mLHGCon(389),
+                   mLHG(390),
+                   mLHGStats(392),
+                   mLHGPilotDN(393),
+                   mLHGPilotDNAppServ(394),
+                   mLHGPltDNCallFwd(395),
+                   mLHGPilotDNSelFwdNum(396),
+                   mLHGPilotDNSelFwdAnonNum(397),
+                   mLHGPilotDNIn(398),
+                   mLHGPilotDNSCRNum(399),
+                   mLHGPilotDNSCRAnonNum(400),
+                   mLHGPilotDNMsg(401),
+                   mLHGMember(402),
+                   pBXFmfmRule(403),
+                   pBXSCANum(404),
+                   pBXSCAAnonNum(405),
+                   sys2510EthSwitch(406),
+                   sys2510EthPort(407),
+                   sigGtwCon(408),
+                   iSUPLocalSigDestCon(409),
+                   sCCPCon(410),
+                   tAGStatsSI(415),
+                   tAGStats(416),
+                   sCCP2(417),
+                   sCCP2Stats(419),
+                   sCCP2LocAccPnt(420),
+                   sCCP2LocAccPntStats(422),
+                   sCCP2PrxdAccPt(423),
+                   sCCP2RemSigDst(424),
+                   sCCP2RemSigDstStats(426),
+                   sCCP2RemAccPt(427),
+                   sCCP2RemoteConcArea(428),
+                   sCCP2RemoteDestListEntry(429),
+                   sCCP2EntitySet(430),
+                   sCCP2GTTranslator(431),
+                   mACTableCon(432),
+                   mACTable(433),
+                   perProfINS(434),
+                   indLineINS(435),
+                   bGLineINS(436),
+                   mADNINS(437),
+                   mLHGPilotDNINS(438),
+                   pBXINS(439),
+                   longDistance(440),
+                   longDistServStats(442),
+                   longDistServClassCon(443),
+                   longDistServClass(444),
+                   aNIScrnTblCon(445),
+                   aNIScrnTbl(446),
+                   aNIScreeningEntry(447),
+                   authCodeTablesCon(448),
+                   authCodeTable(449),
+                   authCode(450),
+                   nomE911(451),
+                   nomE911Record(452),
+                   rPSAttrSetTabCon(453),
+                   rPSNumVldnTabCon(454),
+                   emsUserType(455),
+                   sNMPAlarmDest(456),
+                   eSAServer(457),
+                   eSAProtDomCon(458),
+                   eSAProtDom(459),
+                   iSDNCallTrace(461),
+                   sIPCallTrace(463),
+                   callPark(464),
+                   callParkStats(466),
+                   lineCCCon(467),
+                   lineCC(468),
+                   userDefAttrCon(469),
+                   userDefAttr(470),
+                   busGrpAppServ(471),
+                   bGCallPark(472),
+                   busGrpCallParkStats(474),
+                   busGrpOrbitCodeRange(475),
+                   cFSStatsCon(476),
+                   iSUPMediaChanStatsCon(477),
+                   cASProtocolProfile(478),
+                   subGwStats(480),
+                   cMTSCon(481),
+                   cMTSConStats(483),
+                   cMTS(484),
+                   cMTSStats(486),
+                   flowSpecMapping(488),
+                   tCAPSLHRQryRtsCon(489),
+                   tCAPSLHRQueryRoute(490),
+                   systemPTIEthPtStatsCon(491),
+                   systemPTIEthPtStats(492),
+                   systemCH2510EthPtStatsCon(493),
+                   systemCH2510EthPtStats(494),
+                   systemFTEthPtStatsCon(495),
+                   systemFTEthPtStats(496),
+                   uMGStatsCon(497),
+                   sIPTrunkStatsCon(498),
+                   mFMediaChannelStatsCon(499),
+                   statsDb(500),
+                   aSRepositoryData(501),
+                   iSDNPRIMaintList(502),
+                   iSDNPRIAtndDpMntLst(503),
+                   department(505),
+                   registeredSIPBFUCon(506),
+                   registeredSIPBinding(507),
+                   emsStatsCon(508),
+                   metaSphereServerConn(509),
+                   metaSphereServer(510),
+                   metaSphereApplication(511),
+                   metaSphereCommPortal(512),
+                   metaSphereDirectory(513),
+                   metaSphereMailboxStore(514),
+                   metaSphereMediaServer(515),
+                   metaSphereNotification(516),
+                   metaSphereSMTP(517),
+                   metaSphereWeb(518),
+                   metaSphereServiceMonitor(519),
+                   metaSphereStatisticsMonitor(520),
+                   metaSphereAdjunctDevice(521),
+                   networkNodesCon(522),
+                   networkNode(523),
+                   networkInterconnect(524),
+                   rPSOnSwitchCarrier(525),
+                   bGLineDigitMaps(526),
+                   managedDevice(528),
+                   servAssServ(530),
+                   mVConfigDBConn(531),
+                   delegatedManagementGroupCon(532),
+                   sIPToTCAPMWIConv(533),
+                   mVD(534),
+                   locSrc(535),
+                   mVDConn(536),
+                   delegatedManagementGroup(537),
+                   shadowCfgDb(538),
+                   faultMonitoringProfile(539),
+                   sysIPSub(540),
+                   sysPTIIPSub(541),
+                   sysCH2510IPSub(542),
+                   cFSMVDIPSub(543),
+                   m2PASigLink(544),
+                   m2PAProtProfile(545),
+                   dMGNumberRange(547),
+                   perProfDMGInformation(548),
+                   pBXDIDNumClServs(549),
+                   pBXTmpDIDNumClServs(551),
+                   pBXMultiParty(552),
+                   restrictedNumber(554),
+                   mdRscSrvrCon(555),
+                   mdRscSrvr(556),
+                   callLogUser(558),
+                   m3UARoute(562),
+                   rPASEthInt(563),
+                   rTMUplink(564),
+                   portGrp(565),
+                   besIPSub(566),
+                   cesIPSub(567),
+                   tDMCarrier(568),
+                   bITSPort(569),
+                   mGResRTPPort(570),
+                   mGResMTP2Port(571),
+                   mGResLAPDPort(572),
+                   mGResIVRPort(573),
+                   clocking(574),
+                   systemConn(578),
+                   system(579),
+                   tDMConfig(580),
+                   tDMDefCarrier(582),
+                   tDMCrrDS0Term(583),
+                   lclClkRef(584),
+                   mGResLAPDTerm(585),
+                   m3UAAS(586),
+                   m3UADestinationCon(587),
+                   m3UADestination(588),
+                   iMSOfflChrg(589),
+                   addValAccCodes(590),
+                   lclDiamEnt(592),
+                   ethRsrcs(593),
+                   bes(594),
+                   ces(596),
+                   sysHwInv(597),
+                   sysHISlot(598),
+                   sysHICESBlade(599),
+                   sysHwInvBlade(600),
+                   sysHIShMgr(601),
+                   sysHIFanTray(602),
+                   sysHIPwrEntMod(603),
+                   sysHIUsrCard(604),
+                   sysEthRsrcs(605),
+                   sysCES(606),
+                   sysClkMod(607),
+                   sysUplnk(608),
+                   sysPortGrp(609),
+                   sysCESIPSub(610),
+                   sysUsers(611),
+                   sysCraftUsr(613),
+                   sysShMgmnt(614),
+                   sysShMgr(615),
+                   sysDryAlarms(616),
+                   perimetaConn(617),
+                   servBrkrConn(618),
+                   sIPSessRtrConn(619),
+                   perimeta(620),
+                   servBrkr(621),
+                   sIPSessRtr(622),
+                   staticDomain(624),
+                   result(625),
+                   aGCLine(626),
+                   aGCLineOPX(627),
+                   aGCPBX(628),
+                   aGCPBXLine(629),
+                   clusterMgr(630),
+                   billAppCtrl(631),
+                   billEventInfo(632),
+                   billFileCtrl(633),
+                   alrmLogFileMgr(634),
+                   sIPRegistrar(636),
+                   billXMLAppCtrl(637),
+                   billXMLFlCtrl(638),
+                   aGCLineCon(639),
+                   aGCLineMsg(640),
+                   aGCLineOut(641),
+                   aGCPBXCon(642),
+                   aGCPBXLineCon(643),
+                   iSISSub(644),
+                   procEth(645),
+                   iSISPort(646),
+                   iSISIPAddr(647),
+                   sysISISSub(648),
+                   virtPltfrmConn(649),
+                   virtPltfrm(650),
+                   m3UARemAS(651),
+                   m3UARemASP(652),
+                   iUACrConn(653),
+                   h248M3UARemAS(654),
+                   h248M3UARemIPSP(655),
+                   iDTSubscrLnTmCon(656),
+                   realmsCon(658),
+                   realm(659),
+                   mediaIPIntsCon(660),
+                   mediaProfsCon(661),
+                   mediaIPInt(662),
+                   qosClassesCon(663),
+                   qosClass(664),
+                   vqProfsCon(665),
+                   vqProf(666),
+                   h248Cfg(667),
+                   h248MGC(668),
+                   h248Prof(669),
+                   sISChrg(670),
+                   iMSOnChrg(671),
+                   perProfOnChrgCtrls(672),
+                   indLineOnChrgCtrls(673),
+                   bGLineOnChrgCtrls(674),
+                   pBXOnChrgCtrls(675),
+                   iMSOnPeer(676),
+                   mVStatCon(678),
+                   diagDS0(679),
+                   iMSCore(680),
+                   clusterSiteConn(681),
+                   connToOBS(682),
+                   linkToOBS(683),
+                   hSSIConn(685),
+                   dellServerConn(686),
+                   dellServer(687),
+                   bGMultiParty(688),
+                   mADNWeb(689),
+                   mLHGPilotDNWeb(690),
+                   v5PortCon(691),
+                   v5Port(692),
+                   v5Link(693),
+                   v5SubscriberLineTermCon(694),
+                   v5SubscriberLineTerm(695),
+                   aGCSIP(696),
+                   virtNtwkInt(697),
+                   virtIPSub(698),
+                   sysLogMgr(699),
+                   mVRpi(700),
+                   mVRpiCfs(701),
+                   numRngCon(702),
+                   eSAP(703),
+                   eSAPEthInt(704),
+                   outClBrngLvlsCon(705),
+                   outClBrngLvl(706),
+                   indLineMngdDevCon(707),
+                   indLineMngdDev(708),
+                   aGCLineMultiParty(709),
+                   carrSig(710),
+                   uDSAsCon(711),
+                   uDSA(712),
+                   licFeat(713),
+                   cwCoreDep(719),
+                   sproutCluster(720),
+                   sproutNode(721),
+                   homesteadCluster(722),
+                   homesteadNode(723),
+                   ralfCluster(724),
+                   ralfNode(725),
+                   mswCCFDep(726),
+                   cCFCluster(727),
+                   ccfNode(728),
+                   rhinoDep(729),
+                   rhinoCluster(730),
+                   rhinoNode(731),
+                   voLTEMgmtNodeConn(732),
+                   voLTEMgmtNode(733),
+                   mRFConn(734),
+                   mRF(735),
+                   cNAMCacheEntry(736),
+                   cNAMNetQry(737),
+                   lNPNetQry(738),
+                   lNPCacheEntry(739),
+                   tFLNetQry(740),
+                   tR08IDTPort(741),
+                   analytics(742),
+                   licStatus(743),
+                   cCGenCluster(744),
+                   cCGenNode(745),
+                   tR08IDTPortCon(746),
+                   oBS(747),
+                   sDEConn(748),
+                   sDE(749),
+                   eCBCategsCon(750),
+                   rPSNVTagsCon(751),
+                   eCBCateg(752),
+                   eCBCategRule(753),
+                   rPSNVTag(754),
+                   indLineSCBBlklstNum(755),
+                   indLineSCBSflstNum(756),
+                   bGLineSCBBlklstNum(757),
+                   bGLineSCBSflstNum(758),
+                   mLHGPltDNGnClSvCtl(759),
+                   pBXSCBBlklstNum(760),
+                   pBXSCBSflstNum(761),
+                   bGLineAddIdCon(762),
+                   bGLineAddId(763),
+                   cXServersCon(764),
+                   cXServerConn(765),
+                   cXServer(766),
+                   iMSOfflChrgPeer(767),
+                   indLineDigitMaps(768),
+                   routingPoliciesCon(769),
+                   rtgPlcy(770),
+                   rtgPlcyLine(771),
+                   cSGsCon(772),
+                   cSG(773),
+                   cSGCallFwd(774),
+                   cSGOutgoing(775),
+                   indLineSchedsCon(776),
+                   indLineSched(777),
+                   indLineSchdPrd(778),
+                   bGLineSchedsCon(779),
+                   bGLineSched(780),
+                   bGLineSchdPrd(781),
+                   bGLineFwdSched(782),
+                   mLHGPilotDNSchedsCon(783),
+                   mLHGPilotDNSched(784),
+                   mLHGPilotDNSchdPrd(785),
+                   mLHGPilotDNFwdSched(786),
+                   pBXSchedsCon(787),
+                   pBXSched(788),
+                   pBXSchdPrd(789),
+                   pBXFwdSched(790),
+                   indLineFwdSched(791),
+                   sIMonConn(792),
+                   sIMon(793),
+                   telcoBridgesTMGConn(794),
+                   telcoBridgesTMG(795),
+                   busGrpCallServices(796)
+                 }
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The type of alarmed element"
+    ::= { alarmShortTrap 5 }
+
+  alarmShortTrapDisplayName OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..128))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The user-friendly display name of the alarmed element"
+    ::= { alarmShortTrap 6 }
+
+  alarmShortTrapGroup OBJECT-TYPE
+    SYNTAX       INTEGER {
+                   metaSwitchConnection(1),
+                   metaSwitch(2),
+                   mediaGateway(3),
+                   hardware(4),
+                   virtualPorts(5),
+                   signalingCrossConnects(6),
+                   iDTs(7),
+                   signalingDestinations(8),
+                   signalingLinksets(9),
+                   callAgent(10),
+                   trunkAccessGateway(11),
+                   lAPDResources(12),
+                   configuredSIPBindings(13),
+                   iSDN(14),
+                   iSUP(15),
+                   mF(16),
+                   sIP(17),
+                   sCCP(18),
+                   billing(19),
+                   callServices(20),
+                   applicationServers(21),
+                   callerID(22),
+                   intelligentNetworking(23),
+                   messageServices(24),
+                   pCM(25),
+                   webServices(26),
+                   lawfulInterception(27),
+                   routing(28),
+                   persistentProfile(29),
+                   callTrace(30),
+                   rVT(31),
+                   dNS(32),
+                   systemHardware(33),
+                   aPITrace(34),
+                   reports(35),
+                   logCollector(36),
+                   emailNotifications(37),
+                   iads(38),
+                   subscribers(40),
+                   subscriberGateways(42),
+                   accessDevices(43),
+                   tdmPorts(44),
+                   esaServer(45),
+                   esaProtectionDomains(46),
+                   cMTS(47),
+                   metaViewServer(48),
+                   statisticsDatabase(49),
+                   appServerRepositoryData(50),
+                   iSDNPrimaryRateInterfaces(51),
+                   networkNode(52),
+                   networkInterconnect(53),
+                   metaSphereServer(54),
+                   metaSphereAdjunctDevice(55),
+                   serviceAssuranceServer(56),
+                   mVD(57),
+                   serviceBroker(58),
+                   perimeta(59),
+                   sipRouter(60),
+                   perimetaHpi(61),
+                   system(62),
+                   chassisManagement(63),
+                   hardwareInventory(64),
+                   mediaResourceServer(65),
+                   m3ua(66),
+                   rPAS(67),
+                   colibria(68),
+                   virtualizationPlatform(69),
+                   hSSI(70),
+                   cDRC(71),
+                   statConn(72),
+                   v5(73),
+                   dellServer(74),
+                   oBS(75),
+                   rPI(76),
+                   messagingServer(77),
+                   eSAP(78),
+                   licensedFeatures(79),
+                   cwCore(80),
+                   mswCCF(81),
+                   voLTEMgmt(82),
+                   mRF(83),
+                   rhino(84),
+                   tR08IDTs(85),
+                   licStatus(86),
+                   sDE(87),
+                   cxServer(88),
+                   sIMon(89),
+                   telcoBridgesTMG(90),
+                   businessGroupApplicationServers(91)
+                 }
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The group containing the alarmed element"
+    ::= { alarmShortTrap 9 }
+
+  alarmShortTrapAlarmedObjectPrimaryOID OBJECT-TYPE
+    SYNTAX       OBJECT IDENTIFIER
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The OID of the alarmed obect.  Gets and Sets on
+                  this OID are supported. "
+    ::= { alarmShortTrap 11 }
+
+  alarmShortTrapSeverity OBJECT-TYPE
+    SYNTAX       Unsigned32 ( 0..100 )
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Severity of the alarm condition.
+                  0      Unknown
+                  1-19   Diagnostics
+                  20-29  Verbose statistics
+                  30-39  Verbose operational
+                  40-49  Statistics
+                  50-59  Audit
+                  60-69  Operational
+                  70-79  Unexpected
+                  80-89  Error
+                  90-100 Fatal"
+    ::= { alarmShortTrap 20 }
+
+  alarmShortTrapAlarmType OBJECT-TYPE
+    SYNTAX       INTEGER {
+                   clear(1),
+                   attentionRequired(2),
+                   attendToDependent(3)
+                 }
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Type of the alarm. AttentionRequired implies the element
+                  itself required attention, AttendToDependent implies
+                  an element on which this element relies is
+                  AttentionRequired."
+    ::= { alarmShortTrap 21 }
+
+  alarmShortTrapDescription OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..4096))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Detailed description of the alarmed condition."
+    ::= { alarmShortTrap 23 }
+
+  alarmShortTrapAssociatedProblemDescription OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..4096))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Description of an associated problem."
+    ::= { alarmShortTrap 27 }
+
+  alarmShortTrapLogCorrelator OBJECT-TYPE
+    SYNTAX       Counter64
+    MAX-ACCESS   read-only
+    STATUS       current
+    DESCRIPTION  "The correlator of the main log of the alarm."
+    ::= { alarmShortTrap 28 }
+
+  alarmShortTrapLogID OBJECT-TYPE
+    SYNTAX       Integer32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Identifier for the main log of the alarm"
+    ::= {alarmShortTrap 29 }
+
+  alarmShortTrapEMSName OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..64))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The name of the MetaView Server."
+    ::= { alarmShortTrap 51 }
+
+  alarmShortTrapEquipmentType OBJECT-TYPE
+    SYNTAX       INTEGER {
+                   unknown(0),
+                   metaSwitchCallAgent(1),
+                   metaSwitchMediaGateway(2),
+                   metaSwitchIntegratedSoftswitch(3),
+                   metaSwitchEMS(100),
+                   metaSphereSDP(101),
+                   metaSphereUMS(102),
+                   metaSphereAdjunctDevice(103)
+                 }
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The type of the equipment on which the alarmed condition
+                  has been identified."
+    ::= {alarmShortTrap 53 }
+
+  alarmShortTrapEquipmentName OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..32))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The name of the equipment. This will be the NE or MetaView Server name."
+    ::= {alarmShortTrap 55 }
+
+  alarmShortTrapEquipmentSoftwareVersion OBJECT-TYPE
+    SYNTAX       Unsigned32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "The version of the software on the equipment."
+    ::= {alarmShortTrap 57 }
+
+  alarmShortTrapAlarmCount OBJECT-TYPE
+    SYNTAX       Integer32
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Number of times this element has been alarmed"
+    ::= {alarmShortTrap 82 }
+
+  alarmShortTrapCountResetTimestamp OBJECT-TYPE
+    SYNTAX       Unsigned32
+    UNITS        "UTC"
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Time the alarm count on this element was last reset
+                  in seconds since Jan 1 1970."
+    ::= {alarmShortTrap 83 }
+
+  alarmShortTrapAlarmTimestamp OBJECT-TYPE
+    SYNTAX       Unsigned32
+    UNITS        "UTC"
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "Time of the last alarm in seconds since Jan 1 1970."
+    ::= {alarmShortTrap 84 }
+
+  alarmShortTrapAlarmIndex OBJECT-TYPE
+    SYNTAX       DisplayString (SIZE(1..254))
+    MAX-ACCESS   read-write
+    STATUS       current
+    DESCRIPTION  "A short index for the alarm. This field is typically set to
+                  the dot and decimal representation of the Alarm OID.
+                  However, whent the length of the Display Name field and the
+                  decimal OID exceeds 254 characters, a hash of the OID is used
+                  to try and achieve a unique index."
+    ::= { alarmShortTrap 85 }
+
+
+
+END

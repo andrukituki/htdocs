@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Department_BaseInformation">
+    <xs:annotation>
+      <xs:documentation>
+        Department settings service indication.  Used to manage the common settings associated with a department in a business group fragment.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>masterAdmin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="Name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of this particular department.
+            <d:DisplayName>Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="FullName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of this particular department, including the parent department names. Each name is separated by ' / ' e.g. 'Development / Test / One' for the One department within the Test department.
+            <d:DisplayName>Full Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ParentDepartment" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of the parent department, this can't be changed after the department is created. If omitted or set to 'None' the department is created at the highest level.e.g. 'Development / Test'.
+            <d:DisplayName>Parent Department</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="OperatorNumber" type="tSwitchableDefaultString">
+        <xs:annotation>
+          <xs:documentation>
+            Directory Number of the Operator associated with this department.  If this is blank then the parent department's operator number will be used, if this department has no parent then the Business Group fragment operator number is used.
+            <d:DisplayName>Operator Number</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CallNotificationTargetList" type="tCallNotificationTargetList">
+        <xs:annotation>
+          <xs:documentation>
+            The targets to which notifications will be sent when a subscriber places a call of a specific type (configured on the CFS BG) e.g. an emergency call to 911.  Supplying an empty list element will delete any configured call target notifications.
+            <d:DisplayName>Call Notification Target List</d:DisplayName>
+            <d:ValidFrom>1.14.10</d:ValidFrom>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PreferredPlaylist" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The default playlist to use for Music on Hold in this Department. Can be overruled by defaults at the child Department or subscriber level.
+            <d:DisplayName>Preferred Playlist</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,591 @@
+//-----------------------------------------------------------------------------
+// File: ClientSessionManagerInterface.idl
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Highly Confidential Material
+//
+//-----------------------------------------------------------------------------
+
+#ifndef ClientSessionManagerInterface_idl
+#define ClientSessionManagerInterface_idl
+
+#include "SettingsUserInterface.idl"
+#include "ClientSessionInterface.idl"
+#include "NLSSupportInterface.idl"
+
+/**
+ * Retired constants used on the userLogin and applicationLogin methods to
+ * specify the encoding of the supportedVersions information.
+ *
+ * These values are now retired and an application should make use of the new
+ * constants defined below.
+ *
+ * -  The value SUPPORT_SINGLE_VERSION now maps to
+ *    SUPPORT_FWD_COMPATIBLE_SINGLE_VERSION.
+ *
+ * -  The value SUPPORT_RANGE_OF_VERSIONS now maps to
+ *    SUPPORT_FWD_COMPATIBLE_RANGE_OF_VERSIONS.
+ **/
+const long SUPPORT_SINGLE_VERSION    = 1;
+const long SUPPORT_RANGE_OF_VERSIONS = 2;
+
+/**
+ * Constants used on the userLogin and applicationLogin methods to specify
+ * the encoding of the supportedVersions information.  See the comment for
+ * userLogin for more details.
+ **/
+const long SUPPORT_FWD_COMPATIBLE_SINGLE_VERSION    = 1;
+const long SUPPORT_FWD_COMPATIBLE_RANGE_OF_VERSIONS = 2;
+const long SUPPORT_EXACT_SINGLE_VERSION             = 3;
+const long SUPPORT_EXACT_RANGE_OF_VERSIONS          = 4;
+
+/**
+ * An array of strings containing key and value pairs of the form
+ * "key=value": see the getServerProperties method.
+ */
+typedef sequence<string> PropertiesList;
+
+/**
+ * The ClientSessionManagerInterface is the initial interface used by all
+ * client applications to establish communications with the EMS server.
+ */
+interface ClientSessionManagerInterface
+{
+  /**
+   * User types for use on the applicationLogin method.  See the "MetaSwitch
+   * Class 5 Softswitch: Operations Manual" chapter on "User Security" for more
+   * details on User types.
+   */
+  const long USER_TYPE_SUBSCRIBER      = 1;
+  const long USER_TYPE_SUPPORT_AGENT   = 2;
+  const long USER_TYPE_SUPERVISOR      = 3;
+  const long USER_TYPE_NET_ADMIN       = 4;
+  const long USER_TYPE_DCL_ENGINEER    = 5;
+  const long USER_TYPE_SYS_ADMIN       = 6;
+  const long USER_TYPE_SUPER_USER      = 7;
+  const long USER_TYPE_CALEA_USER      = 8;
+  const long USER_TYPE_CALEA_DCL_ENG   = 9;
+  const long USER_TYPE_WKFLOW_USER_A   = 10;
+  const long USER_TYPE_WKFLOW_USER_B   = 11;
+  const long USER_TYPE_WKFLOW_USER_C   = 12;
+
+  /**
+   * Version identifiers for use on the userLogin and applicationLogin methods.
+   * These constants define all of the versions that are supported by the
+   * current release of the EMS.
+   */
+  const long VERSION_1_04              = 0x01040000;
+  const long VERSION_2_0               = 0x02000000;
+  const long VERSION_2_1               = 0x02010000;
+  const long VERSION_2_2               = 0x02020000;
+  const long VERSION_2_3               = 0x02030000;
+  const long VERSION_2_3_01            = 0x02030100;
+  const long VERSION_3_0               = 0x03000000;
+  const long VERSION_3_0_01            = 0x03000100;
+  const long VERSION_3_0_02            = 0x03000200;
+  const long VERSION_3_0_03            = 0x03000300;
+  const long VERSION_3_1               = 0x03010000;
+  const long VERSION_3_1_01            = 0x03010100;
+  const long VERSION_3_2               = 0x03020000;
+  const long VERSION_4_0               = 0x04000000;
+  const long VERSION_4_0_01            = 0x04000100;
+  const long VERSION_4_1               = 0x04010000;
+  const long VERSION_4_1_01            = 0x04010100;
+  const long VERSION_4_1_02            = 0x04010200;
+  const long VERSION_4_2               = 0x04020000;
+  const long VERSION_5_0               = 0x05000000;
+  const long VERSION_5_0_02            = 0x05000200;
+  const long VERSION_5_1               = 0x05010000;
+  const long VERSION_6_0               = 0x06000000;
+  const long VERSION_6_1               = 0x06010000;
+  const long VERSION_7_0               = 0x07000000;
+  const long VERSION_7_0_01            = 0x07000100;
+  const long VERSION_7_1               = 0x07010000;
+  const long VERSION_7_1_01            = 0x07010100;
+  const long VERSION_7_2               = 0x07020000;
+  const long VERSION_7_3               = 0x07030000;
+  const long VERSION_7_3_01            = 0x07030100;
+  const long VERSION_7_4               = 0x07040000;
+  const long VERSION_7_4_01            = 0x07040100;
+  const long VERSION_8_0               = 0x08000000;
+  const long VERSION_8_0_02            = 0x08000200;
+  const long VERSION_8_0_03            = 0x08000300;
+  const long VERSION_8_1               = 0x08010000;
+  const long VERSION_8_1_01            = 0x08010100;
+  const long VERSION_8_1_02            = 0x08010200;
+  const long VERSION_8_2               = 0x08020000;
+  const long VERSION_8_2_02            = 0x08020200;
+  const long VERSION_8_3               = 0x08030000;
+  const long VERSION_8_3_01            = 0x08030100;
+  const long VERSION_8_3_03            = 0x08030300;
+  const long VERSION_8_3_04            = 0x08030400;
+  const long VERSION_8_3_10            = 0x08030A00;
+  const long VERSION_9_0               = 0x09000000;
+  const long VERSION_9_0_01            = 0x09000100;
+  const long VERSION_9_0_02            = 0x09000200;
+  const long VERSION_9_0_03            = 0x09000300;
+  const long VERSION_9_0_10            = 0x09000A00;
+  const long VERSION_9_1               = 0x09010000;
+  const long VERSION_9_1_10            = 0x09010A00;
+  const long VERSION_9_1_15            = 0x09010F00;
+  const long VERSION_9_2               = 0x09020000;
+  const long VERSION_9_2_01            = 0x09020100;
+  const long VERSION_9_2_10            = 0x09020A00;
+  const long VERSION_9_2_11            = 0x09020B00;
+  const long VERSION_9_3               = 0x09030000;
+  const long VERSION_9_3_10            = 0x09030A00;
+  const long VERSION_9_3_20            = 0x09031400;
+  const long VERSION_9_4               = 0x09040000;
+  const long VERSION_9_4_10            = 0x09040A00;
+  const long VERSION_9_4_20            = 0x09041400;
+  const long VERSION_9_4_30            = 0x09041E00;
+  const long VERSION_9_5               = 0x09050000;
+  const long VERSION_9_5_10            = 0x09050A00;
+  const long VERSION_9_5_20            = 0x09051400;
+  const long VERSION_9_5_30            = 0x09051E00;
+  const long VERSION_9_5_40            = 0x09052800;
+  const long VERSION_9_6               = 0x09060000;
+  const long VERSION_9_6_10            = 0x09060A00;
+  const long VERSION_9_6_20            = 0x09061400;
+  const long VERSION_9_6_30            = 0x09061E00;
+  const long VERSION_9_6_40            = 0x09062800;
+  const long VERSION_9_6_50            = 0x09063200;
+  const long VERSION_9_6_60            = 0x09063C00;
+  const long VERSION_9_6_70            = 0x09064600;
+
+  /**
+   * Version identifiers for use on the userLogin_SessionController,
+   * userLoginWithNewPassword_SessionController and
+   * applicationLogin_SessionController methods. These constants define all of
+   * the versions that are supported by the current release of the Session
+   * Controller (Perimeta).
+   */
+  const long VERSION_3_9_SC          = 0x03090000;
+  const long VERSION_3_9_20_SC       = 0x03091400;
+  const long VERSION_3_9_40_SC       = 0x03092800;
+  const long VERSION_4_0_00_SC       = 0x04000000;
+  const long VERSION_4_0_20_SC       = 0x04001400;
+  const long VERSION_4_0_40_SC       = 0x04002800;
+  const long VERSION_4_1_00_SC       = 0x04010000;
+  const long VERSION_4_1_20_SC       = 0x04011400;
+  const long VERSION_4_1_40_SC       = 0x04012800;
+  const long VERSION_4_2_00_SC       = 0x04020000;
+  const long VERSION_4_2_20_SC       = 0x04021400;
+  const long VERSION_4_2_40_SC       = 0x04022800;
+  const long VERSION_4_3_00_SC       = 0x04030000;
+  const long VERSION_4_3_20_SC       = 0x04031400;
+  const long VERSION_4_3_40_SC       = 0x04032800;
+  const long VERSION_4_3_50_SC       = 0x04033200;
+  const long VERSION_4_4_00_SC       = 0x04040000;
+  const long VERSION_4_4_20_SC       = 0x04041400;
+  const long VERSION_4_5_00_SC       = 0x04050000;
+  const long VERSION_4_5_20_SC       = 0x04051400;
+  const long VERSION_4_5_40_SC       = 0x04052800;
+  const long VERSION_4_6_00_SC       = 0x04060000;
+  const long VERSION_4_6_20_SC       = 0x04061400;
+  const long VERSION_4_6_40_SC       = 0x04062800;
+  const long VERSION_4_7_00_SC       = 0x04070000;
+  const long VERSION_4_7_20_SC       = 0x04071400;
+  const long VERSION_4_7_30_SC       = 0x04071E00;
+  const long VERSION_4_7_35_SC       = 0x04072300;
+  const long VERSION_4_7_40_SC       = 0x04072800;
+  const long VERSION_4_7_45_SC       = 0x04072D00;
+  const long VERSION_4_8_00_SC       = 0x04080000;
+  const long VERSION_4_8_05_SC       = 0x04080500;
+  const long VERSION_4_8_10_SC       = 0x04080A00;
+  const long VERSION_4_8_20_SC       = 0x04081400;
+  const long VERSION_4_8_25_SC       = 0x04081900;
+  const long VERSION_4_8_30_SC       = 0x04081E00;
+  const long VERSION_4_9_00_SC       = 0x04090000;
+  const long VERSION_4_9_10_SC       = 0x04090A00;
+  const long VERSION_4_9_20_SC       = 0x04091400;
+  const long VERSION_4_9_25_SC       = 0x04091900;
+  const long VERSION_4_9_30_SC       = 0x04091E00;
+  const long VERSION_4_9_35_SC       = 0x04092300;
+  const long VERSION_4_9_40_SC       = 0x04092800;
+  const long VERSION_5_0_00_SC       = 0x05000000;
+  const long VERSION_5_0_15_SC       = 0x05000F00;
+  const long VERSION_5_0_20_SC       = 0x05001400;
+  const long VERSION_5_0_25_SC       = 0x05001900;
+  const long VERSION_5_1_00_SC       = 0x05010000;
+  const long VERSION_5_1_05_SC       = 0x05010500;
+  const long VERSION_5_1_10_SC       = 0x05010A00;
+  const long VERSION_5_1_20_SC       = 0x05011400;
+  const long VERSION_5_2_00_SC       = 0x05020000;
+  const long VERSION_5_2_10_SC       = 0x05020A00;
+  const long VERSION_5_3_00_SC       = 0x05030000;
+  const long VERSION_5_3_10_SC       = 0x05030A00;
+
+  /**
+   * Initiates a user session on the server.
+   *
+   * This entry point is used by applications wishing to perform operations
+   * using a particular EMS account.
+   *
+   * The account details (username and password) must match those in an EMS
+   * User Object.
+   *
+   * The supportedVersions parameter should contain a sequence of integers,
+   * each identifying a particular EMS Object version.  The number of versions
+   * in the sequence is dependent on the supportVersionsFormat parameter (see
+   * below).  Each version identifier is formatted as follows:
+   *
+   * -  the top 8 bits represent the major version,
+   * -  the next 8 bits represent the minor version,
+   * -  the next 8 bits represent the compatibility level,
+   * -  the bottom 8 bits are reserved for future use.
+   *
+   * For example, version V2.1.10 is specified as 0x02010a00.
+   *
+   * The supportedVersionsFormat is used to indicate how the supportedVersions
+   * sequence should be interpreted.  The number of entries in the sequence and
+   * the meaning of each of the entries in the sequence varies according to the
+   * value of this parameter.  The parameter can take one of four possible
+   * values:
+   *
+   * -  SUPPORT_EXACT_SINGLE_VERSION,
+   * -  SUPPORT_EXACT_RANGE_OF_VERSIONS,
+   * -  SUPPORT_FWD_COMPATIBLE_SINGLE_VERSION,
+   * -  SUPPORT_FWD_COMPATIBLE_RANGE_OF_VERSIONS.
+   *
+   * Only applications that are written to strictly follow all of the forward
+   * compatibility guidelines in the Integration and Customization manual
+   * should use either of the SUPPORT_FWD_COMPATIBLE values.  In this case the
+   * EMS will only ever return objects that a correctly written forward
+   * compatible application will be compatible with.  Please refer to the
+   * Integration and Customization manual for full details on the intended use
+   * of this support.
+   *
+   * -  If SUPPORT_EXACT_RANGE_OF_VERSIONS is specified then the
+   *    supportedVersions sequence contains two integers, a lowest and highest
+   *    EMS Object version, used to specify the range of EMS Object versions
+   *    that the application supports.  In this case the EMS will typically
+   *    return objects with versions within the specified range, and will
+   *    usually not allow the management of objects whose version falls outside
+   *    of this range.  However, the following object types are always handled
+   *    as though forward compatibility is supported (see version
+   *    format specifier SUPPORT_FWD_COMPATIBLE_RANGE_OF_VERSIONS):
+   *
+   *      -  CFS / UMG / IS / MVD Connection (BOONetworkElementConnSE)
+   *      -  Element Management System (BOOEmsSE)
+   *      -  Element Management System Statistics (BOOEmsStatsContainerSE)
+   *      -  'Summary Period' Element Management System Statistics (BOOEmsStatsSE)
+   *      -  Log Collection Status (BOOLogCollectorSE)
+   *      -  Email Notification (BOOEmailNotificationSE)
+   *      -  Security Certificates (BOONMSCertificateContainerSE)
+   *      -  Security Certificate (BOONMSCertificateSE)
+   *      -  Users (BOOEmsUsersSE)
+   *      -  EMS Users (BOOEmsUserContainerSE)
+   *      -  EMS User (BOOEmsUserSE)
+   *      -  Craft Users (BOOEmsCraftUserContainerSE)
+   *      -  Craft User (BOOEmsCraftUserSE).
+   *
+   *    Objects of the above type will be returned regardless of the supported
+   *    range of versions.  Their version will be equal to the EMS version.
+   *
+   * -  If SUPPORT_EXACT_SINGLE_VERSION is specified then the supportedVersions
+   *    sequence contains a single integer to specify the only EMS Object
+   *    version that the application supports.  The behaviour is identical to
+   *    SUPPORT_EXACT_RANGE_OF_VERSIONS where the same version is used for both
+   *    the lowest and highest supported versions.
+   *
+   * -  If SUPPORT_FWD_COMPATIBLE_RANGE_OF_VERSIONS is specified then the
+   *    supportedVersions sequence contains two integers, a lowest and highest
+   *    EMS Object version, used to specify the range of forward compatible EMS
+   *    Object versions that the application supports.  In this case the EMS
+   *    will return objects with versions within the specified range and above.
+   *    However, the EMS will not allow management of an object if the version
+   *    of the object is not forward compatible with the highest of the
+   *    specified range of versions.
+   *
+   * -  If SUPPORT_FWD_COMPATIBLE_SINGLE_VERSION is specified then the
+   *    supportedVersions sequence contains a single integer to specify the
+   *    only forward compatible version.  The behaviour is identical to
+   *    SUPPORT_FWD_COMPATIBLE_RANGE_OF_VERSIONS where the same version is used
+   *    for both the lowest and highest forward compatible versions.
+   *
+   * @returns           A ClientSessionInterface that provides the application
+   *                    with access to EMS Objects.
+   *
+   * @param userName    The user name of the EMS account.
+   * @param password    The password of the EMS account.
+   * @param supportedVersionsFormat
+   *                    The format in which the supportVersions information is
+   *                    encoded. See the comment above for more details.
+   * @param supportedVersions
+   *                    Sequence of integers specifying the EMS Object versions
+   *                    that the application wishes to use. See the comment
+   *                    above for more details.
+   *
+   * @exception LoginFailedException
+   *                    Thrown if the supplied account details do not match the
+   *                    details of any EMS User Object.
+   * @exception VersionNotSupportedException
+   *                    Thrown if the versions supported by the application
+   *                    fall entirely outside the scope of the manageable EMS
+   *                    Object versions.
+   * @exception VersionFormatException
+   *                    Thrown when the version information is incorrectly
+   *                    formatted. This may occur when supportedVersionsFormat
+   *                    is an unrecognized format, when the supportedVersions
+   *                    sequence does not contain recognized EMS Object
+   *                    Versions, or when the supportedVersions sequence is
+   *                    invalid for the specified supportedVersionsFormat
+   *                    value.
+   */
+  ClientSessionInterface userLogin(in string userName,
+                                   in string password,
+                                   in long supportedVersionsFormat,
+                                   in SequenceOfIntegers supportedVersions)
+    raises (LoginFailedException,
+            VersionNotSupportedException,
+            VersionFormatException);
+
+  /**
+   * Enhanced version of userLogin that supports the Session Controller
+   * (Perimeta) by passing its version alongside the EMS version.
+   *
+   * @returns           A ClientSessionInterface that provides the application
+   *                    with access to EMS Objects.
+   *
+   * @param userName    The user name of the EMS account.
+   * @param password    The password of the EMS account.
+   * @param supportedVersionsFormat
+   *                    The format in which the supportVersions information is
+   *                    encoded. See the comment above for more details.
+   * @param supportedVersions
+   *                    Sequence of integers specifying the EMS Object versions
+   *                    that the application wishes to use. See the comment
+   *                    above for more details.
+   * @param scSupportedVersionsFormat
+   *                    The format in which the scSupportVersions information
+   *                    is encoded. See the comment above for more details.
+   * @param scSupportedVersions
+   *                    Sequence of integers specifying the Session Controller
+   *                    (Perimeta) Object versions that the application wishes
+   *                    to use. See the comment above for more details.
+   *
+   * @exception LoginFailedException
+   *                    Thrown if the supplied account details do not match the
+   *                    details of any EMS User Object.
+   * @exception VersionNotSupportedException
+   *                    Thrown if the versions supported by the application
+   *                    fall entirely outside the scope of the manageable EMS
+   *                    Object versions.
+   * @exception VersionFormatException
+   *                    Thrown when the version information is incorrectly
+   *                    formatted. This may occur when supportedVersionsFormat
+   *                    is an unrecognized format, when the supportedVersions
+   *                    sequence does not contain recognized EMS or Session
+   *                    Controller (Perimeta) Object Versions, or when the
+   *                    supportedVersions sequence is invalid for the specified
+   *                    supportedVersionsFormat value.
+   */
+  ClientSessionInterface userLogin_SessionController(in string userName,
+                                                     in string password,
+                                                     in long supportedVersionsFormat,
+                                                     in SequenceOfIntegers supportedVersions,
+                                                     in long scSupportedVersionsFormat,
+                                                     in SequenceOfIntegers scSupportedVersions)
+    raises (LoginFailedException,
+            VersionNotSupportedException,
+            VersionFormatException);
+
+  /**
+   * Identical to userLogin except that a new password is supplied to which
+   * the user's password is set if login is successful.  This userLogin
+   * must be called to login users whose passwords have expired.
+   *
+   * @returns           A ClientSessionInterface that provides the application
+   *                    with access to EMS Objects.
+   *
+   * @param userName    The user name of the EMS account.
+   * @param password    The current password of the EMS account.
+   * @param newPassword The new password for the EMS account.
+   * @param supportedVersionsFormat
+   *                    The format in which the supportVersions information is
+   *                    encoded. See the comment above for more details.
+   * @param supportedVersions
+   *                    Sequence of integers specifying the EMS Object versions
+   *                    that the application wishes to use. See the comment
+   *                    above for more details.
+   *
+   * @exception LoginFailedException
+   *                    Thrown if the supplied account details do not match the
+   *                    details of any EMS User Object.
+   * @exception VersionNotSupportedException
+   *                    Thrown if the versions supported by the application
+   *                    fall entirely outside the scope of the manageable EMS
+   *                    Object versions.
+   * @exception VersionFormatException
+   *                    Thrown when the version information is incorrectly
+   *                    formatted. This may occur when supportedVersionsFormat
+   *                    is an unrecognized format, when the supportedVersions
+   *                    sequence does not contain recognized EMS Object
+   *                    Versions, or when the supportedVersions sequence is
+   *                    invalid for the specified supportedVersionsFormat
+   *                    value.
+   */
+  ClientSessionInterface userLoginWithNewPassword(in string userName,
+                                                  in string password,
+                                                  in string newPassword,
+                                                  in long supportedVersionsFormat,
+                                                  in SequenceOfIntegers supportedVersions)
+    raises (LoginFailedException,
+            VersionNotSupportedException,
+            VersionFormatException);
+
+  /**
+   * Identical to userLogin_SessionController except that a new password is
+   * supplied to which the user's password is set if login is successful. This method must
+   * be called to login users whose passwords have expired.
+   *
+   * @returns           A ClientSessionInterface that provides the application
+   *                    with access to EMS/Session Controller (Perimeta)
+   *                    Objects.
+   *
+   * @param userName    The user name of the EMS account.
+   * @param password    The current password of the EMS account.
+   * @param newPassword The new password for the EMS account.
+   * @param supportedVersionsFormat
+   *                    The format in which the supportVersions information is
+   *                    encoded. See the comment above for more details.
+   * @param supportedVersions
+   *                    Sequence of integers specifying the EMS Object versions
+   *                    that the application wishes to use. See the comment
+   *                    above for more details.
+   * @param scSupportedVersionsFormat
+   *                    The format in which the scSupportVersions information
+   *                    is encoded. See the comment above for more details.
+   * @param scSupportedVersions
+   *                    Sequence of integers specifying the Session Controller
+   *                    (Perimeta) Object versions that the application wishes
+   *                    to use. See the comment above for more details.
+   *
+   * @exception LoginFailedException
+   *                    Thrown if the supplied account details do not match the
+   *                    details of any EMS User Object.
+   * @exception VersionNotSupportedException
+   *                    Thrown if the versions supported by the application
+   *                    fall entirely outside the scope of the manageable EMS
+   *                    Object versions.
+   * @exception VersionFormatException
+   *                    Thrown when the version information is incorrectly
+   *                    formatted. This may occur when supportedVersionsFormat
+   *                    is an unrecognized format, when the supportedVersions
+   *                    sequence does not contain recognized EMS or Session
+   *                    Controller (Perimeta) Object Versions, or when the
+   *                    supportedVersions sequence is invalid for the specified
+   *                    supportedVersionsFormat value.
+   */
+  ClientSessionInterface userLoginWithNewPassword_SessionController(in string userName,
+                                                          in string password,
+                                                          in string newPassword,
+                                                          in long supportedVersionsFormat,
+                                                          in SequenceOfIntegers supportedVersions,
+                                                          in long scSupportedVersionsFormat,
+                                                          in SequenceOfIntegers scSupportedVersions)
+    raises (LoginFailedException,
+            VersionNotSupportedException,
+            VersionFormatException);
+
+  /**
+   * Called by a client application to initiate a session on the server.
+   *
+   * The application's authenticity must have been established prior to this
+   * invocation.
+   *
+   * This login does not require an EMS User account.
+   *
+   * The lowestSupportedVersion and highestSupportedVersion fields are version
+   * identifiers as discussed in the CORBA integration chapter of the
+   * Integration and Customization manual.
+   *
+   * @param userType  The userType to associate with this session.
+   *                  For more information on User types see the
+   *                  "MetaSwitch Class 5 Softswitch: Operations Manual".
+   *                  User type constants are defined above.
+   * @param supportedVersionsFormat  The format in which the supportedVersions
+   *                  information is encoded.  See the comment for userLogin.
+   * @param supportedVersions  Array of integers specifying the EMS Object
+   *                  versions that this application wishes to use.  See the
+   *                  comment for userLogin.
+   *
+   * @return          ClientSessionInterface that provides the application with
+   *                  access to EMS objects.
+   *
+   * @throws LoginFailedException  Thrown if the userType is unknown.
+   */
+  ClientSessionInterface applicationLogin(in long userType,
+                                          in long supportedVersionsFormat,
+                                          in SequenceOfIntegers supportedVersions)
+    raises (LoginFailedException,
+            VersionNotSupportedException,
+            VersionFormatException);
+
+  /**
+   * Enhanced version of applicationLogin that supports the Session Controller
+   * (Perimeta) by passing its version alongside the EMS version.
+   *
+   * @param userType  The userType to associate with this session.
+   *                  For more information on User types see the
+   *                  "MetaSwitch Class 5 Softswitch: Operations Manual".
+   *                  User type constants are defined above.
+   * @param supportedVersionsFormat
+   *                    The format in which the supportVersions information is
+   *                    encoded. See the comment above for more details.
+   * @param supportedVersions
+   *                    Sequence of integers specifying the EMS Object versions
+   *                    that the application wishes to use. See the comment
+   *                    above for more details.
+   * @param scSupportedVersionsFormat
+   *                    The format in which the scSupportVersions information
+   *                    is encoded. See the comment above for more details.
+   * @param scSupportedVersions
+   *                    Sequence of integers specifying the Session Controller
+   *                    (Perimeta) Object versions that the application wishes
+   *                    to use. See the comment above for more details.
+   *
+   * @return          ClientSessionInterface that provides the application with
+   *                  access to EMS/Session Controller (Perimeta) objects.
+   *
+   * @throws LoginFailedException  Thrown if the userType is unknown.
+   */
+  ClientSessionInterface applicationLogin_SessionController(in long userType,
+                                                            in long supportedVersionsFormat,
+                                                            in SequenceOfIntegers supportedVersions,
+                                                            in long  scSupportedVersionsFormat,
+                                                            in SequenceOfIntegers scSupportedVersions)
+    raises (LoginFailedException,
+            VersionNotSupportedException,
+            VersionFormatException);
+
+  /**
+   * Obtains a list of the EMS Server properties.
+   *
+   * EMS Server properties include:
+   *
+   * dcl.vpems.server.versioninfo - this is a displayable string that indicates
+   * the version of code used by the EMS Server.  This is a version identifier
+   * of the form described in the userLogin method, but in dotted decimal
+   * format: "[major version].[minor version].[compatability level]".
+   *
+   * dcl.vpems.server.helpmanualversioninfo - this string is only interpretable
+   * by the EMS Client.
+   *
+   * @return  PropertiesList containing key and value pairs of the
+   *          form "key=value".
+   */
+  PropertiesList getServerProperties();
+
+  /**
+   * Provides access to the NLSSupportInterface that allows translation
+   * from National Language Support (NLS) enabled text into human-readable
+   * displayable text.
+   *
+   * @return  A reference to an NLSSupportInterface.
+   */
+  NLSSupportInterface getNLSSupport();
+};
+
+#endif

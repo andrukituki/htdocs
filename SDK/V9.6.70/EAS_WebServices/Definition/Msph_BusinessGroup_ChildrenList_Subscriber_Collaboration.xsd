@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_BusinessGroup_ChildrenList_Subscriber_Collaboration">
+    <xs:annotation>
+      <xs:documentation>
+        Read only service indication used to list all subscriber devices within all fragments of a business group. The response includes the web collaboration configuration for all lines.
+        <d:Actions />
+        <d:AuthLevel>masterAdmin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Subscriber" type="tBGCLCollabSubscriber">
+        <xs:annotation>
+          <xs:documentation>
+            An entry representing a single subscriber device in the specified business group fragment.
+            <d:DisplayName>Subscriber</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tBGCLCollabSubscriber_Addon">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="ID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            UID for the add-on type.
+            <d:DisplayName>ID</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tBGCLCollabSubscriber">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="DirectoryNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            DN of this subscriber device.
+            <d:DisplayName>Directory Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SubscriberUID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Unique identifier of this subscriber.
+            <d:DisplayName>Subscriber UID</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="IntercomDialingCode" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Intercom code for this subscriber device.
+            <d:DisplayName>Intercom Dialing Code</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Name" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Name of this subscriber.
+            <d:DisplayName>Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="BusinessGroupAdministrationAccountType" type="tBGCLSubscriber_BusinessGroupAdministrationAccountType">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this subscriber can administer this business group fragment, or departments within it.
+            <d:DisplayName>Business Group Administration Account Type</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+            <d:Values>
+              <d:Value>Normal</d:Value>
+              <d:Value>Administrator</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="BusinessGroupAdministrationAdministrationDepartment" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of the department this subscriber can administer, or 'None' if they can administer the entire BG fragment.  Only present if the account type is Administrator.
+            <d:DisplayName>Business Group Administration Administration Department</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AttendantLineType" type="tBGCLSubscriber_AttendantLineType">
+        <xs:annotation>
+          <xs:documentation>
+            What type of auto-attendant this line represents, if any.
+            <d:DisplayName>Attendant Line Type</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+            <d:Values>
+              <d:Value>None</d:Value>
+              <d:Value>AutoAttendant</d:Value>
+              <d:Value>EasyAttendant</d:Value>
+              <d:Value>PremiumAttendant</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Department" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Full name of the department this subscriber is in or 'None' if they are not in a department.
+            <d:DisplayName>Department</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="BusinessGroupSpokenNameRecorded" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this subscriber has a business group spoken name greeting recorded (visible only to callers within the business group).
+            <d:DisplayName>Business Group Spoken Name Recorded</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="SpokenNameRecorded" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this subscriber has a spoken name greetingrecorded (visible to callers outside the business group).
+            <d:DisplayName>Spoken Name Recorded</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AdditionalNumber" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this device uses an additional number.
+            <d:DisplayName>Additional Number</d:DisplayName>
+            <d:ValidFrom>1.12</d:ValidFrom>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="CoSID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The ID of the Class of Service used for this subscriber.
+            <d:DisplayName>CoS ID</d:DisplayName>
+            <d:ValidFrom>1.13.10</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AADEmailAddress" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The email address of the Azure Active Directory (AAD) user account associated with this subscriber.
+            <d:DisplayName>AAD Email Address</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AccessionMeetingPermitted" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Whether this subscriber is allowed to have Accession Meeting (determined by the Class of Service).
+            <d:DisplayName>Accession Meeting Permitted</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PreferredPlaylist" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The preferred playlist to use for the subscriber's Music on Hold. If not present then the default at a higher level will be used.
+            <d:DisplayName>Preferred Playlist</d:DisplayName>
+            <d:ValidFrom>1.35</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue />
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Addon" type="tBGCLCollabSubscriber_Addon">
+        <xs:annotation>
+          <xs:documentation>
+            Settings related to a specific add-on.
+            <d:DisplayName>Addon</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

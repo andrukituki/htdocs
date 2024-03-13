@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_Reminders">
+    <xs:annotation>
+      <xs:documentation>
+        Subscriber Reminders Settings service indication.  Used to manage reminders and reminder recordings for a subscriber. This indication supports the codec parameter to control the codec used to encode returned audio data.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="Enabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether reminders are enabled for the subscriber.
+            <d:DisplayName>Enabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Reminder" type="tMsph_Subscriber_Reminders_Reminder">
+        <xs:annotation>
+          <xs:documentation>
+            A specific reminder.
+            <d:DisplayName>Reminder</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_Subscriber_Reminders_Reminder">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="UID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Unique identifier for the reminder. A UID cannot be specified when a reminder is created, and cannot be modified for an existing reminder. However, the reminder UID must be specified for deletes, in order to identify the reminder to be removed.
+            <d:DisplayName>UID</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Description" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            A description of the reminder.
+            <d:DisplayName>Description</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="TargetDevicePhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Phone number of the device to receive the reminder. If this is not specified, the primary device number is used.
+            <d:DisplayName>Target Device Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ReminderHour" type="tMsph_Subscriber_Reminders_Reminder_ReminderHour">
+        <xs:annotation>
+          <xs:documentation>
+            The hour of the reminder in the subscriber's time zone.
+            <d:DisplayName>Reminder Hour</d:DisplayName>
+            <d:Type>Integer range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Range>0 - 23</d:Range>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ReminderMinute" type="tMsph_Subscriber_Reminders_Reminder_ReminderMinute">
+        <xs:annotation>
+          <xs:documentation>
+            The minute of the reminder in the subscriber's time zone.
+            <d:DisplayName>Reminder Minute</d:DisplayName>
+            <d:Type>Integer range</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Range>0 - 59</d:Range>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Type" type="tMsph_Subscriber_Reminders_Reminder_Type">
+        <xs:annotation>
+          <xs:documentation>
+            The type of reminder - OneTime or Recurring.
+            <d:DisplayName>Type</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+            <d:Values>
+              <d:Value>OneTime</d:Value>
+              <d:Value>Recurring</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Date" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The date when the onetime reminder will occur in the format YYYYMMDD.
+            <d:DisplayName>Date</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Days" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The days when the recurring reminder will occur. This should take the form of a string of numbers where 1 corresponds to Monday and 7 to Sunday, in numerical order. For example, Monday, Wednesday and Friday would be represented as '135'.
+            <d:DisplayName>Days</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="ReminderFile" type="tBinaryData">
+        <xs:annotation>
+          <xs:documentation>
+            The audio file to use for the reminder. The data in this file and its corresponding content type must be in one of the supported formats defined in the EAS System Planning Guide. The formats enabled on a system can be viewed through Craft.
+            <d:DisplayName>Reminder File</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tMsph_Subscriber_Reminders_Reminder_ReminderHour">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="23" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tMsph_Subscriber_Reminders_Reminder_ReminderMinute">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0" />
+      <xs:maxInclusive value="59" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tMsph_Subscriber_Reminders_Reminder_Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OneTime" />
+      <xs:enumeration value="Recurring" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_CustomerGroup_Administrators">
+    <xs:annotation>
+      <xs:documentation>
+        Customer Group Administrator service indication. Used to manage customer group administrators.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="999" minOccurs="0" name="Administrator" type="tMsph_CustomerGroup_Administrators_Administrator">
+        <xs:annotation>
+          <xs:documentation>
+            An individual Administrator for this Customer Group.
+            <d:DisplayName>Administrator</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_CustomerGroup_Administrators_Administrator">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="AdministratorName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The name of an Administrator for this Customer Group. This should be specified for deletes, to identify the Administrator to be removed.  Permitted regex: ^[^\p{C}\p{Zl}\p{Zp}&lt;&gt;;"\\]{1,64}$
+            <d:DisplayName>Administrator Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AdministratorPassword" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The password for this Administrator.  The only way to read back the password is to use the encrypted password field instead.  Permitted regex: .*
+            <d:DisplayName>Administrator Password</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>-W-W-W</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="EncryptedAdministratorPassword" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The password for this Administrator, in encrypted form.  Use this to migrate passwords - the password field takes precedent, if present.  Permitted regex: .*
+            <d:DisplayName>Encrypted Administrator Password</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AdministratorType" type="tMsph_CustomerGroup_Administrator_Type">
+        <xs:annotation>
+          <xs:documentation>
+            The type of this Administrator.
+            <d:DisplayName>Administrator Type</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>Group</d:Value>
+              <d:Value>Master</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AdministratorGroup" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The Customer Group that this Administrator has access to.  Permitted regex: .*
+            <d:DisplayName>Administrator Group</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWR-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tMsph_CustomerGroup_Administrator_Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Group" />
+      <xs:enumeration value="Master" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

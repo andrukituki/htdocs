@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_MoH_Playlist">
+    <xs:annotation>
+      <xs:documentation>
+        Music on Hold Service Playlist indication. Used to create, modify and delete Music on Hold playlists.
+        <d:Actions>
+          <d:Action>apply</d:Action>
+          <d:Action>delete</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="FriendlyName" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The friendly name of the playlist.
+            <d:DisplayName>Friendly Name</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="StartPoint" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Which method to use to determine the track to start with when beginning the playlist.
+            <d:DisplayName>Start Point</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InterruptionTrack" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The track to periodically interrupt playlist playback with, if configured.
+            <d:DisplayName>Interruption Track</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="InterruptionInterval" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            The interval in seconds between playlist interruptions.
+            <d:DisplayName>Interruption Interval</d:DisplayName>
+            <d:Type>Integer</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="NextPlaylist" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The next playlist to play once this playlist completes, if the next action is to change playlist.
+            <d:DisplayName>Next Playlist</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="NextAction" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The next action to take after completing the playlist.
+            <d:DisplayName>Next Action</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="TrackList" type="tMsph_MoH_Playlist_Track_List">
+        <xs:annotation>
+          <xs:documentation>
+            List of tracks containing their index, track ID and whether the track file is missing.
+            <d:DisplayName>Track List</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_MoH_Playlist_Track_List">
+    <xs:annotation>
+      <xs:documentation>A container for tracks within this playlist.</xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="1" name="TrackID" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The ID of the track in this tracklist.
+            <d:DisplayName>Track ID</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="TrackIndex" type="xs:int">
+        <xs:annotation>
+          <xs:documentation>
+            The index of the track in the track list.
+            <d:DisplayName>Track Index</d:DisplayName>
+            <d:Type>Integer</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="1" name="TrackMissingFile" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Whether the file corresponding to the track in this tracklist is missing.
+            <d:DisplayName>Track Missing File</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

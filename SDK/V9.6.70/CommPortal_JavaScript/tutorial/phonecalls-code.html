@@ -1,0 +1,190 @@
+<html>
+<head>
+  <title>Making Phone Calls - a CommPortal SDK tutorial</title>
+
+  <script src="../script/commportal.js" id="includeAPI"></script>
+</head>
+
+<body>
+<h1>CommPortal SDK Making Phone Calls Example</h1>
+
+Enter the server address, then press the button to log in.
+
+<form onsubmit="doLogin(); return false">
+  <div id="enterServer">
+    CommPortal Server:
+    <input type="text" id="server" value="http://eas.sandbox.innovators.metaswitch.com/unbranded" style="width:300px"></input>
+    <br/><br/>
+  </div>
+
+  <input type="submit" id="loginButton" value="Login"/>
+</form>
+
+<form id="enterNumbers">
+  <h2>Making a Call</h2>
+  Number to call:
+  <input type="text" id="numberTo" value=""></input> required
+  <br/>
+  Calling from:
+  <input type="text" id="numberFrom" value=""></input> (optional)
+  <br/>
+  <button disabled="disabled" id="callButton" onclick="doMakeCall(connection); return false;">Make Call</button>
+  <button disabled="disabled" id="cancelButton" onclick="doCancelCall(connection); return false;">Cancel Call</button>
+</form>
+
+<!--
+  There are a number of separate script blocks that follow, which makes it
+  easier to identify individual bits of code for display in the tutorials.
+  In a normal coding environment you would probably have these as a single
+  code block.
+-->
+<script id="tutorialFramework">
+function display(msg, className)
+{
+  // Convert the input object to a string if necessary
+  if (typeof msg !== "string")
+  {
+    msg = msg.toString();
+  }
+
+  var line = document.createElement("div");
+  line.appendChild(document.createTextNode(msg));
+
+  if (className)
+  {
+    line.className = className;
+  }
+
+  addToOutput(line);
+}
+
+function addToOutput(element)
+{
+  var out = document.getElementById("outputGoesHere");
+
+  if (!out)
+  {
+    var out = document.createElement("div");
+    document.body.appendChild(out);
+  }
+
+  out.appendChild(element);
+}
+
+if (window.location.protocol.match("file"))
+{
+  alert(
+    "Warning: The working example does not function when you load this tutorial using the file protocol.  " +
+    "Please place the tutorial files on a web server, and reload them from there");
+}
+</script>
+
+<script id="createConnection">
+var connection;
+
+function createConnection()
+{
+  var server = document.getElementById("server").value;
+  // Place the connection to CommPortal in a global variable.
+  connection = new CommPortal(server);
+
+  display("Using CommPortal server " + server);
+}
+</script>
+
+<script id="loginScript">
+function doLogin()
+{
+  display("Logging in");
+
+  createConnection();
+  connection.login("PhoneCallsTutorial", loginSuccess, loginFailure);
+
+  // The function to be called when succesfully logged in
+  function loginSuccess(connection, sessionId)
+  {
+    display("CommPortal session ID: " + sessionId);
+
+    doEnableButtons();
+  }
+
+  // The function to be called if logging in fails
+  function loginFailure(connection, error)
+  {
+    display("Failed to log into CommPortal, error: " + error);
+  }
+}
+</script>
+
+<script id="enableButtonsScript">
+function doEnableButtons()
+{
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++)
+  {
+    button = buttons[i];
+
+    button.disabled = false;
+  }
+
+  display("Now use the other buttons to drive the example");
+}
+</script>
+
+<script id="makeCallScript">
+function doMakeCall(connection)
+{
+  // Get the user provided numbers from the UI
+  var callingTo = document.getElementById("numberTo").value;
+  var callingFrom = document.getElementById("numberFrom").value;
+
+  if (callingFrom !== "")
+  {
+    display("Making a call from " + callingFrom + " to " + callingTo);
+
+    // A second number was provided, so use the two number form
+    connection.makeCall(callingTo, callingFrom, callProgress, callFailure);
+  }
+  else
+  {
+    display("Making a call to " + callingTo);
+
+    // Use the one number form
+    connection.makeCall(callingTo, callProgress, callFailure);
+  }
+
+  function callProgress(connection, callId, state)
+  {
+    display("Call " + callId + " is in state " + state);
+  }
+
+  function callFailure(connection, error)
+  {
+    display("Error: " + error);
+  }
+}
+</script>
+
+<script id="cancelCallScript">
+function doCancelCall(connection)
+{
+  connection.cancelCall(cancelSuccess, cancelFailure);
+
+  // The cancel success only records the success of the request to cancel.
+  // The actual cancelling will cause new progress to be sent to the success
+  // function passed to the original makeCall() method.
+  function cancelSuccess(connection)
+  {
+    display("Call cancel accepted");
+  }
+
+  function cancelFailure(connection, error)
+  {
+    display("Error: " + error);
+  }
+}
+</script>
+
+</body>
+</html>

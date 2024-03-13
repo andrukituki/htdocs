@@ -1,0 +1,46 @@
+//-----------------------------------------------------------------------------
+// File: SnapshotChangeListenerInterface.idl
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Highly Confidential Material
+//
+//-----------------------------------------------------------------------------
+
+#ifndef SnapshotChangeListenerInterface_idl
+#define SnapshotChangeListenerInterface_idl
+
+interface SEAccessInterface;
+
+#include "SEExceptions.idl"
+#include "SEAccessInterface.idl"
+
+/**
+ * Implemented by an object to receive notification of changes in the
+ * SE's state.  Changes in state include:
+ * - a change in the value of a field on the SettingsUserInterface
+ * - a change in the SE's name
+ * - a change in the SE's displayName
+ * - a change in the SE's enabledActions
+ * - a change in the SE's references.
+ **/
+interface SnapshotChangeListenerInterface
+{
+  /**
+   * Called by the SEAccess to notify the implementing object of a change in
+   * the SE's state.
+   *
+   * @param source     SEAccessInterface with which this
+   *                   SnapshotChangeListenerInterface was registered.
+   * @param fundamental  If true, any outstanding changes to the
+   *                   SettingsUserInterface object currently held by the
+   *                   SEAccessInterface user, will be rejected with
+   *                   ElementChangedException if an action is performed.
+   *                   This is because another user has significantly changed
+   *                   the SE's state.  If false, actions may be performed
+   *                   without an calling getSnapshot.
+   **/
+  void newSnapshotAvailable(in SEAccessInterface source,
+                            in boolean fundamental);
+};
+
+#endif

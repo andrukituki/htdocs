@@ -1,0 +1,344 @@
+<html>
+<head>
+<title>Faxes : Advanced Topic - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Faxes - CommPortal SDK Tutorial</h1>
+
+This tutorial considers how to handle faxes using the CommPortal SDK.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+By the way, if you've worked through previous tutorials then the initial
+section will be very familiar - it's just a refresher from the
+<a href="login.html">Login</a> tutorial, so feel free to skip straight to
+<a href="#enableButtons">Enable Buttons</a>.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>fetchFaxCounts()</b>
+  <li><b>fetchFaxes()</b>
+  <li><b>confirmFaxesViewed()</b>
+  <li><b>markFaxesAsViewed()</b>
+  <li><b>markFaxesAsUnviewed()</b>
+  <li><b>deleteFaxes()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+Here, we've coded our <i>doLogin()</i> function so that, when the
+user successfully logs in, we automatically proceed to the
+<i>doEnableButtons()</i> function covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="enableButtons"></a>
+<h2>Enable Buttons</h2>
+
+So, just to recap: we've opened a connection to CommPortal, and we've allowed the
+subscriber to log in.
+
+<p>
+Just like in the <a href="phonecalls.html">phone calls</a> tutorial, the remainder
+of our examples are triggered by the user clicking buttons.  Also as in that example,
+we enable the buttons once the subscriber's logged in, using the following
+<i>doEnableButtons()</i> function.
+
+<code id="enableButtonsScript"></code>
+
+<h2>Handling Faxes</h2>
+
+CommPortal subscribers can, subject to configuration, use their phone
+numbers for more than just phone calls and voicemails - they can receive
+faxes on that same number, too.
+
+<p>
+Faxes are treated by the system very similarly to voicemails, so the
+API methods we'll be using resemble those we saw in the
+<a href="voicemails.html">Voicemails</a> tutorial.
+In common with the other advanced topics, our working example uses a button
+in the UI to launch our exploration of fax handling.
+
+<code id="faxHandling" class="html"></code>
+
+We've set up our button so that pressing it calls our <i>doFetchFaxCount()</i>
+function, described below.
+
+<h3>Counting faxes</h3>
+
+<code id="faxesCountScript"></code>
+
+This function uses the <b>fetchFaxCount()</b> method in the API, which - if you
+were paying attention in the <a href="voicemails.html">Voicemails</a> tutorial -
+will hold no surprises for you.  It exactly parallels the equivalent function
+for voicemails, taking the usual callbacks for success and failure.  It
+invokes the success callback with two numbers - one holding the total number of
+faxes, the other holding the number which haven't yet been viewed.
+
+<p>
+In our example we print out these numbers, then call the next part of the example
+- <i>doFetchFaxList()</i> - to fetch the details of the faxes themselves.
+
+<h3>Fax details</h3>
+
+<b>doFetchFaxList()</b> fetches the details of the faxes, again with the usual
+asynchronous callback.
+
+<code id="faxesListScript"></code>
+
+Once again you'll see strong parallels with the voicemail example - we're passed
+an array of objects representing the faxes, though the details for each fax message
+are of course slightly different from the voicemail case:
+
+<dl>
+  <dt>Id</dt>
+  <dd>A unique identifier for this fax, valid only in this session</dd>
+
+  <dt>From</dt>
+  <dd>The directory number which sent the fax (if not withheld)</dd>
+
+  <dt>Name</dt>
+  <dd>May contain a name if one was provided for the sender of the fax</dd>
+
+  <dt>Read</dt>
+  <dd>Boolean value</dd>
+
+  <dt>Urgent</dt>
+  <dd>Boolean value</dd>
+
+  <dt>Private</dt>
+  <dd>Boolean value</dd>
+
+  <dt>Received</dt>
+  <dd>Time the fax was received</dd>
+
+  <dt>Pages</dt>
+  <dd>Number of pages in the fax</dd>
+
+  <dt>ImageFile</dt>
+  <dd>The URL of the TIFF file holding the fax image - only valid within this login session.
+      Requesting this file will implicitly mark the fax as viewed
+  </dd>
+
+  <dt>ImageFilePDF</dt>
+  <dd>The URL of the PDF file holding the fax image - only valid within this login session.
+      Requesting this file will implicitly mark the fax as viewed
+  </dd>
+</dl>
+
+Let's pick out the new aspects of the list above.  As well as a size in bytes, the fax message
+details include a count of the number of pages in the fax.  Finally, there are also two URLs linking
+to the image files holding the fax - one in TIFF format and one in PDF. It's your choice which is
+most appropriate.
+
+<p>
+Since this is an advanced tutorial, we're going to quicken the pace a bit here;
+rather than consider a number of different display options for the fax details,
+we'll present just one table view which illustrates all of the points we want to
+make.  So, once we've received the list of faxes, we pass them on to the following
+<i>displayFaxActions()</i> function.
+
+<code id="faxesActionsScript"></code>
+
+As with many of our previous examples, we build up an HTML table to show the data.
+One small difference this time: while building the table header, we give the
+table an explicit id of "faxes".  You'll see why we do that shortly.
+
+<p>
+We then follow the familiar routine of considering each entry in the array of faxes,
+adding each as its own row in the table.  The distinctive background color is
+applied if the fax is not marked as "Read" - incidentally, now you can appreciate
+why the CommPortal API uses the common term "Read", covering both voicemails being
+"heard" and faxes being "viewed". We also account for the case where the From
+number was withheld.
+
+<p>
+The HTML which creates the three buttons should also be familiar from the
+<a href="voicemails.html">Voicemails</a> tutorial; we've included buttons to delete
+a fax, mark as viewed, and mark it as unviewed.
+
+<p>
+But the image link requires a little bit of explanation.  Firstly, there are two
+file types - TIFF and PDF.  PDF files are not handled directly by the web
+browser and TIFF format images rarely are.  Instead, common operating systems
+provide viewers which can show these files.  We simply provide a link that the
+user can click on; the browser typically handles a click by spawning an
+external viewer to display the file.
+
+<p>
+TIFF images are a slightly more complex case than PDF.  For example, Safari
+handles TIFF files directly, so we make a specific check for this browser via
+the userAgent string (making sure to exclude Google's Chrome, which pretends to
+be Safari). We then cause Safari to open the TIFF links in a new window each
+time, to stop it opening them in place of our working example window.
+
+<p>
+We have one further twist.  We need to call a short function when the user
+displays a fax (we'll see what it does below), so we attach an onclick
+handler to the link, calling a <i>viewingFax()</i> function.  But see how
+our little bit of onclick script also includes "return true"?  That means
+the web browser will perform the default action - opening the image - as well
+as calling our function.  (Previous onclick handlers used in these
+tutorials have instead specified "return false", suppressing the default
+action and calling the onclick function only.)
+
+<p>
+With all that dealt with, we finally close the table text string, and use it
+to create an element ready to add to the DOM.  Again though, we do something a
+little more sophisticated than our earlier examples.  Before adding the element,
+we check to see if we already have a table with the same name in the DOM - and
+if we do, we replace the old version rather than simply adding the new one.
+It's to enable this flourish that we gave the table an id earlier on.
+
+<h3>Viewing the fax</h3>
+
+<p>
+So what of the function that's called - <i>viewingFax()</i> - when the user
+clicks to see the fax?
+
+<code id="viewingFax"></code>
+
+<p>
+We've arranged for this function to be called whenever the user has clicked on the
+fax link - and by implication has viewed the fax itself.  Recall that each fax
+message maintains a flag as to whether it has been "Read" or not, and that
+requesting the image file from the server automatically sets that flag.
+To keep the CommPortal API in step with this updated information, we need to call
+<b>confirmFaxesViewed()</b> whenever we detect that the user has viewed a fax.
+
+<p>
+Like most API calls, this method can be passed a single id (as we do here), or
+an array of ids (if our UI was arranged in such a way that the user could view
+multiple faxes in a single interaction).  However, because it's just informing
+the API of this information and not trying to interact with the CommPortal server,
+this is a <i>synchronous</i> call with no callbacks.
+
+<p>
+(Incidentally, there's a similar <b>confirmVoicemailsHeard()</b> API method.
+For the sake of simplicity we left that out of the earlier
+<a href="voicemails.html">voicemails</a> tutorial.)
+
+<p>
+Our function also sets a function to be called in the (immediate) future, which
+calls <i>doFetchFaxList()</i> again - this will fetch the latest list of faxes
+(with their new Read states), and re-display the table.  Now you can
+see why we made sure that the display function replaces any existing table
+with the same name: rather than scrolling up a number of tables via the
+<i>addToOuput()</i> function, we are keeping just one "live" table visible,
+which is a much more realistic example.
+
+<h3>Marking faxes as viewed or unviewed</h3>
+
+We've just considered that accessing the image file of the fax automatically
+marks it as viewed - but as with voicemails, we also have the flexibility to
+control this state using <b>markFaxesAsViewed()</b> and
+<b>markFaxesAsUnviewed()</b> API calls.
+
+<code id="markAsViewedFunction"></code>
+<code id="markAsUnviewedFunction"></code>
+
+<p>
+These methods follow the familiar pattern of taking a single id, or an array of ids -
+along with callbacks, of course, since we're back into asynchronous territory again.
+
+<p>
+You'll see that we are ending all these interactions by calling back to our
+<i>doFetchFaxList()</i> function.  That's so that every time we do something that
+affects the list of faxes, we fetch it and redisplay it to reflect the change.
+
+<p>
+Just to make it clear, the difference between the calls to <b>confirmFaxesViewed()</b>
+and <b>markFaxesAsViewed()</b> is that the former is a synchronous call, which
+merely confirms that something has happened that the API would not otherwise know about.
+The latter's an asynchronous call that communicates a specific user intent to the
+CommPortal server.
+
+<h3>Deleting faxes</h3>
+
+To round out the set of actions you can perform on faxes, it won't surprise you
+to learn that there is a <b>deleteFaxes()</b> API call.
+
+<code id="deleteFunction"></code>
+
+Once again, once this action has completed, we call
+<i>doFetchFaxList()</i> so that the display table shows the resultant list
+with the deleted item removed.
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="faxes-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial takes us through
+<a href="coredata.html">core data and error handling</a> within the CommPortal SDK API.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

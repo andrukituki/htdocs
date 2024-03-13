@@ -1,0 +1,449 @@
+<html>
+<head>
+<title>Login - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Login - CommPortal SDK Tutorial</h1>
+
+In this tutorial, we'll look in detail at the most fundamental part of the
+CommPortal API - the ability to authenticate a subscriber with the CommPortal
+server.  After working through this tutorial, you'll be able to log into the
+API in one of a number of ways: by getting the user to enter details interactively,
+by providing the details via your own UI prompts,
+or by using a token containing stored user credentials.
+
+<p>
+If you've worked through the <a href="hello.html">Hello World</a>
+tutorial, you'll already be familiar with some of the techniques we'll use.
+If you haven't tried <a href="hello.html">Hello World</a> yet, you might find
+it helpful to read it first... but don't worry if you can't, as we'll
+summarize the key concepts here.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>getSessionId()</b>
+  <li><b>logout()</b>
+  <li><b>fetchToken()</b>
+  <li><b>getSessionState()</b>
+  <li><b>reconnect()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+The key part of connecting to the server is handled in a function
+called <i>createConnection()</i>, which fetches the server name from the
+form above:
+
+<code id="createConnection"></code>
+
+The most important thing we do here is to save off the <i>connection</i>
+value returned by <b>new CommPortal()</b>.  We'll need that to make further
+calls to the CommPortal API.
+
+<p>
+The <i>display()</i> function, which we call
+next, is part of our example code (not the API).  It just displays some text
+so you can see what's going on; if you're interested in how it works, you can
+find it in the full example code.
+
+<h2>Logging in to CommPortal</h2>
+
+Now we're getting to the real point of this tutorial - logging a subscriber
+into CommPortal.
+
+<p>
+Why do you have to do that?  Well, all the information available through the
+CommPortal API relates to a specific subscriber - and of course, CommPortal
+needs to be sure it protects subscribers' confidential information.  So the
+first thing your application needs to do is to identify the subscriber and
+get them to prove who they are.
+
+<p>
+Fortunately, CommPortal can do all this for you.  Rather than having to ask for
+user credentials within your own UI, the login process can present the user
+with the normal CommPortal login screen.  As well as saving you work, that's
+reassuring for your users: their browser's location bar allows them to see
+that they're connecting to a real CommPortal server.
+
+<p>
+There are a number of ways of logging in through the CommPortal UI.
+<ul>
+  <li>
+    You can use a popup window to show the CommPortal login screen.  This is
+    equally applicable whether you're producing a mashup-type application
+    running embedded inside another page, or an application which occupies
+    the whole page.
+  </li>
+  <li>
+    You can take over all responsibility for prompting the user for their
+    subscriber number and password (which is less reassuring for the user,
+    but can be more convenient).
+    This is also equally applicable whether you're producing a mashup or a
+    full page application.
+  </li>
+  <li>
+    Alternatively, you can transfer your users to a full-page CommPortal login
+    screen.  This is generally only suitable when you're in full control of
+    the web page and can set up content at your choice of URLs.
+  </li>
+</ul>
+
+<h3>Logging in with a popup login panel</h3>
+
+If you're using the popup login option, it's important to remember that many
+users run popup blockers.  To make sure your login screen isn't
+mistaken for an annoying ad, you should make sure to call CommPortal's
+<b>login()</b> function as a direct result of a user action - generally a click
+on some part of your UI.
+
+<p>
+In our example, we simply have a button which calls
+a <i>doLogin()</i> function:
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+This function makes two calls to the CommPortal API.  First, it calls the
+<i>createConnection()</i> function we defined above, which in turn calls
+<b>new CommPortal()</b>.  (Now you see why that function saved off the
+connection identifier in the <i>connection</i> variable - we're about to use
+it in the next line.)
+
+<p>
+Next, the code calls the <b>login()</b> API function.  If you've worked through
+the <a href="hello.html">Hello World</a> tutorial, you'll already know what's
+happening here: this is an asynchronous call taking two function names as
+parameters. The first function is one that should be called when the login
+has succeeded, and the other's called if the function fails.
+
+<p>
+Here we have also specified the optional <i>ApplicationId</i> parameter
+which is placed before the two function parameters.
+This parameter tells the CommPortal server the name of your application,
+so that it can both log it and prioritize requests better when under load
+(if your selected server is configured to perform prioritization). For now, you
+just need to know that you can use it to identify your application to
+CommPortal. Careful not to specify a value with spaces or unusual characters!
+The use of application ids is an addition in the 7.1 version of the API.
+
+<p>
+Returning to the success function, this is called with two parameters.
+<ul>
+  <li>First, a reminder of the connection object this relates to.  In our particular
+      application we don't need that, because we already saved it off in
+      our <i>connection</i> variable.  In other application designs it's
+      useful, though; the <a href="hello.html">Hello World</a> tutorial
+      is an example.</li>
+  <li>Second, a string representing the sessionId of the connected session.
+      You can use this to correlate with web server logs, but for the sake of
+      our example, we just display it on the screen.</li>
+</ul>
+
+We also take the opportunity to illustrate the use of <b>getSessionId()</b>,
+which simply returns us the same value as was passed to the success function -
+so not only is this parameter of little use to us in the first place, but we
+don't even need to remember it because we can get it back later if we do ever
+find a need for it!
+
+<p>
+But the most important result of the function is the fact that we're now logged
+in - so we now have access to the rest of the CommPortal API on behalf of the
+subscriber.
+
+<p>
+The error function, if it's called, works similarly.  The main difference is
+the second parameter: in this case, it's a string giving a English-language
+explanation of the error.  Because this is just a simple example, we just
+display the error message on the screen.
+
+<h3>Logging in with phone number and password</h3>
+
+The most secure way to use the CommPortal SDK API is to log in via the popup panel.
+That panel is served up directly from CommPortal, so the browser appearance
+reassures the user that they are really entering their CommPortal credentials
+into a valid site, not some phishing site.
+
+<p>
+However in some situations the popup panel is an inconvenience, and the
+appearance of the popup may not sit well with the styling used in the rest of
+the web application.
+
+<p>
+Thus, in version 7.1 of the API, it is possible to log in by supplying the
+subscriber phone number and password as direct parameters.  This is not as
+secure, but sometimes users are prepared to trade security for convenience.
+
+<code class="html" id="loginPromptButton"></code>
+
+<code id="loginPromptScript"></code>
+
+Here we ask the user for their subscriber number and password in the easiest
+way the browser provides - via calls to <i>Window.prompt()</i>.  You might see
+at once that this is not ideal - as you type the password, it is displayed
+in plain test, so anyone shoulder surfing behind you can see the value.  That's
+one of the reasons why we say this login method is less secure than the
+automated popup one - it forces all consideration of security on to the
+programmer who is using the API.
+
+<p>
+Once we have the two pieces of information, we simply pass them on to the
+<b>login()</b> function, which can tell by the additional parameters that we
+do not want a popup to be shown.
+
+<h3>Logging in with a full-page redirect</h3>
+
+<div class="notWritten">
+This technique is not covered by the tutorials, since it is not specific to
+the API.  Details can be found in the CommPortal Client Interface Guide.
+</div>
+
+<h2>Logging out</h2>
+
+The opposite of logging in is, of course, logging out.  It's good practice
+to log out at the end of a session, to free resources on the CommPortal
+server.  You might also do this when the user wants to switch to
+seeing the data for a different subscriber: you'll need to log out from the
+first subscriber, then log in again as the other subscriber.
+
+<p>
+There's no particular restriction on when or how the logout call can be made.
+In particular, with no popup blockers to worry about, it doesn't need to be
+a direct result of user input.  All the same, for this tutorial, we'll just
+add another button calling a function <i>doLogout()</i>.
+
+<code class="html" id="logoutButton"></code>
+
+<code id="logoutScript"></code>
+
+As you can see, logging out is very simple.  The code just calls the
+<b>logout()</b> API function, again using the <i>connection</i> handle we
+saved earlier.  Logging out can't fail.
+
+<h2>About the rest of this tutorial</h2>
+
+If you've got this far, you now know all you <i>really</i> need to know to
+authenticate a subscriber with the CommPortal API.  The next section covers a
+couple of optional, more advanced concepts, which helps make life easier for
+your users by skipping entering their details so many times.
+
+<p>
+If you don't want to cover these advanced topics, you can skip ahead to the
+<a href="#workingExample">working example</a>.
+
+<h2>Getting a persistent token [Advanced topic]</h2>
+
+Asking the user to log into CommPortal each time they use your application
+could get annoying.  On the other hand, if you had to store the subscriber's
+login details within your application, you'd need to worry about a host of
+security issues - and even persuade your users that your application was safe.
+
+<p>
+Fortunately, CommPortal has a solution!  Having logged in a user for the first
+time, you can get hold of a "token" representing that user.  You never
+actually see the subscriber's login details, but you can use the token
+to log in next time, without going through the CommPortal sign-in screen.
+
+<p>
+Getting the token is another asynchronous operation, so you pass
+the names of a pair of functions - one to call on success, the other to call
+on failure.
+
+<p>
+Here's a useful tip: in the CommPortal API, methods that return
+data asynchronously use the verb "fetch" as part of their name.  So the method
+we need to call here is <b>fetchToken()</b>.  As in previous stages, we trigger
+fetching this token with a button in the UI:
+
+<code class="html" id="tokenButton"></code>
+
+<code id="fetchTokenScript"></code>
+
+We won't work through this function in quite as much detail as the last one;
+it's probably all quite familiar by now.  However, it's worth talking about
+what we do once we have the token.  We need to keep it in some form of
+client-side storage, and in this example, we're simply using a session cookie
+- which means it will disappear when we close the browser.
+
+<p>
+In a real application, you'd probably use a document cookie, so that it's
+available even once the browser's closed and re-opened.  Of course, this wouldn't
+be a great idea on a shared computer, so you should always ask the user whether
+they want you to remember them.
+
+<h2>Using a persistent token to log in again</h2>
+
+To demonstrate actually using the token, we'll add a final button that brings
+everything together.  As usual, it calls a function we supply.
+
+<code class="html" id="loginTokenButton"></code>
+
+<code id="loginTokenScript"></code>
+
+This code fragment extracts the persistent token from the cookie where it was
+stored, then calls the <b>login()</b> method we saw above.  This time, though,
+we pass a fourth parameter - the token.  Because the token parameter is
+present, CommPortal uses the token rather than popping up the login screen.
+
+<p>
+That's the only difference.  As you'll have noticed, the success and error
+callback functions are the same as in the version of this call without a token.
+
+<p>
+Just as in the original <b>login()</b> call, we supply the optional
+<i>ApplicationId</i> parameter, so that the server knows who we are. We choose
+to supply the same value as before, but we don't have to; there's no reason
+why we couldn't be using a token generated by one application within another.
+
+<p>
+Incidentally, you don't <i>have</i> to use a button to trigger this kind of login
+- because there's no popup to worry about, you don't need to ensure it's a direct
+result of user input.
+
+<h3>Corrupting the token</h3>
+
+It's important to remember that a token <i>can</i> become invalid.
+This will happen if the user changes their password, which
+automatically cancels all existing tokens.
+
+<p>
+A coding error might also corrupt the token, for example by
+failing to encode it before it's stored.  So it's worth knowing what an
+attempt to use an invalid token looks like, just in case it happens to you!
+
+<p>
+The final part of the tutorial adds a button to deliberately corrupt the
+stored token - in our case, by truncating it.  Try pressing this button, then
+trying to log in again using the token.  You'll find the error function is
+called instead of the success one.
+
+<code class="html" id="corruptTokenButton"></code>
+
+<code id="corruptTokenScript"></code>
+
+<h2>Reconnecting to an existing session [Advanced topic]</h2>
+
+It's all very well being able to login again automatically some time later,
+but there are cases where it would be even more efficient if we could
+remember the essentials of the current connection, and to recreate a new
+connection a very short time later that effectively continues the earlier
+connection.
+
+<p>
+Actually the "essentials of the current connection" has a name - it's simply
+the session that we want to preserve.  If your web application is spread over
+multiple URLs, then you probably would want to pass the session between URLs,
+so that the new page can again connect to the same server session.
+
+<p>
+All we currently know about this thing called the session is that it has an
+id, which was passed to us on a successful login (though we also learnt that
+we can get the value later via the <b>getSessionId()</b> call).  The API also
+has a <b>getSessionState()</b> call, and the state that it returns, in the
+form of a string, is actually what we need to connect again later.
+
+<code class="html" id="getSessionStateButton"></code>
+
+<code id="getSessionStateScript"></code>
+
+<b>getSessionState()</b> is a synchronous call - so it's trivial easy to use!
+
+<p>
+We then have to save that string somewhere - in our example we simply place it
+in a global variable - though in practice you are probably going to need to
+put it somewhere else, because you are going to need it again when a different
+JavaScript environment is in effect (such as on a new page where all global
+variables will have been reset).
+
+<p>
+We now consider how we use the saved value to reconnect to the same session,
+where the answers is simply via the <b>reconnect()</b> method.
+
+<p>
+Note that we can only reconnect to the same session if the session still
+exists on the server.  That means that we can't use <b>logout()</b> on the
+connection before we reconnect, since that is a signal to the server that it
+can free up the session.
+
+<code class="html" id="reconnectButton"></code>
+
+<code id="reconnectScript"></code>
+
+<p>
+To make this as realistic as possible, we do the reconnect on a new CommPortal
+connection.  Having got that, and the saved state data which we retrieve from
+the global variable, we call <b>reconnect()</b>.
+
+<p>
+If all goes well our success function is then called, and we can see via
+<b>getSessionId()</b> that our session is indeed continued on this
+new connection.
+
+<p>
+In the working example, you can see the reconnect failing if you save the
+session state, then do a logout (which destroys the server session).
+A subsequent attempt to reconnect will fail, complaining that the saved sate
+for reconnection is invalid.
+
+<hr>
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="login-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial tackles the more substantial subject of
+<a href="voicemails.html">handling voicemails</a> using the CommPortal SDK.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

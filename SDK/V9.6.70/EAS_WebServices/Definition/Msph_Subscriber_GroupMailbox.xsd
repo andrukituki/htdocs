@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_GroupMailbox">
+    <xs:annotation>
+      <xs:documentation>
+        Group Mailbox configuration service indication.  Used to associate mailboxes in a group.  You use this indication in a single ShUpdate request following a Msph_Subscriber_BaseInformation indication creating a new mailbox.  This combination creates the mailbox and makes it part of the group.  If you use this indication when creating a primary mailbox you create a group containing just that mailbox.  If you use it when creating a secondary mailbox, specifying the phone number of an existing primary, then you will create the secondary mailbox and add it to the group
+        <d:Actions>
+          <d:Action>apply</d:Action>
+        </d:Actions>
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="PrimaryPhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The phone number of the primary subscriber in this group mailbox.
+            <d:DisplayName>Primary Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="GroupMailboxEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether group mailbox function is enabled for this subscriber.  This toggles the presentation of a group menu to callers dialling the primary number.  Note that this is unrelated to the enabled/disabled state of a mailbox - that is controlled by the Disabled element in the Msph_Subscriber_BaseInformation indication.
+            <d:DisplayName>Group Mailbox Enabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="Member" type="tMsph_Subscriber_GroupMailbox_Member">
+        <xs:annotation>
+          <xs:documentation>
+            A member of this group mailbox.
+            <d:DisplayName>Member</d:DisplayName>
+            <d:Type>Custom</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Type" type="tMsph_Subscriber_GroupMailbox_Type">
+        <xs:annotation>
+          <xs:documentation>
+            Used to specify whether this entry is a primary or secondary within a group mailbox.
+            <d:DisplayName>Type</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:Values>
+              <d:Value>primary</d:Value>
+              <d:Value>secondary</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="MWIAggregationEnabled" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether this Subscriber's mailbox aggregates MWI within the group mailbox.  For primary mailboxes this indicates that the mailbox allows MWI aggregation of secondary mailboxes.  For secondary mailboxes, this indicates that the submailbox contributes towards the MWI of the primary.
+            <d:DisplayName>MWI Aggregation Enabled</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="AggregatesMessages" type="tTrueFalse">
+        <xs:annotation>
+          <xs:documentation>
+            Flag indicating whether this mailbox aggregates messages within its group mailbox. For primary mailboxes this indicates that the mailbox is interested in its sub-mailboxes' new messages.  For sub-mailboxes this indicates that the sub-mailbox is prepared to disclose information about its new messages to its primary.
+            <d:DisplayName>Aggregates Messages</d:DisplayName>
+            <d:Type>Choice of values</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+            <d:DefaultValue>False</d:DefaultValue>
+            <d:Values>
+              <d:Value>True</d:Value>
+              <d:Value>False</d:Value>
+            </d:Values>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="Action" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="tMsph_Subscriber_GroupMailbox_Member">
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="PhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            The phone number of this member of the group mailbox.
+            <d:DisplayName>Phone Number</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="Key" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Each mailbox within the group mailbox can be assigned a key, which is then used to select that mailbox during sign-in, and when calling to deposit a message.
+            <d:DisplayName>Key</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>RWRWRW</d:BaseAccess>
+            <d:Mandatory>Yes</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="tMsph_Subscriber_GroupMailbox_Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="primary" />
+      <xs:enumeration value="secondary" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,152 @@
+<html>
+<head>
+<title>Fetch Greetings - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Fetch Greetings - CommPortal SDK Tutorial</h1>
+
+In this tutorial, we'll use the CommPortal API to fetch details about the
+subscribers current greetings including allowing any existing greetings to
+be played back.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+By the way, if you've worked through the <a href="login.html">Login</a>
+tutorial, the early stages of this will be second nature to you know.  In that
+case, feel free to skip straight to
+<a href="#fetchingGreetings">Fetching Greetings</a>.
+
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>fetchCodecs()</b>
+  <li><b>fetchGreetings()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+There's one difference from the previous tutorial: we've coded our
+<i>doLogin()</i> function so that, when the user successfully logs in,
+we automatically proceed to the <i>getCodecList()</i> function
+covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="fetchingGreetings"></a>
+<h2>Fetching Greetings</h2>
+
+So, just to recap: we've opened a connection to CommPortal, we've allowed the
+subscriber to log in, and we've arranged to call our <i>getCodecList()</i>
+function as soon as they have.  
+
+<p>
+Here is the code for the <i>getCodecList()</i> function.
+
+<code id="getCodecListScript"></code>
+
+This fetches the list of codecs from CommPortal and uses the result to generate
+a drop down list with the available codecs. Once a codec has been chosen from the 
+dropdown the chosen codec is passed to <i>doFetchGreetings</i>.
+
+<p>
+Here's the function - we'll discuss exactly what it does below.
+
+<code id="greetingsFetchScript"></code>
+
+This is a straightforward call to the CommPortal API to request information
+about the current greetings. The interesting work happens in
+<i>displayGreetingsList()</i> which we call after the fetch succeeds.
+
+<code id="greetingsDisplayScript"></code>
+
+In this function we output the current default greeting and a table describing
+all of the available greetings.
+
+The table reuses the code from the Fetch Voicemails tutorial to create links
+to any recorded greetings to allow you to listen to the audio. As before, we
+don't have any control over the audio once it's started to play.  For example,
+we can't implement a pause button.  Still, for playing a short piece of audio
+such as a voicemail, you might think that's a good trade-off.
+
+<code id="audioScript"></code>
+
+<hr>
+
+<a name="workingExample"></a>
+<h1>Working example - Fetch Greetings</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="greetings-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial tackles the subject of <a href="greetings-update.html">
+updating greetings</a> using the CommPortal SDK.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

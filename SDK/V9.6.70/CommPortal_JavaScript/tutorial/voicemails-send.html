@@ -1,0 +1,195 @@
+<html>
+<head>
+<title>Send Voicemails - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Send Voicemails - CommPortal SDK Tutorial</h1>
+
+In this tutorial, we'll take a look at using the CommPortal API to send
+Voicemail messages to other subscribers.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+As before, if you've worked through the <a href="login.html">Login</a>
+tutorial, the early stages of this will be second nature to you know.  In that
+case, feel free to skip straight to <a href="#uploadingaudio">Uploading an
+Audio File</a>.
+
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>fetchCodecs()</b>
+  <li><b>uploadVoicemailAudio()</b>
+  <li><b>reconnect()</b>
+  <li><b>sendVoicemail()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  If you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+There's one difference from the previous tutorial: we've coded our
+<i>doLogin()</i> function so that, when the user successfully logs in,
+the next stage of the UI is revealed.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="uploadingaudio"></a>
+<h2>Uploading an audio file</h2>
+
+So, just to recap: we've opened a connection to CommPortal, we've allowed the
+subscriber to log in, and we've arranged to call our <i>listCodecs()</i> and
+<i>showUploadFile()</i> function as soon as they have. 
+
+<p>
+Here is the <i>listCodecs()</i> function.
+
+<code id="listCodecsScript"></code>
+
+<p>
+This simple code fetches the list of supported codecs from CommPortal and
+prints the codec names and extensions so that we know what kinds of files
+we are allowed to upload. Each codec in the returned list has three fields.
+
+<dl>
+  <dt>CodecName</dt>
+  <dd>The name of the codec which should be used when specifying a codec on greetings downloads.</dd>
+
+  <dt>CodecExtension</dt>
+  <dd>The file extension used by this codec.</dd>
+
+  <dt>CodecContentType</dt>
+  <dd>The Content Type used by this codec.</dd>
+</dl>
+
+<p>
+Before we go any further we must quickly discuss how sending a voicemail
+is going to work. There are two steps which we must complete. The first step is
+to upload an audio file to CommPortal where it is temporarily stored within our
+session. We then send a request to send a voicemail and name our uploaded file
+as the audio to use.
+
+<p>
+Anway, for now here's the function which we called after login - we'll discuss
+exactly what it does below.
+
+<code id="showUIScript"></code>
+
+This function ensures that the upload file UI is shown and the sending a
+voicemail UI is hidden. This is necessary as we must upload an audio file
+before we can send a voicemail using that file. The form which we use for file
+upload has the following code. The style tag ensures that this UI is
+initially hidden.
+
+<code class="html" id="chooseFileStep"></code>
+
+<p>
+The code for handling file uploads is slightly different to what you have
+seen before. Here it is; the details are given below.
+
+<code id="uploadScript"></code>
+
+<p>
+The <i>doUpload()</i> function is called when the user clicks the "Upload File"
+button. This passes the usual success and failure callbacks along with the
+id of the form which was used to select a file for upload. The CommPortal
+API submits this form and then calls one of the callback functions as normal.
+
+<p>
+The call to the <i>showSendVM()</i> within <i>uploadSuccess()</i> reveals
+the final part of the UI now that we have successfully uploaded an audio file.
+
+<h2>Sending a Voicemail</h2>
+
+Now that we have uploaded an audio file into our session we can use this to
+send a voicemail. The following simple form is used for entering the voicemail
+details. The style tag ensures that this UI is initially hidden.
+
+<code class="html" id="sendVMStep"></code>
+
+The function used by this form is listed below.
+
+<code id="sendScript"></code>
+
+We make a call into the CommPortal API specifying the usual success and
+failure callsbacks along with some parameters to control the recipient of the
+voicemail and whether it should be marked as urgent and/or private.
+
+<hr>
+
+<a name="workingExample"></a>
+<h1>Working example - Send a Voicemail</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="voicemails-sendcode.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial tackles the subject of
+<a href="greetings.html">fetching greetings</a> using the CommPortal SDK.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

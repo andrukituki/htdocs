@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright (c) Microsoft Corporation. All rights reserved. -->
+<!-- Highly Confidential Material -->
+<xs:schema xmlns="http://www.metaswitch.com/ems/soap/sh/userdata"
+           xmlns:s="http://www.metaswitch.com/ems/soap/sh/servicedata"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.metaswitch.com/ems/soap/sh/userdata"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified"
+           version="1.0">
+  <xs:import namespace="http://www.metaswitch.com/ems/soap/sh/servicedata" schemaLocation="serviceData.xsd"/>
+  <xs:simpleType name="tString" final="list restriction">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="0"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="tSequenceNumber" final="list restriction">
+    <xs:restriction base="xs:int">
+      <xs:minInclusive value="0"/>
+      <xs:maxInclusive value="65535"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="tSh-Data">
+    <xs:sequence>
+      <xs:element name="RepositoryData" type="tTransparentData"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tTransparentData">
+    <xs:sequence>
+      <xs:element name="ServiceIndication" type="tString"/>
+      <xs:element name="SequenceNumber" type="tSequenceNumber"/>
+      <xs:element name="ServiceData" type="s:tServiceData"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="tUserData">
+    <xs:sequence>
+      <xs:element name="Sh-Data" type="tSh-Data"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.metaswitch.com/sdp/soap/sh/servicedata" xmlns:d="http://www.metaswitch.com/sdp/soap/sh/documentation" xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" targetNamespace="http://www.metaswitch.com/sdp/soap/sh/servicedata" elementFormDefault="qualified" attributeFormDefault="unqualified" version="1.36" xsi:schemaLocation="http://www.metaswitch.com/sdp/soap/sh/documentation Documentation.xsd">
+  <xs:import namespace="http://www.w3.org/2005/05/xmlmime" schemaLocation="https://www.w3.org/2005/05/xmlmime" />
+  <xs:include schemaLocation="Msph_CommonTypes.xsd" />
+  <xs:complexType name="tMsph_Subscriber_CheckSession">
+    <xs:annotation>
+      <xs:documentation>
+        EAS system subscriber information service indication.  Used to check that a subscriber's credentials are still valid. The request should take the form of a pull of the indication Msph_Subscriber_CheckSessionwith specific parameters user=[user], pwd=[password], usertype=[user type] where [user] is the subscriber's DN or login email, [password] is their password and [user type] is the type of subscriber whose session we are checking for validity. Alternatively, the accesstoken=[access token] parameter can be used to validate an Azure AD access token and return the associated EAS subscriber's DN.
+        <d:Actions />
+        <d:AuthLevel>admin</d:AuthLevel>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element maxOccurs="1" minOccurs="0" name="DomainPrefix" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Always "", as this indication no longer checks credentials for remote subscribers.
+            <d:DisplayName>Domain Prefix</d:DisplayName>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element maxOccurs="1" minOccurs="0" name="PrimaryPhoneNumber" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Primary phone number of this subscriber.
+            <d:DisplayName>Primary Phone Number</d:DisplayName>
+            <d:ValidFrom>1.25</d:ValidFrom>
+            <d:Type>String</d:Type>
+            <d:BaseAccess>R-R-R-</d:BaseAccess>
+            <d:Mandatory>No</d:Mandatory>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

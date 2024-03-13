@@ -1,0 +1,528 @@
+<html>
+<head>
+<title>Core data and errors : Advanced Topics - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Advanced Topics - CommPortal SDK Tutorial</h1>
+
+This tutorial contains two more advanced topics.  First, we'll see how to access
+data which isn't yet exposed through the high-level CommPortal SDK; then, we'll
+take a more detailed look at error handling.
+
+<p>
+The tutorial includes extensive example code fragments, which build up to
+a <a href="#workingExample">working example</a> at the end
+of the tutorial.  Feel free to use this code in your own application - you
+can download the example application as a single file, or you can copy just the
+relevant code fragments out of this web page.
+
+<p>
+If you've worked through previous tutorials, then you'll already be expecting
+the initial section to be very familiar.  Once again, it's just a refresher
+from the <a href="login.html">Login</a> tutorial - so feel free to skip
+straight to the <a href="#enableButtons">Enable Buttons</a>.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>API calls</h2>
+
+This tutorial uses the following API calls:
+<ul>
+  <li><b>login()</b>
+  <li><b>fetchData()</b>
+  <li><b>fetchSubscriberName()</b>
+  <li><b>fetchRawData()</b>
+  <li><b>saveData()</b>
+</ul>
+
+<h2>Including the CommPortal API</h2>
+
+As we first saw in the <a href="hello.html">Hello World</a> tutorial,
+the CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  You can do this with a script tag in the page header,
+which should be included before any other scripts.  As always, if you copy this code,
+remember to adjust the <i>src</i> URL to reference the correct location on
+your server.
+
+<p>
+This creates a global object called CommPortal, which you'll use to get
+access to the API.
+
+<code class="html" id="includeAPI"></code>
+
+<h2>Connecting to a server</h2>
+
+Next, we need to create a <b>new CommPortal()</b> object, which creates a
+connection to the CommPortal server.  Again, if you've worked through
+<a href="hello.html">Hello World</a>, you'll be familiar with what we're
+doing here.
+
+<p>
+In these tutorials we include a form, which you can use to enter a suitable
+CommPortal URL.  In a real application you might well just hard-code the right
+value for your environment.
+
+<p>
+Remember that the CommPortal popup should open a plain login page, if it loads
+something other than that you'll need to include the path to the login page to
+the URL of your CommPortal server.  Normally the login page is located under
+your customization as "domain/cust/login.html".
+
+<code id="enterServer" class="html"></code>
+
+And as in the previous tutorials, the form also has a <i>Login</i> button,
+which we've coded to call a function called <i>createConnection()</i>:
+
+<code id="createConnection"></code>
+
+<h2>Logging in to CommPortal</h2>
+
+A previous tutorial covers the subject of
+<a href="login.html">Logging in</a> to the CommPortal SDK API.
+For this tutorial, we'll simply repeat the Login button, which uses
+the <b>login()</b> API call to pop up CommPortal's own login screen.
+
+<p>
+This time round, we've coded our <i>doLogin()</i> function so that,
+when the user successfully logs in, we automatically proceed to the
+<i>doEnableButtons()</i> function covered in the next section.
+
+<code class="html" id="loginButton"></code>
+
+<code id="loginScript"></code>
+
+<a name="enableButtons"></a>
+<h2>Enable Buttons</h2>
+
+So, just to recap: we've opened a connection to CommPortal, and we've allowed the
+subscriber to log in.  The remainder of our examples will be driven by the user, so
+we have arranged that once the subscriber is logged in we enable the interactive
+buttons in <i>doEnableButtons()</i>.
+
+<code id="enableButtonsScript"></code>
+
+<h2>Handling Core Data</h2>
+
+The CommPortal SDK API, which we've been using throughout these tutorials, is
+actually just the top of a stack of interfaces available for you to use.
+It sits on top of the MetaSphere Enhanced Applications Server CommPortal Client
+Interface, which defines a (mostly JSON-based) protocol specifying the messages
+which flow over the wire between the client and the server.
+
+<p>
+For many applications, the CommPortal SDK API has a number of advantages over
+the JSON-based protocol:
+<ul>
+  <li>
+    it's easier to use the JavaScript interface, with calls and either direct
+    replies or callbacks, than to deal directly with URLs and their responses
+  </li>
+  <li>
+    it can more easily be used cross-domain, when the web page or web
+    application is being served up from somewhere other than the CommPortal
+    domain
+  </li>
+  <li>
+    it provides parsed-out and simplified data structures - so you don't have
+    to be an expert on JSON, XML and SOAP
+  </li>
+  <li>
+    and the most important data types are given high-level abstractions and
+    their own dedicated method calls, providing the data in an even cleaner and
+    easy-to-process form.
+  </li>
+</ul>
+
+The previous tutorials all deal with data types with such high-level abstractions
+- for example, voicemails, call lists and contacts.  However, not
+all forms of data have such dedicated methods.  For some there's no obvious
+abstraction to use, while for others the SDK just doesn't include one yet
+(though that might change in a future revision!)
+
+<p>
+But all is not lost - in particular, you don't have to give up all the other
+advantages of the CommPortal SDK API just because you need to work with these
+less common types of data.  You just need to get familiar with a slightly
+lower-level interface: the CommPortal SDK Core API.
+
+<h3>Fetching Core Data</h3>
+
+The key Core API method, which gives access to the core data, is <b>fetchData()</b>.
+Just like the higher-level functions we've used already, this is an asynchronous
+interface, so you won't be surprised to see that it takes a pair of callbacks for
+success and failure.
+
+<p>
+There's one big difference from the higher-level abstractions, though.  In all the
+cases we've seen so far, the data to be fetched is specified by the method name
+itself - <b>fetchContacts()</b>, for example.
+
+<p>
+In the case of <b>fetchData()</b>, on the other hand, we need to supply the data
+type as the first parameter.  This is done by providing the name of the data
+packet, which you'll find in the "MetaSphere Enhanced Applications Server
+CommPortal V7.1 Client Interface Guide".
+
+<p>
+An example will make this clearer.  You may recall that, in our
+<a href="hello.html">Hello World</a> tutorial, we greeted the logged-in
+subscriber by number.  However, in the words of the cult TV show
+<a href="http://en.wikipedia.org/wiki/The_Prisoner">The Prisoner</a>,
+"I am not a number!" - most people prefer to be addressed by name.  The
+CommPortal SDK API was originally released without a method
+<b>fetchSubscriberName()</b>;
+but if you look at the source of the CommPortal dashboard page, you'll see
+that it displays a subscriber name obtained through the CustInfo6 field of
+the "Meta_Subscriber_CustomerInformation" data object, so we can illustrate how
+we might get round this restriction.
+
+<p>
+(Actually, in the 7.1 version of the SDK API, a <b>fetchSubscriberName()</b>
+function has been added, but that merely confirms that this is just a convenience
+function - it doesn't add anything that we could not already do via the existing
+API).
+
+<p>
+Once we know the background of how the dashboard page gets a name, it's simple
+for us to do the same.
+
+<code id="coreDataScript"></code>
+
+In our example, we fetch this data, and then the callback uses our normal
+<i>display()</i> method to show the particular field we were after.
+
+<p>
+To help us explore more advanced options, we also show the full data returned,
+formatted as JSON using the <i>JSON.stringify()</i> method.  This method is part
+of the
+<a href="http://wiki.ecmascript.org/doku.php?id=es3.1:json_support">ECMAScript 3.1 draft specification</a>,
+and it's available to us because the CommPortal SDK API includes
+the <a href="http://www.json.org/js.html">json2.js</a> implementation of this
+spec by <a href="http://www.json.org/">json.org</a>.
+
+<p>
+Displaying the data in this form will help us in the next section, where we
+consider the structure of the returned data.  To illustrate this further, our
+next example repeats the process on a more complex data object - the
+Meta_Subscriber_BaseInformation.
+
+<h3>A detour to compare with fetchSubscriberName</h3>
+
+As a quick detour, as from version 7.1, the SDK API provides a single function
+that will return the subscriber name to us.  It's such a simple function to use
+that it hardly stands up against the more advanced topics in this tutorial,
+so we'll skip through it very quickly.
+
+<code id="fetchSubscriberNameScript"></code>
+
+<p>
+Probably no explanation is needed - it's a standard format call whereby it takes
+the success and failure callbacks.  We should note that it doesn't always
+return the same name as our homebrew function did - specifically if the
+custInfo6 value is empty, it also knows to look at a second location that may
+also hold a name for certain types of subscribers.
+
+<h3>Back to fetching more core data</h3>
+
+As we said, our next example fetches a more complex data object.
+
+<code id="moreCoreDataScript"></code>
+
+This is almost identical to our earlier example, except to note that we do a
+bit of extra whitespace insertion into the JSON string.  That simply serves to
+make the output easier to read by allowing the browser to word-wrap the text
+at appropriate places.
+
+<h3>Structure of the returned data</h3>
+
+So, let's take a look at the format of the data that's returned by
+<b>fetchData()</b>.  (Before we start, you'll find it a lot easier to follow
+this section if you've looked at the output of the function above - and you
+might also want to have the "MetaSphere Enhanced Applications Server CommPortal
+V7.1 Client Interface Guide" handy.)
+
+<p>
+Exactly what's passed to the callback obviously depends
+on which data object was asked for.  You'll recall that the name of the object
+was given by the Client Interface Guide, and the same manual describes the
+various field names and their meanings.
+
+<p>
+The guide also mentions how the data contents are derived from an
+XML schema, via a SOAP to JSON mapping.  Unfortunately that gives an object
+structure that is rather hard to read and to use, with a proliferation of
+objects whose only field is named "_".  If you really want to work with this
+"raw" data format, we'll describe how to do so later.
+
+<p>
+But the good news is that <b>fetchData()</b> does a
+fair bit of cleaning up before it passes the data to you.  In particular, it
+gives you a much flatter data object, with the removal of the unnecessary
+underscores which otherwise clutter up the data structure (and your code!)
+
+<p>
+Some field names are also renamed.  If the name described in the XML is
+written IN ALL CAPS LIKE THIS, then it's generally changed to just have a
+single initial capital letter.  (The exception is for the few fields where the
+name is actually an abbreviation - URL, HTTP, MADN or SIP).
+
+<p>
+Finally, if you're using the Meta_Subscriber_MetaSphere_SubscriberCapabilities
+object, it gets a whole further level of cleanup again.  The XML definition
+describes an object containing an array of names and values.  The Core API
+converts this into a simpler JavaScript object, with a series of named
+fields each containing the corresponding value.  That's far easier to refer
+to in your code, since you can use standard JavaScript object lookup
+techniques, rather than having to search for the existence of values within
+the array.
+
+<p>
+One last thing: to remind us that we are dealing with a cleaned-up data
+structure, you'll notice that a new <i>_cleaned</i> field is added to the
+data object.
+
+<h3>Fetching Multiple Items of Data</h3>
+
+In the examples we looked at above, the first parameter to <b>fetchData()</b>
+was a single name.  If you like though, you can also pass an array of such strings.
+Very often as you work with this API, you'll find that the data you want is
+spread over a number of data packets; it's more efficient, and generally more
+convenient, to fetch them all at once.
+
+<p>
+When you request multiple data items, provided the parameters validate
+correctly, then the success or failure callback will be called once for
+each data item requested.  Because of that, it's very possible you'll
+get hold of some data items successfully, whilst other items fail.
+
+<p>
+Here's an example to illustrate that in detail.
+
+<code id="multipleCoreDataScript"></code>
+
+The example code has a long list of (possible) data types, and asks for them
+all in one call to <b>fetchData()</b>.  We display the output using
+the JSON formatter as before, but note that we also have some code in the
+<i>failureCallback()</i> to display any errors.  You'll probably get some -
+we've deliberately asked for data types which aren't available for all
+subscribers, so it's quite likely that some of them will be missing for
+whoever you happen to have logged in as.
+
+<p>
+The only additional complication in this code is that we count down the
+number of items where we're still to receive data (or an error).  That's
+just so that we can step to the next stage of the example once we've got
+everything we're expecting.
+
+<h3>Getting raw data</h3>
+
+We mentioned above that the data returned by <b>fetchData()</b> was in a
+cleaned-up form - but that you can get at the dirty raw data directly,
+if you want to.  That's achieved by calling <b>fetchRawData()</b>.
+
+<p>
+This method returns the data exactly as received over the wire - and thus has
+all the naming abnormalities and littering underscores you could ever want.
+
+<p>
+Given what we've said, you might well be wondering why you'd ever want to
+fetch the raw data like this.  Aside from masochism, there's one important
+reason: the cleaning up of the data is irreversible.  If all you are
+doing is reading and displaying the data, then using the cleaned data is
+by far the best idea.  However, if you need to manipulate the data and
+return it to the server after manipulation, the raw data's for you.
+
+<p>
+This simple example function shows how this API call works.
+
+<code id="fetchRawDataScript"></code>
+
+<h3>Updating data</h3>
+
+Our discussion of raw data has got us to a point where we can think about
+<i>updating</i> the data that the server stores.
+
+<p>
+<strong>
+A word of warning here - the power to update data of course includes
+the power to destroy data!  There's no easy way in CommPortal to
+back up and later restore the state of an individual subscriber's account.
+So when you are writing code that updates this data, be sure to test it carefully.
+It's obviously good practice to do your development using a subscriber
+specially set up for the task, rather than trying it out on live customers!
+</strong>
+
+<p>
+To illustrate the principle of updating data, we'll choose a very simple data
+object - that associated with the Call Waiting service.  Why's it so simple?
+Because the only data stored for this service is whether the subscriber's
+subscribed to it or not.
+
+<p>
+All the same, there are a couple of points to be aware of before we go ahead.
+<ul>
+  <li>
+    Changing the subscription state may have an impact on your billing system.
+    However, assuming you use a test account, that shouldn't be a problem.
+  </li>
+  <li>
+    Not all types of subscriber can successfully sign themselves up for new
+    services.  Your application is supposed to police this in advance; if
+    you go ahead and make a forbidden change, things appear to work (which
+    means the example still proceeds as expected), but the change isn't really
+    stored.  Again, assuming this is a test subscriber, you don't need to
+    worry too much.  For the record, subscribers with business group lines
+    can't sign themselves up for new services, though individual subscribers can.
+  </li>
+</ul>
+
+<p>
+With the warnings out of the way, let's look at method used to update data
+on the server: <b>saveData()</b>.  This can be both used to update existing
+data objects (those that have been previously fetched from the server), and
+also to save objects that have been created by the client without
+reference to existing server data.
+<p>
+A future tutorial <a href="saslogging.html">Service Assurance Server Logging</a>
+describes an optional parameter which can be passed to saveData() to log
+a summary of the update being made.
+
+<code id="updateDataScript"></code>
+
+The first thing we do here is to fetch the Call Waiting data, which goes under
+the data type named "Meta_Subscriber_CallWaiting".  We use the
+<b>fetchRawData()</b> method to do this - as we explained above, we need to use
+raw data because we'll be passing it back to the server.
+
+<p>
+When our <i>dataSuccess()</i> callback is given the data, we reach in
+and read out the existing Subscribed value.  Since this is raw data, we have
+to be quite careful here: we check whether the field is actually present, and if
+so we remember to fetch from the "_" subfield.  We also use the "!!" JavaScript
+technique to ensure we only store a real boolean value (true or false), rather
+than merely a truey or falsey value.
+
+<p>
+We then want to invert the subscription setting.  If there's already a setting
+present, that's simply a matter of setting the existing value to the reverse of
+what it was.  On the other hand, if the Subscribed field was missing, we have to
+set it to a newly constructed object.  And with all that done, we're at last ready
+to pass our modified data to the server using the <b>saveData()</b> call!
+
+<p>
+If that is successful, the <i>saveSuccess()</i> callback goes on to switch
+the service setting back to its original state.  As well as cleaning up after
+ourselves, that lets us show off another way of forming the input to
+<b>saveData()</b> - as you'll see, in this case we build up an entire raw
+data object from scratch, using JavaScript's object notation.
+
+<h2>Error Handling</h2>
+
+By now you'll be very familiar with the API's asynchronous call model, where
+many methods take a callback function for success and one for failure.  Up to
+now, though, we've concentrated on what you might do when the API call succeeds,
+and more or less ignored what to do if it fails.
+
+<p>
+There are good reasons for that - it's made the examples easy to follow, and in
+any case success is much more interesting than failure.  But we can't put it off
+any longer: it's time to talk about error handling.
+
+<p>
+To recap what he <i>have</i> noted so far, the failure callback is called with two
+parameters:
+
+<ul>
+  <li>connection - the connection the API call was made on</li>
+  <li>error - an error object, describing the error</li>
+</ul>
+
+In previous examples we've either done nothing in this callback, or simply
+treated the error object as a string which we've displayed directly. However,
+this is a simplification of the true position.  The error object's not really a
+string, but an object holding at least the following fields:
+
+<dl>
+  <dt>id</dt>
+  <dd>A numeric id that identifies which error occurred</dd>
+
+  <dt>message</dt>
+  <dd>An English-language explanation of the error</dd>
+</dl>
+
+For specific errors, the object may contain additional fields which provide
+more details on the error.
+
+<p>
+Just to explain why our earlier simplification works: if you pass the error object to
+something that expects a string - for example by concatenating it to another string,
+like we do in our simple examples - you'll get the value of the message
+field.  (For the technically curious, this is achieved by making the error object's
+<b>toString()</b> method return the message string.)  If you've worked through our
+tutorial on <a href="phonecalls.html">making calls</a>, you'll notice this is
+very similar to the way the call state object passed to the <b>makeCall()</b>
+progress callback works.
+
+<p>
+That's all very well, but relying on the string representation isn't a great
+idea if you want to take different action based on exactly which error occurred;
+the string may well be updated in later versions of the API.  Instead, you
+really want to look at the id field, since this will remain fixed over time -
+and in any case, it's much easier to switch your behaviour on.
+
+<h3>Error examples</h3>
+
+It's fairly difficult to deliberately illustrate errors, so our sample code
+here is necessarily limited.  All the same, we've got a few cases to try out below.
+
+<p>
+In this code, we make a number of API calls, all of which use the same success and
+failure callback functions.  The success callback will never get called, but the
+failure callback displays the error data in as much detail as it can.
+
+<code id="errorExerciseScript"></code>
+
+Our first deliberate mistake in <i>doErrorExercise()</i> is to create a new
+unconnected connection object (unconnected because we never log in with it),
+then make a API call on it. Since the error is reported through an asynchronous
+callback, we delay moving to our next error exercise for a second
+(using <i>setTimeOut()</i>), to give the callback a chance to fire before
+we move on to the next case.
+
+<p>
+Subsequent attempts all use the real connection object - the one we logged in
+with earlier - and in turn try to cancel a call we haven't actually made,
+and to fetch and then save data using a made-up name.
+
+<p>
+When displaying the error information in <i>failureCallback()</i>, we
+step through all the fields of the error using the "var i in error" JavaScript
+construct.  One detail here: some advanced JavaScript programming techniques
+can make this construct return fields that are not actually part of the error,
+so we call the standard <i>hasOwnProperty()</i> method to limit us to showing
+the fields that are part of the error itself.
+
+<h3>Error IDs</h3>
+
+Just so you know, the error codes themselves are not specifically documented in this tutorial.
+Instead, please see the API Reference for a list of the errors that may be encountered.
+
+<a name="workingExample"></a>
+<h1>Working example</h1>
+
+<iframe id="includedCode" width="100%" height="500" src="coredata-code.html"></iframe>
+
+<h2>What next?</h2>
+
+The next tutorial takes us through
+<a href="incomingCall.html">Incoming Call events</a> within the CommPortal SDK API.
+
+<script src="tutorial.js"></script>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<html>
+<head>
+<title>Introduction - CommPortal SDK Tutorial</title>
+</head>
+
+<body>
+<style>@import url(tutorial.css);</style>
+<a id="homelink" href="starthere.html">Back to SDK Home</a>
+
+<h1>Introduction - CommPortal SDK Tutorial</h1>
+
+Thank you for accessing the CommPortal SDK.  This includes a number of
+tutorial examples which will help you learn how to use the CommPortal SDK API.
+
+<h2>Contents</h2>
+
+<div id="tableOfContents"></div>
+
+<h2>Assumptions</h2>
+
+These tutorials assume that you have some basic knowledge of JavaScript,
+but the code sticks to simple constructs to make it easy to follow.
+If you have more advanced JavaScript experience, then you may well spot
+more elegant ways to do things than are presented here.
+
+<h2>Before you start</h2>
+
+In order to get the most out of these tutorials, you'll need the following:
+<ul>
+  <li>Access to a CommPortal server, with at least one user provisioned on it</li>
+  <li>A web server to host these tutorials - this can be running on localhost</li>
+  <li>The zip file containing these tutorial files</li>
+  <li>A text editor to view and edit the code files</li>
+</ul>
+
+Code files provided as part of these tutorials have been developed on
+Windows machines, and thus follow Windows line ending conventions.
+
+<p>
+To view the tutorial you'll need a web browser.  Until very recently,
+by far the best browser to use when developing web pages was
+<a href="http://www.getfirefox.com">Firefox</a>,
+specifically because of the powerful
+<a href="http://getfirebug.com/">Firebug</a> web development environment
+which was available for it.
+
+<p>
+With the recent release of Microsoft's IE8 on the Windows platform, this
+web browser has been updated so that it also includes many Firebug-inspired
+features, which makes it a good second choice.  When you do
+produce your own web pages, you should be careful to check that they work
+in both Firefox and IE. In fact, in the case of IE, you should probably
+be checking them out in all widespread versions of IE, namely
+IE6, IE7 and IE8.
+
+<h3>Placing the tutorial files on your web server</h3>
+
+To access these tutorials, you need to unzip the CommPortal SDK file, and to
+place the resultant set of directories on your web server.
+
+<p>
+You can then point your browser at the "tutorials/starthere.html" file
+to get a simple page that gives access to all the other tutorials.
+
+<h2>Tutorial Conventions</h2>
+
+Within this tutorial, the following conventions are used:
+
+<h3>Functions within the examples</h3>
+
+Internal functions whose code is supplied as part of the example are written
+as <i>display()</i> or <i>play()</i>
+
+<h3>API calls</h3>
+
+Functions which are provided in the CommPortal SDK API are written
+as <b>login()</b> or <b>fetchContacts()</b>.
+
+<h3>HTML code</h3>
+
+<code class="html">
+Examples in this style are HTML code, that should be placed in your HTML file.
+</code>
+
+<h3>JavaScript code</h3>
+
+<code>
+// Examples shown like this are JavaScript code, which can be placed within a
+// script tag within your HTML file, or may be placed within a separate JavaScript
+// file.
+</code>
+
+<h2>Helper functions</h2>
+
+In order to demonstrate the CommPortal API, the fragments of tutorial code
+make use of a function called <i>display()</i>.  This is not part of
+the API, it is just a convenient function for the tutorial code to call in
+order that in the working example at the bottom of the page you can see the
+result of API calls.
+
+<p>
+A very simple implementation of </i>display()</i> would be to display each message
+via the browser alert mechanism:
+
+<code>
+function display(text)
+{
+  alert(text);
+}
+</code>
+
+However that gets a bit annoying over time, since you have to keep dismissing
+the alerts that pop up, and there is no way to see previous messages.  The
+implementation used in the live code below is to append the messages to the
+body of the page - still very simple, but effective enough for our current needs.
+
+<code id="tutorialFramework"></code>
+
+<h2>Including the CommPortal API</h2>
+
+The CommPortal JavaScript API must be included before you can use any of the
+CommPortal API calls.  This is done using a script tag in the page header,
+which should be included before any other scripts.  When copying this code you
+will need to adjust the src url to reference the correct location.
+
+<code class="html" id="includeAPI"></code>
+
+This creates a global object called CommPortal, through which the whole of the
+API is accessed.
+
+<h2>What next?</h2>
+
+You now have sufficient background to try the first tutorial - the
+<a href="hello.html">Hello World</a> example for the CommPortal SDK.
+
+<iframe id="includedCode" width="100%" height="500" src="login-code.html" style="display:none"></iframe>
+
+<script src="tutorial.js"></script>
+</body>
+</html>
